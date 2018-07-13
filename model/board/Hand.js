@@ -1,23 +1,14 @@
 var Card = require("./Card");
 
-class Deck {
+class Hand {
 
-	constructor (list, area) {
+	constructor (area) {
 
-		this.id = { type: "deck", no: area.id.no };
+		this.id = { type: "hand", no: area.id.no };
 
 		this.area = area;
 
 		this.cards = [];
-		list.forEach(el => new Card(el, this.area.gameboard.getCardId(), this));
-		this.shuffle();
-	}
-
-	draw() {
-
-		var d = this.cards.pop();
-		d.goto(null);
-		return d;
 	}
 
 	shuffle() {
@@ -40,7 +31,7 @@ class Deck {
 
 	opposite () {
 
-		return this.area.opposite().deck;
+		return this.area.opposite().hand;
 	}
 
 	addCard (card) {
@@ -66,4 +57,4 @@ class Deck {
 	}
 }
 
-module.exports = Deck;
+module.exports = Hand;

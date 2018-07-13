@@ -2,16 +2,18 @@ var Bank = require("../../Bank");
 
 class Card {
 
-	constructor (noModel, noId) {
+	constructor (noModel, noId, location) {
 
-		this.id = { type: "card", "no": noId };
+		this.id = { type: "card", no: noId };
 
-		this.body = Bank.get(noModel);
+		Object.assign(this, Bank.get(noModel));
 
 		this.location = null;
+		if (location)
+			this.goto(location);
 	}
 
-	move (loc) {
+	goto (loc) {
 
 		var former = this.location;
 		if (this.location !== null && this.location.hasCard (this))
@@ -29,7 +31,17 @@ class Card {
 
 	destroy () {
 
-		this.move(null)
+		this.goto(null);
+	}
+
+	isType (type) {
+
+		return this.cardType === type;
+	}
+
+	isArchetype (arc) {
+
+		return this.archetypes && this.archetypes.includes(arc);
 	}
 }
 

@@ -42,10 +42,7 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('prepare', function(token, deck){
 
-		console.log(deck.hero);
-		console.log(deck.body);
-
-		new GameBoard(deck, deck);
+		new GameBoard(deck, deck).start();
 
 		if (!checkDeck(token, deck)) {
 

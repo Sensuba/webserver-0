@@ -24,7 +24,7 @@ class Field {
 
 	opposite () {
 
-		return this.area.opposite.field;
+		return this.area.opposite().field;
 	}
 }
 
