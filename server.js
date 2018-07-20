@@ -29,24 +29,27 @@ io.sockets.on('connection', function (socket) {
 
 		console.log("join " + room);
 		socket.join(room);
+		socket.room = room;
 		if (!(room in rooms))
 			rooms[room] = { players: [] };
 		if (rooms[room].players.length < 2) {
+			socket.emit('joined', {as: 'player', no: rooms[room].players.length});
 			rooms[room].players.push({ socket: socket });
-			socket.emit('joined', 'player');
 		} else {
 			console.log("already")
-			socket.emit('joined', 'spectator');
+			socket.emit('joined', {as: 'spectator'});
 		}
 	});
 
 	socket.on('prepare', function(token, deck){
 
-		new GameBoard(deck, deck).start();
-
 		if (!checkDeck(token, deck)) {
-
+			return;
 		}
+
+		var gb = new GameBoard(deck, deck);
+		gb.notify = (type, src, ...data) => io.sockets.in(socket.room).emit("notification", {type, src, data});
+		gb.start();
 	})
 
 	socket.on('leave', function(){
@@ -62,6 +65,7 @@ io.sockets.on('connection', function (socket) {
 		console.log("disconnect");
 		let room = socket.room;
 		socket.leave(room);
-		rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
+		if (room)
+			rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
 	});
 });

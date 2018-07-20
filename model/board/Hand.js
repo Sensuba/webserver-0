@@ -19,19 +19,19 @@ class Hand {
 	    }
 	}
 
-	count () {
+	get count () {
 
 		return this.cards.length;
 	}
 
-	isEmpty () {
+	get isEmpty () {
 
-		return this.count() === 0;
+		return this.count === 0;
 	}
 
-	opposite () {
+	get opposite () {
 
-		return this.area.opposite().hand;
+		return this.area.opposite.hand;
 	}
 
 	addCard (card) {

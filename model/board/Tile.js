@@ -10,7 +10,7 @@ class Tile {
 		this.card = null;
 	}
 
-	isEmpty () {
+	get isEmpty () {
 
 		return this.card === null || this.card === undefined;
 	}
@@ -48,20 +48,20 @@ class Tile {
 		return this.card === card;
 	}
 
-	inFront () {
+	get inFront () {
 
-		return this.field.front().includes(this);
+		return this.field.front.includes(this);
 	}
 
-	inBack () {
+	get inBack () {
 
-		return this.field.back().includes(this);
+		return this.field.back.includes(this);
 	}
 
-	neighbors () {
+	get neighbors () {
 
 		var n = [];
-		var line = this.inFront() ? this.field.front() : this.field.back();
+		var line = this.inFront ? this.field.front : this.field.back;
 		for (var i = 0; i < line.length-1; i++)
 			if (line[i] === this)
 				n.push(line[i+1]);
@@ -73,54 +73,54 @@ class Tile {
 
 	isNeighborTo (other) {
 
-		return this.neighbors().includes(other);
+		return this.neighbors.includes(other);
 	}
 
-	tilesBehind () {
+	get tilesBehind () {
 
 		var b = [];
-		if (this.inBack())
+		if (this.inBack)
 			return b;
-		for (var i = 0; i < this.field.front().length; i++)
-			if (this.field.front() [i] === this) {
-				b.push (this.field.back() [i]);
-				b.push (this.field.back() [i+1]);
+		for (var i = 0; i < this.field.front.length; i++)
+			if (this.field.front [i] === this) {
+				b.push (this.field.back [i]);
+				b.push (this.field.back [i+1]);
 			}
 		return b;
 	}
 
-	tilesAhead () {
+	get tilesAhead () {
 
 		var a = [];
-		if (this.inFront())
+		if (this.inFront)
 			return a;
-		for (var i = 0; i < this.field.back().length-1; i++)
-			if (this.field.back() [i] === this)
-				a.push (this.field.front() [i]);
-		for (var i = 1; i < this.field.back().length; i++)
-			if (this.field.back() [i] === this)
-				a.push (this.field.front() [i-1]);
+		for (var i = 0; i < this.field.back.length-1; i++)
+			if (this.field.back [i] === this)
+				a.push (this.field.front [i]);
+		for (var i = 1; i < this.field.back.length; i++)
+			if (this.field.back [i] === this)
+				a.push (this.field.front [i-1]);
 		return a;
 	}
 
-	adjacents () {
+	get adjacents () {
 
-		return this.neighbors().concat(this.inFront() ? this.tilesBehind() : this.tilesAhead());
+		return this.neighbors.concat(this.inFront ? this.tilesBehind : this.tilesAhead);
 	}
 
 	isAdjacentTo (other) {
 
-		return this.adjacents().includes(other);
+		return this.adjacents.includes(other);
 	}
 
 	isBehind (other) {
 
-		return this.tilesBehind().includes(other);
+		return this.tilesBehind.includes(other);
 	}
 
 	isAhead (other) {
 
-		return this.tilesAhead().includes(other);
+		return this.tilesAhead.includes(other);
 	}
 }
 

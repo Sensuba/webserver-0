@@ -17,6 +17,8 @@ class Deck {
 
 		var d = this.cards.pop();
 		d.goto(null);
+		this.area.gameboard.notify("identify", this.id, d);
+		this.area.gameboard.notify("draw", this.id, d.id);
 		return d;
 	}
 
@@ -28,19 +30,19 @@ class Deck {
 	    }
 	}
 
-	count () {
+	get count () {
 
 		return this.cards.length;
 	}
 
-	isEmpty () {
+	get isEmpty () {
 
-		return this.count() === 0;
+		return this.count === 0;
 	}
 
-	opposite () {
+	get opposite () {
 
-		return this.area.opposite().deck;
+		return this.area.opposite.deck;
 	}
 
 	addCard (card) {

@@ -14,6 +14,8 @@ class GameBoard {
 			new Area(0, d1, this),
 			new Area(1, d2, this)
 		];
+
+		this.notify = () => {};
 	}
 
 	start (area) {
@@ -21,7 +23,7 @@ class GameBoard {
 		area = area || this.areas[Math.floor(Math.random()*2)];
 		this.currentArea = area;
 		this.currentArea.draw (4);
-		this.currentArea.opposite().draw (5);
+		this.currentArea.opposite.draw (5);
 		//otherArea.duellist.manapool.NewGem();
 		this.currentArea.newTurn ();
 		//console.log(this.currentArea.hand.cards);
@@ -29,7 +31,7 @@ class GameBoard {
 
 	newTurn () {
 
-		this.currentArea = currentArea.opposite();
+		this.currentArea = currentArea.opposite;
 		this.currentArea.newTurn();
 	}
 

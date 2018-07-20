@@ -16,7 +16,7 @@ class Area {
 		new Card(decklist.hero, gameboard.getCardId(), this.field.tiles[6]);
 	}
 
-	opposite () {
+	get opposite () {
 
 		return this.gameboard.areas[1 - this.id.no];
 	}
@@ -29,7 +29,7 @@ class Area {
 			this.draw(n-1);
 	}
 
-	isPlaying () {
+	get isPlaying () {
 
 		return this.gameboard.currentArea = this;
 	}
@@ -41,7 +41,7 @@ class Area {
 
 	endTurn () {
 
-		if (this.isPlaying())
+		if (this.isPlaying)
 			this.gameboard.newTurn();
 	}
 }

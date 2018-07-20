@@ -6,7 +6,10 @@ class Card {
 
 		this.id = { type: "card", no: noId };
 
-		Object.assign(this, Bank.get(noModel));
+		var model = Bank.get(noModel)
+		for (var k in model)
+			this[k] = model[k];
+		this.supercode = undefined;
 
 		this.location = null;
 		if (location)
@@ -32,6 +35,11 @@ class Card {
 	destroy () {
 
 		this.goto(null);
+	}
+
+	get area () {
+
+		return this.location ? this.location.area : null;
 	}
 
 	isType (type) {

@@ -12,19 +12,19 @@ class Field {
 			this.tiles.push(new Tile(i, this));
 	}
 
-	front () {
+	get front () {
 
 		return this.tiles.slice(0, 4);
 	}
 
-	back () {
+	get back () {
 
 		return this.tiles.slice(4, 9);
 	}
 
-	opposite () {
+	get opposite () {
 
-		return this.area.opposite().field;
+		return this.area.opposite.field;
 	}
 }
 
