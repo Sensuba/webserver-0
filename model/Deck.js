@@ -6,20 +6,18 @@ class Deck {
 
 		this.id = { type: "deck", no: area.id.no };
 
+		this.locationOrder = 1;
+
 		this.area = area;
 
 		this.cards = [];
-		list.forEach(el => new Card(el, this.area.gameboard.getCardId(), this));
+		list.forEach(el => new Card(el, this.area.gameboard, this));
 		this.shuffle();
 	}
 
 	draw() {
 
-		var d = this.cards.pop();
-		d.goto(null);
-		this.area.gameboard.notify("identify", this.id, d);
-		this.area.gameboard.notify("draw", this.id, d.id);
-		return d;
+		return this.cards[0];
 	}
 
 	shuffle() {

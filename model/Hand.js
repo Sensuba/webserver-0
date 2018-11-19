@@ -6,6 +6,8 @@ class Hand {
 
 		this.id = { type: "hand", no: area.id.no };
 
+		this.locationOrder = 2;
+
 		this.area = area;
 
 		this.cards = [];
@@ -36,6 +38,7 @@ class Hand {
 
 	addCard (card) {
 
+		card.identify(this.area);
 		this.cards.push(card);
 		if (card.location !== this)
 				card.goto(this);

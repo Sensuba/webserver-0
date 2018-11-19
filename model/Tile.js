@@ -5,6 +5,8 @@ class Tile {
 
 		this.id = { type: "tile", no: id };
 
+		this.locationOrder = 3;
+
 		this.field = field;
 
 		this.card = null;
@@ -13,6 +15,11 @@ class Tile {
 	get isEmpty () {
 
 		return this.card === null || this.card === undefined;
+	}
+
+	get occupied () {
+
+		return !this.isEmpty;
 	}
 
 	place (card) {
@@ -34,6 +41,7 @@ class Tile {
 
 	addCard (card) {
 
+		card.identify();
 		this.place(card);
 	}
 
@@ -46,6 +54,11 @@ class Tile {
 	hasCard (card) {
 
 		return this.card === card;
+	}
+
+	get area () {
+
+		return this.field.area;
 	}
 
 	get inFront () {

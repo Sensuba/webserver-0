@@ -9,7 +9,7 @@ class Field {
 		this.area = area;
 		this.tiles = [];
 		for (var i = 0; i < 9; i++)
-			this.tiles.push(new Tile(i, this));
+			this.tiles.push(new Tile(i + 9 * this.id.no, this));
 	}
 
 	get front () {
