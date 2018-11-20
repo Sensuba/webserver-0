@@ -22,8 +22,26 @@ var checkDeck = (token, deck) => {
 
 io.sockets.on('connection', function (socket) {
 
-	console.log("connect");
 	socket.emit('connected');
+
+	socket.on('seek', function(prv){
+
+		if (!prv) {
+			var pubKeys = Object.keys(rooms).filter(key => !rooms[key].private);
+			if (pubKeys.length > 0) {
+				var key = pubKeys[Math.floor(Math.random() * pubKeys.length)];
+				socket.emit('assign', {to: key});
+				return;
+			}
+		}
+		var batch = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		var room = "";
+		for (var i = 0; i < 10; i++)
+			room += batch.charAt(Math.floor(Math.random() * batch.length));
+		if (!(room in rooms))
+			rooms[room] = { players: [], game: new GameBoard(), private: prv };
+		socket.emit('assign', {to: room});
+	});
 
 	socket.on('join', function(room){
 
@@ -31,8 +49,8 @@ io.sockets.on('connection', function (socket) {
 		socket.join(room);
 		socket.room = room;
 		if (!(room in rooms))
-			rooms[room] = { players: [], game: new GameBoard() };
-		if (rooms[room].players.length < 2) {
+			rooms[room] = { players: [], game: new GameBoard(), private: true };
+		if (!rooms[room].started && rooms[room].players.length < 2) {
 			socket.emit('joined', {as: 'player', no: rooms[room].players.length});
 			rooms[room].players.push({ socket: socket });
 		} else {
@@ -46,18 +64,30 @@ io.sockets.on('connection', function (socket) {
 			return;
 		}
 
-		var gb = rooms[socket.room].game;
-		gb.notify = (type, src, ...data) => io.sockets.in(socket.room).emit("notification", {type, src, data});
-		gb.whisper = (type, player, src, ...data) => rooms[socket.room].players[player] ? rooms[socket.room].players[player].socket.emit("notification", {type, src, data}) : {};
-		gb.init(deck, deck);
-		gb.start();
+		var players = rooms[socket.room].players;
+		var room = rooms[socket.room];
+		var p = players.find(player => player.socket === socket);
+		p.token = token;
+		p.deck = deck;
+		p.ready = true;
+
+		if (!room.started && players.length === 2 && players.every(player => player.ready)) {
+
+			var gb = rooms[socket.room].game;
+			gb.notify = (type, src, ...data) => io.sockets.in(socket.room).emit("notification", {type, src, data});
+			gb.whisper = (type, player, src, ...data) => players[player] ? players[player].socket.emit("notification", {type, src, data}) : {};
+			gb.init(players[0].deck, players[1].deck);
+			gb.start();
+			room.started = true;
+			room.private = true;
+		}
 	})
 
 	socket.on('command', function(cmd){
 
 		var room = rooms[socket.room];
-		var no = room.players.findIndex(p => p.socket === socket) + 1;
-		if (no > 0)
+		var no = room.players.findIndex(p => p.socket === socket);
+		if (no >= 0)
 			room.game.command(cmd, no);
 	});
 
@@ -69,12 +99,17 @@ io.sockets.on('connection', function (socket) {
 		rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
 	});
 
-	socket.on('disconnect', function(){
+	var quit = () => {
 
-		console.log("disconnect");
 		let room = socket.room;
 		socket.leave(room);
 		if (room)
 			rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
-	});
+		if (rooms[room].players.length == 0)
+			delete rooms[rooms];
+	}
+
+	socket.on('quit', quit);
+
+	socket.on('disconnect', quit);
 });

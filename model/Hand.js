@@ -36,9 +36,13 @@ class Hand {
 		return this.area.opposite.hand;
 	}
 
+	get public () {
+
+		return false;
+	}
+
 	addCard (card) {
 
-		card.identify(this.area);
 		this.cards.push(card);
 		if (card.location !== this)
 				card.goto(this);

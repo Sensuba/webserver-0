@@ -22,6 +22,11 @@ class Court {
 		return !this.isEmpty;
 	}
 
+	get public () {
+
+		return true;
+	}
+
 	place (card) {
 
 		if (this.card !== null)

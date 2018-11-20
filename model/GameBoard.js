@@ -52,7 +52,7 @@ class GameBoard {
 			this.data.cards[cmd.id.no].play(cmd.targets ? cmd.targets.map(id => this.tiles.find(t => t.id.no === id.no)) : undefined);
 			break;
 		case "endturn":
-			if (this.areas[player-1].isPlaying)
+			if (this.areas[player].isPlaying)
 				this.newTurn();
 			break;
 		default: break;

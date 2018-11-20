@@ -43,6 +43,11 @@ class Deck {
 		return this.area.opposite.deck;
 	}
 
+	get public () {
+
+		return false;
+	}
+
 	addCard (card) {
 
 		this.cards.push(card);

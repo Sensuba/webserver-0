@@ -15,6 +15,7 @@ class Card {
 		this.resetBody();
 
 		this.location = null;
+		this.identified = [false, false];
 		if (location) {
 			location.area.gameboard.notify("newcard", this.id, location.id);
 			this.goto(location);
@@ -65,6 +66,7 @@ class Card {
 			this.resetBody ();
 		if (loc && !loc.hasCard (this))
 			loc.addCard (this);
+		this.identify();
 		/*if (former != null && !destroyed)
 			Notify ("card.move", former, value);
 		if (location is Tile)
@@ -106,15 +108,18 @@ class Card {
 		return this.archetypes && this.archetypes.includes(arc);
 	}
 
-	identify (area) {
+	identify () {
 
-		if (this.identified)
+		if (!this.location || this.identified[0] && this.identified[1])
 			return;
-		if (area)
-			this.area.gameboard.whisper("identify", area.id.no, this.id, this.data);
-		else
-			this.area.gameboard.notify("identify", this.id, this.data);
-		this.identified = true;
+		[0, 1].forEach(id => {
+			if (this.identified[id])
+				return;
+			if (this.location.public || this.location.area.id.no === id) {
+				this.area.gameboard.whisper("identify", id, this.id, this.data);
+				this.identified[id] = true;
+			}
+		});
 	}
 
 	get canBePaid () {
