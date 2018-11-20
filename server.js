@@ -105,7 +105,7 @@ io.sockets.on('connection', function (socket) {
 		socket.leave(room);
 		if (room)
 			rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
-		if (rooms[room].players.length == 0)
+		if (room && rooms[room].players.length == 0)
 			delete rooms[rooms];
 	}
 
