@@ -2,7 +2,7 @@ var Bank = (() => {
 
 	this.list = {};
 
-	init = (url, callback) => {
+	init = (url, callback, error) => {
 
 		var axios = require('axios');
 		this.client = axios.create({
@@ -15,7 +15,7 @@ var Bank = (() => {
 	  		response.data.forEach(el => this.list[el.idCardmodel] = Object.assign(el, JSON.parse(atob(el.supercode))));
 	  		callback(response.data);
 	  	})
-	  	.catch(err => {});
+	  	.catch(error);
 	}
 
 	get = no => Object.assign({}, this.list[no]);

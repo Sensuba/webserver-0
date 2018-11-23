@@ -1,16 +1,26 @@
 var Bloc = require('./Bloc');
+var Types = require('./Types');
 var Event = require('../Event');
 
 class Play extends Bloc {
 
-	constructor (src, ctx) {
+	constructor (src, ctx, target) {
 
 		super("play", src, ctx);
+		this.f = (src, ins) => [this, this.chosen ? this.chosen.card : null, this.chosen];
+		this.types = [Types.tilefilter];
+		this.target = target;
 	}
 
 	setup () {
 
-		this.src.event = new Event(() => this.execute(), null);
+		var req = this.computeIn()[0];
+		var reqf = this.target ? (req ? (target => req(this.src, target)) : (target => true)) : null;
+		this.src.event = new Event(target => {
+			if (target)
+				this.chosen = target;
+			this.execute();
+		}, reqf);
 	}
 }
 

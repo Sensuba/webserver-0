@@ -19,9 +19,9 @@ class Event {
 			this.action(target);
 	}
 
-	static get target () {
+	static get targets () {
 
-		return target;
+		return targets;
 	}
 }
 

@@ -13,6 +13,11 @@ console.log("Initialization...");
 Bank.init('https://bhtwey7kwc.execute-api.eu-west-3.amazonaws.com/alpha', () => {
 
 	console.log("Initialized !");
+	start();
+}, err => {
+
+	console.log(`Error code: ${err.code}`);
+	console.log(`Unable to load data from ${err.hostname}`);
 });
 
 var checkDeck = (token, deck) => {
@@ -20,7 +25,7 @@ var checkDeck = (token, deck) => {
 	return true;
 }
 
-io.sockets.on('connection', function (socket) {
+var start = () => io.sockets.on('connection', function (socket) {
 
 	socket.emit('connected');
 

@@ -71,7 +71,8 @@ class ManaPool {
 
 	refill (nb) {
 
-		this.receptacles = this.receptacles.filter(r => r || !nb || nb-- > 0);
+		nb = nb || MAX_MANA;
+		this.receptacles = this.receptacles.map(r => r || nb-- > 0);
 	}
 }
 

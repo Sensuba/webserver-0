@@ -1,7 +1,8 @@
 var Bloc = require('./Bloc');
 var Play = require('./Play');
 var Draw = require('./Draw');
-var OverloadBonus = require('./OverloadBonus');
+var Destroy = require('./Destroy');
+var LimitBreak = require('./LimitBreak');
 var Plus = require('./Plus');
 var Minus = require('./Minus');
 
@@ -13,9 +14,10 @@ class Reader {
 		Object.keys(ctx).forEach(key => blueprint[key].forEach(el => {
 			var bloc = null;
 			switch(el.type) {
-			case "play": bloc = new Play(card, ctx); break;
+			case "play": bloc = new Play(card, ctx, el.target); break;
 			case "draw": bloc = new Draw(card, ctx); break;
-			case "olbonus": bloc = new OverloadBonus(card, ctx); break;
+			case "destroy": bloc = new Destroy(card, ctx); break;
+			case "limitbrk": bloc = new LimitBreak(card, ctx); break;
 			case "opplus": bloc = new Plus(card, ctx); break;
 			case "opminus": bloc = new Minus(card, ctx); break;
 			default: bloc = new Bloc(el.type, card, ctx); break;
