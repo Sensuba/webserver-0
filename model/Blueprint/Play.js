@@ -6,7 +6,7 @@ class Play extends Bloc {
 
 	constructor (src, ctx, target) {
 
-		super("play", src, ctx);
+		super("play", src, ctx, true);
 		this.f = (src, ins) => [this, this.chosen ? this.chosen.card : null, this.chosen];
 		this.types = [Types.tilefilter];
 		this.target = target;

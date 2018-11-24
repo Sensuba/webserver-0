@@ -1,12 +1,14 @@
 class Bloc {
 
-	constructor (type, src, ctx) {
+	constructor (type, src, ctx, stc = false) {
 
 		this.ctx = ctx;
 		this.src = src;
 		this.type = type;
+		this.static= stc;
 		this.in = [];
 		this.types = [];
+		this.toPrepare = ["to"];
 	}
 
 	execute () {
@@ -19,10 +21,12 @@ class Bloc {
 
 	prepare (src, blueprint) {
 
-		if (src.to !== undefined && src.to !== null) {
-			this.to = this.ctx.actions[src.to];
-			this.to.prepare(blueprint.actions[src.to]);
-		}
+		this.toPrepare.forEach(to => {
+			if (src[to] !== undefined && src[to] !== null) {
+				this[to] = this.ctx.actions[src[to]];
+				this[to].prepare(blueprint.actions[src[to]], blueprint);
+			}
+		});
 	}
 
 	setup() {
@@ -31,7 +35,7 @@ class Bloc {
 
 	compute () {
 
-		if (this.out !== null && this.out !== undefined)
+		if (this.static && this.out !== null && this.out !== undefined)
 			return this.out;
 		this.execute();
 		return this.out;

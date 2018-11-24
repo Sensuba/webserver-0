@@ -37,6 +37,16 @@ class Card {
 		return this.location instanceof Tile;
 	}
 
+	get destroyed() {
+
+		return this.location === null;
+	}
+
+	get damaged() {
+
+		return this.hp && this.chp && this.chp < this.hp;
+	}
+
 	get data() {
 
 		var copy = Object.assign({}, this);
@@ -49,12 +59,17 @@ class Card {
 		if (tile.occupied || tile.card === this)
 			return;
 		this.skillPt = 1;
+		this.chp = this.hp;
 		this.goto(tile, true);
 		if (this.isType("character"))
 			this.resetSickness();
+		this.area.gameboard.notify("summon", this.id, tile.id);
 	}
 
-	goto (loc, aaa) {
+	goto (loc) {
+
+		if (this.location === loc)
+			return;
 
 		var former = this.location;
 		this.location = loc;
@@ -79,6 +94,7 @@ class Card {
 		for (var k in model)
 			this[k] = model[k];
 		delete this.supercode;
+		this.clearBoardInstance();
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
 	}
@@ -86,7 +102,19 @@ class Card {
 	destroy () {
 
 		this.area.gameboard.notify("destroycard", this.id);
+		this.clearBoardInstance();
 		this.goto(null);
+	}
+
+	damage (dmg, src) {
+
+		if (!this.chp || dmg <= 0)
+			return;
+
+		this.chp -= dmg;
+		this.area.gameboard.notify("damagecard", this.id, dmg, src.id);
+		if (this.chp <= 0)
+			this.destroy();
 	}
 
 	get area () {
@@ -147,9 +175,27 @@ class Card {
 	resetSickness () {
 
 		this.actionPt = 1;
-		this.skillPt = 1;
 		this.motionPt = 0;
 		this.firstTurn = true;
+	}
+
+	refresh () {
+
+		this.skillPt = 1;
+		if (this.isType("character")) {
+			this.actionPt = 1;
+			this.motionPt = 1;
+			this.firstTurn = false;
+		}
+	}
+
+	clearBoardInstance () {
+
+		delete this.chp;
+		delete this.actionPt;
+		delete this.skillPt;
+		delete this.motionPt;
+		delete this.firstTurn;
 	}
 }
 
