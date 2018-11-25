@@ -27,10 +27,11 @@ class Event {
 		this.requirement = requirement;
 	}
 
-	execute (target) {
+	execute (gameboard, target) {
 
 		if (!this.requirement || this.requirement(target))
 			this.action(target);
+		gameboard.update();
 	}
 
 	static get targets () {

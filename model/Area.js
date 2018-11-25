@@ -48,11 +48,8 @@ class Area {
 
 		this.gameboard.notify("newturn", this.id);
 		this.manapool.refill();
+		this.field.entities.forEach(e => e.refresh());
 		this.draw();
-		/*if (this.hand.cards[0].isType("figure"))
-			this.hand.cards[0].play(this.field.tiles[1]);
-		else if (this.hand.cards[1].isType("figure"))
-			this.hand.cards[1].play(this.field.tiles[1]);*/
 	}
 
 	endTurn () {

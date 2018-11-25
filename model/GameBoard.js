@@ -20,6 +20,8 @@ class GameBoard {
 			new Area(0, d1, this),
 			new Area(1, d2, this)
 		];
+
+		this.updates = [];
 	}
 
 	start (area) {
@@ -47,12 +49,29 @@ class GameBoard {
 
 	command (cmd, player) {
 
+		var p = this.areas[player];
+
 		switch (cmd.type) {
-		case "play":
-			this.data.cards[cmd.id.no].play(cmd.targets ? cmd.targets.map(id => this.tiles.find(t => t.id.no === id.no)) : undefined);
-			break;
+		case "play": {
+			let card = this.data.cards[cmd.id.no],
+				targets = cmd.targets ? cmd.targets.map(id => this.tiles.find(t => t.id.no === id.no)) : undefined;
+			if (card.canBePlayedOn(targets))
+				card.play(targets);
+			break; }
+		case "attack": {
+			let card = this.data.cards[cmd.id.no],
+				target = this.data.cards[cmd.target.no];
+			if (card.canAttack(target))
+				card.attack(target);
+			break; }
+		case "move": {
+			let card = this.data.cards[cmd.id.no],
+				tile = this.tiles.find(t => t.id.no === cmd.to.no);
+			if (card.canMoveOn(tile))
+				card.move(tile);
+			break; }
 		case "endturn":
-			if (this.areas[player].isPlaying)
+			if (p.isPlaying)
 				this.newTurn();
 			break;
 		default: break;
@@ -63,6 +82,12 @@ class GameBoard {
 
 		this.data.cards.push(card);
 		return this.data.cards.length-1;
+	}
+
+	update () {
+
+		while (this.updates.length > 0)
+			this.updates[0].trigger();
 	}
 }
 

@@ -26,6 +26,11 @@ class Field {
 
 		return this.area.opposite.field;
 	}
+
+	get entities () {
+
+		return this.tiles.filter(tile => tile.occupied).map(tile => tile.card);
+	}
 }
 
 module.exports = Field;
