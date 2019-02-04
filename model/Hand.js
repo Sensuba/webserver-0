@@ -1,5 +1,7 @@
 var Card = require("./Card");
 
+const MAX_CARDS = 10;
+
 class Hand {
 
 	constructor (area) {
@@ -43,10 +45,11 @@ class Hand {
 
 	addCard (card) {
 
+		if (this.count >= MAX_CARDS && !this.hasCard(card))
+			card.destroy();
 		this.cards.push(card);
 		if (card.location !== this)
-				card.goto(this);
-
+			card.goto(this);
 	}
 
 	removeCard (card) {

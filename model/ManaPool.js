@@ -54,6 +54,11 @@ class ManaPool {
 		return this.receptacles.length;
 	}
 
+	canPay (mana) {
+
+		return this.usableMana >= mana;
+	}
+
 	use (value) {
 
 		if (value <= this.usableMana) {

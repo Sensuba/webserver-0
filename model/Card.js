@@ -4,6 +4,7 @@ var Hand = require("./Hand");
 var Deck = require("./Deck");
 var Tile = require("./Tile");
 var Update = require("./Update");
+var Action = require("./Action");
 var Reader = require("./Blueprint/Reader");
 
 class Card {
@@ -95,15 +96,29 @@ class Card {
 			lastTileOn = location as Tile;*/
 	}
 
+	loadModel () {
+
+		return Bank.get(this.model);
+	}
+
 	resetBody () {
 
-		var model = Bank.get(this.model);
+		var model = this.loadModel();
 		for (var k in model)
 			this[k] = model[k];
 		delete this.supercode;
+		this.faculties = [];
 		this.clearBoardInstance();
+		if (this.isType("hero"))
+			this.faculties.push(new Action(new Event(() => this.area.manapool.createReceptacle())));
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
+		if (this.atk && typeof this.atk === 'string')
+			this.atk = parseInt(this.atk, 10);
+		if (this.hp && typeof this.hp === 'string')
+			this.hp = parseInt(this.hp, 10);
+		if (this.range && typeof this.range === 'string')
+			this.range = parseInt(this.range, 10);
 	}
 
 	destroy () {
@@ -121,7 +136,50 @@ class Card {
 		this.chp -= dmg;
 		this.gameboard.notify("damagecard", this.id, dmg, src.id);
 		if (this.chp <= 0)
-			new Update(() => this.destroy(), this.gameboard); //this.destroy();
+			new Update(() => this.destroy(), this.gameboard);
+	}
+
+	heal (amt, src) {
+
+		if (!this.chp || amt <= 0)
+			return;
+
+		this.chp = Math.min(this.hp, this.chp + amt);
+		this.gameboard.notify("healcard", this.id, amt, src.id);
+	}
+
+	boost (atk, hp, range) {
+
+		if (!atk && !hp && !range)
+			return;
+
+		this.atk += atk;
+		this.hp += hp;
+		if (hp >= 0)
+			this.chp += hp;
+		else
+			this.chp = Math.min(this.chp, this.hp);
+		this.range += range;
+		this.gameboard.notify("boostcard", this.id, atk, hp, range);
+		if (this.chp <= 0)
+			new Update(() => this.destroy(), this.gameboard);
+	}
+
+	set (cost, atk, hp, range) {
+
+		if (cost || cost === 0)
+			this.mana = cost;
+		if (atk || atk === 0)
+			this.atk = atk;
+		if (hp || hp === 0) {
+			this.hp = hp;
+			this.chp = hp;
+		}
+		if (range || range === 0)
+			this.range = range;
+		this.gameboard.notify("setcard", this.id, cost, atk, hp, range);
+		if (this.chp <= 0)
+			new Update(() => this.destroy(), this.gameboard);
 	}
 
 	canAttack (target) {
@@ -194,7 +252,7 @@ class Card {
 
 	get canBePaid () {
 
-		return this.mana && this.area && this.mana <= this.area.manapool.usableMana;
+		return (this.mana || this.mana === 0) && this.area && this.mana <= this.area.manapool.usableMana;
 	}
 
 	get canBePlayed () {
@@ -251,8 +309,8 @@ class Card {
 		switch(this.cardType) {
 		case "figure":
 			this.summon(targets[0]);
-			if (this.event && targets.length > 1)
-				this.event.execute(this.gameboard, targets ? targets[1] : undefined);
+			if (this.event)
+				this.event.execute(this.gameboard, targets.length > 1 ? targets[1] : undefined);
 			break;
 		case "spell":
 			this.goto(this.area.court);
@@ -269,6 +327,11 @@ class Card {
 		if (!this.onBoard || !this.motionPt)
 			return;
 		return this.location.isAdjacentTo(tile);
+	}
+
+	canUse (faculty) {
+
+		return faculty.canBeUsed(this);
 	}
 
 	move (tile) {

@@ -70,6 +70,11 @@ class GameBoard {
 			if (card.canMoveOn(tile))
 				card.move(tile);
 			break; }
+		case "faculty": {
+			let card = this.data.cards[cmd.id.no];
+			if (card.faculties && card.faculties.length > cmd.faculty && card.canUse(card.faculties[cmd.faculty]))
+				card.faculties[cmd.faculty].execute(this, card);
+			break; }
 		case "endturn":
 			if (p.isPlaying)
 				this.newTurn();

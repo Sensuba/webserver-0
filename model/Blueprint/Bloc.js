@@ -12,7 +12,7 @@ class Bloc {
 	}
 
 	execute () {
-
+		
 		var f = this.f || (() => []);
 		this.out = f(this.src, this.computeIn());
 		if (this.to)

@@ -17,11 +17,7 @@ class Area {
 		this.hand = new Hand(this);
 		this.manapool = new ManaPool(this);
 		this.court = new Court(this);
-		new Card(decklist.hero, gameboard, this.field.tiles[6]);
-		
-		this.manapool.createReceptacle();
-		this.manapool.createReceptacle();
-		this.manapool.createReceptacle();
+		this.hero = new Card(decklist.hero, gameboard, this.field.tiles[6]);
 	}
 
 	get opposite () {
@@ -29,14 +25,14 @@ class Area {
 		return this.gameboard.areas[1 - this.id.no];
 	}
 
-	draw (n = 1) {
+	draw (n = 1, filter) {
 
 		if (n <= 0) return;
-		var d = this.deck.draw();
+		var d = this.deck.draw(filter);
 		d.goto(this.hand);
 		this.gameboard.notify("draw", this.id, d.id);
 		if (n > 1)
-			this.draw(n-1);
+			this.draw(n-1, filter);
 	}
 
 	get isPlaying () {

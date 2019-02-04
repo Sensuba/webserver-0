@@ -1,13 +1,41 @@
 var Bloc = require('./Bloc');
+
 var Play = require('./Play');
+
 var Draw = require('./Draw');
 var Damage = require('./Damage');
+var Heal = require('./Heal');
+var SetCard = require('./Set');
+var Boost = require('./Boost');
 var Destroy = require('./Destroy');
-var LimitBreak = require('./LimitBreak');
-var RandomBool = require('./RandomBool');
+
+var CanPay = require('./CanPay');
+var CompareCards = require('./CompareCards');
+var CompareTiles = require('./CompareTiles');
+var CompareLocations = require('./CompareLocations');
+var ComparePlayers = require('./ComparePlayers');
+var TileToTiles = require('./TileToTiles');
+var CountTiles = require('./CountTiles');
+var CardToTileFilter = require('./CardToTileFilter');
+
 var BreakCard = require('./BreakCard');
+var BreakModel = require('./BreakModel');
+var BreakTile = require('./BreakTile');
+var BreakLocation = require('./BreakLocation');
+var BreakPlayer = require('./BreakPlayer');
+
+var Archetype = require('./Archetype');
+var LimitBreak = require('./LimitBreak');
+var ManaPool = require('./ManaPool');
+var FindRandomCard = require('./FindRandomCard');
+var RandomInt = require('./RandomInt');
+var RandomBool = require('./RandomBool');
+
 var Branch = require('./Branch');
 var Loop = require('./Loop');
+var AreaOfEffect = require('./AreaOfEffect');
+var ForEachTile = require('./ForEachTile');
+
 var Plus = require('./Plus');
 var Minus = require('./Minus');
 var Times = require('./Times');
@@ -36,12 +64,33 @@ class Reader {
 			case "play": bloc = new Play(card, ctx, el.target); break;
 			case "draw": bloc = new Draw(card, ctx); break;
 			case "damage": bloc = new Damage(card, ctx); break;
+			case "heal": bloc = new Heal(card, ctx); break;
+			case "set": bloc = new SetCard(card, ctx); break;
+			case "boost": bloc = new Boost(card, ctx); break;
 			case "destroy": bloc = new Destroy(card, ctx); break;
+			case "canpay": bloc = new CanPay(card, ctx); break;
+			case "cmpcards": bloc = new CompareCards(card, ctx); break;
+			case "cmptiles": bloc = new CompareTiles(card, ctx); break;
+			case "cmplocations": bloc = new CompareLocations(card, ctx); break;
+			case "cmpplayers": bloc = new ComparePlayers(card, ctx); break;
+			case "tiletotiles": bloc = new TileToTiles(card, ctx); break;
+			case "counttiles": bloc = new CountTiles(card, ctx); break;
+			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
+			case "archetype": bloc = new Archetype(card, ctx); break;
 			case "limitbrk": bloc = new LimitBreak(card, ctx); break;
+			case "manapool": bloc = new ManaPool(card, ctx); break;
+			case "findcard": bloc = new FindRandomCard(card, ctx); break;
+			case "randint": bloc = new RandomInt(card, ctx); break;
 			case "randbool": bloc = new RandomBool(card, ctx); break;
 			case "brkcard": bloc = new BreakCard(card, ctx); break;
+			case "brkmodel": bloc = new BreakModel(card, ctx); break;
+			case "brktile": bloc = new BreakTile(card, ctx); break;
+			case "brklocation": bloc = new BreakLocation(card, ctx); break;
+			case "brkplayer": bloc = new BreakPlayer(card, ctx); break;
 			case "branch": bloc = new Branch(card, ctx); break;
 			case "loop": bloc = new Loop(card, ctx); break;
+			case "aoe": bloc = new AreaOfEffect(card, ctx); break;
+			case "fortile": bloc = new ForEachTile(card, ctx); break;
 			case "opplus": bloc = new Plus(card, ctx); break;
 			case "opminus": bloc = new Minus(card, ctx); break;
 			case "optimes": bloc = new Times(card, ctx); break;

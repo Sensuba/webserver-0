@@ -15,9 +15,14 @@ class Deck {
 		this.shuffle();
 	}
 
-	draw() {
+	draw(filter) {
 
-		return this.cards[0];
+		if (this.cards.length <= 0)
+			return;
+
+		if (!filter)
+			return this.cards[0];
+		return this.cards.find(filter);
 	}
 
 	shuffle() {

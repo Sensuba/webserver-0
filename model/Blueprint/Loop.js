@@ -7,11 +7,11 @@ class Loop extends Bloc {
 
 		super("loop", src, ctx, true);
 		this.f = (src, ins) => {
-			this.times = (this.times || ins[0]) - 1;
+			this.times = this.times === 0 ? this.times - 1 : (this.times || ins[0] || 256) - 1;
 			if (!ins[1] || this.times < 0) {
 				if (this.completed)
 					this.completed.execute();
-				return;
+				return [0];
 			}
 			var index = ins[0] - this.times + 1;
 			this.out = [index];

@@ -2,9 +2,14 @@ var targets = require('../Event').targets;
 
 class Types {
 
+	static string (value, src) {
+
+		return value;
+	}
+
 	static int (value, src) {
 
-		return (typeof value === 'string' ? parseInt(value, 10) : value) || 0;
+		return typeof value === 'string' ? parseInt(value, 10) : value;
 	}
 
 	static bool (value, src) {
@@ -17,14 +22,76 @@ class Types {
 		return typeof value === 'string' ? (value === "self" ? src.area : src.area.opposite) : value;
 	}
 
+	static location (value, src) {
+
+		if (!(typeof value === 'string'))
+			return value;
+		switch (value) {
+		case 'this': return src.location;
+		case 'hand': return src.area.hand;
+		case 'deck': return src.area.deck;
+		case 'cemetery': return src.location;
+		case 'opponent\'s hand': return src.area.opposite.hand;
+		case 'opponent\'s deck': return src.area.opposite.deck;
+		case 'opponent\'s cemetery': return src.location;
+		default: src.location;
+		}
+	}
+
+	static locations (value, src) {
+		
+		if (!(typeof value === 'string'))
+			return value;
+		switch (value) {
+		case 'board': return src.area.gameboard.tiles;
+		case 'field': return src.area.field.tiles;
+		case 'front': return src.area.field.front;
+		case 'back': return src.area.field.back;
+		case 'hand': return src.area.hand;
+		case 'deck': return src.area.deck;
+		case 'cemetery': return src.location;
+		case 'opponent\'s field': return src.area.opposite.field.tiles;
+		case 'opponent\'s front': return src.area.opposite.field.front;
+		case 'opponent\'s back': return src.area.opposite.field.back;
+		case 'opponent\'s hand': return src.area.opposite.hand;
+		case 'opponent\'s deck': return src.area.opposite.deck;
+		case 'opponent\'s cemetery': return src.location;
+		default: src.location;
+		}
+	}
+
 	static card (value, src) {
 
-		return typeof value === 'string' ? src : value;
+		if (!(typeof value === 'string'))
+			return value;
+		switch (value) {
+		case 'this': return src;
+		case 'your hero': return src.area.hero;
+		case 'opponent\'s hero': return src.area.opposite.hero;
+		default: return src;
+		}
+	}
+
+	static model (value, src) {
+
+		return typeof value === 'string' ? src.loadModel() : value;
 	}
 
 	static cardfilter (value, src) {
 
-		return typeof value === 'string' ? (target => target.isType(value)) : value;
+		if (!(typeof value === 'string'))
+			return value;
+		switch (value) {
+		case 'hero':
+		case 'figure':
+		case 'character':
+		case 'entity':
+		case 'spell':
+		case 'artifact':
+			return target => target.isType(value);
+		case 'damaged': return target => target.damaged;
+		default: target => true;
+		}
 	}
 
 	static tilefilter (value, src) {
