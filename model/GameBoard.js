@@ -6,7 +6,7 @@ class GameBoard {
 
 		this.id = { type: "gameboard", no: 0 };
 
-		this.notify = () => {};
+		this.send = () => {};
 		this.whisper = () => {};
 	}
 
@@ -16,17 +16,39 @@ class GameBoard {
 			cards: []
 		}
 
+		this.updates = [];
+		this.subscriptions = {};
+		this.indexSubscription = 0;
+
 		this.areas = [
-			new Area(0, d1, this),
-			new Area(1, d2, this)
+			new Area(0, this),
+			new Area(1, this)
 		];
 
-		this.updates = [];
+		this.areas[0].init(d1);
+		this.areas[1].init(d2);
+	}
+
+	notify (type, src, ...data) {
+
+		this.send(type, src.id, data.map(d => d ? d.id || d : d));
+		if (!this.subscriptions[type])
+			return;
+		this.subscriptions[type].forEach(sub => sub.notify(type, src, data));
+	}
+
+	subscribe (type, notify) {
+
+		if (!this.subscriptions[type])
+			this.subscriptions[type] = [];
+		let id = this.indexSubscription++;
+		this.subscriptions[type].push({ id, notify });
+		return () => this.subscriptions[type].splice(this.subscriptions[type].findIndex(sub => sub.id === id), 1);
 	}
 
 	start (area) {
 
-		this.notify("start", this.id);
+		this.notify("start", this);
 		area = area || this.areas[Math.floor(Math.random()*2)];
 		this.currentArea = area;
 		this.currentArea.draw (4);
@@ -73,7 +95,7 @@ class GameBoard {
 		case "faculty": {
 			let card = this.data.cards[cmd.id.no];
 			if (card.faculties && card.faculties.length > cmd.faculty && card.canUse(card.faculties[cmd.faculty]))
-				card.faculties[cmd.faculty].execute(this, card);
+				card.use(cmd.faculty);
 			break; }
 		case "endturn":
 			if (p.isPlaying)

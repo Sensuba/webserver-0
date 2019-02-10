@@ -2,13 +2,17 @@ var Card = require("./Card");
 
 class Deck {
 
-	constructor (list, area) {
+	constructor (area) {
 
 		this.id = { type: "deck", no: area.id.no };
 
 		this.locationOrder = 1;
 
 		this.area = area;
+		this.cards = [];
+	}
+
+	init (list) {
 
 		this.cards = [];
 		list.forEach(el => new Card(el, this.area.gameboard, this));

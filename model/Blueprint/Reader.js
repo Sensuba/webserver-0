@@ -1,6 +1,12 @@
 var Bloc = require('./Bloc');
+var Trigger = require('./Trigger');
+var Data = require('./Data');
 
+var State = require('./State');
 var Play = require('./Play');
+var Listener = require('./Listener');
+var LastWill = require('./LastWill');
+var Frenzy = require('./Frenzy');
 
 var Draw = require('./Draw');
 var Damage = require('./Damage');
@@ -8,8 +14,11 @@ var Heal = require('./Heal');
 var SetCard = require('./Set');
 var Boost = require('./Boost');
 var Destroy = require('./Destroy');
+var SetState = require('./SetState');
 
 var CanPay = require('./CanPay');
+var CheckCard = require('./CheckCard');
+var CheckTile = require('./CheckTile');
 var CompareCards = require('./CompareCards');
 var CompareTiles = require('./CompareTiles');
 var CompareLocations = require('./CompareLocations');
@@ -25,6 +34,7 @@ var BreakLocation = require('./BreakLocation');
 var BreakPlayer = require('./BreakPlayer');
 
 var Archetype = require('./Archetype');
+var Timestamp = require('./Timestamp');
 var LimitBreak = require('./LimitBreak');
 var ManaPool = require('./ManaPool');
 var FindRandomCard = require('./FindRandomCard');
@@ -61,14 +71,21 @@ class Reader {
 		Object.keys(ctx).forEach(key => blueprint[key].forEach(el => {
 			var bloc = null;
 			switch(el.type) {
+			case "state": bloc = new State(card, ctx); break;
 			case "play": bloc = new Play(card, ctx, el.target); break;
+			case "listener": bloc = new Listener(card, ctx); break;
+			case "lw": bloc = new LastWill(card, ctx); break;
+			case "frenzy": bloc = new Frenzy(card, ctx); break;
 			case "draw": bloc = new Draw(card, ctx); break;
 			case "damage": bloc = new Damage(card, ctx); break;
 			case "heal": bloc = new Heal(card, ctx); break;
 			case "set": bloc = new SetCard(card, ctx); break;
 			case "boost": bloc = new Boost(card, ctx); break;
 			case "destroy": bloc = new Destroy(card, ctx); break;
+			case "setstate": bloc = new SetState(card, ctx); break;
 			case "canpay": bloc = new CanPay(card, ctx); break;
+			case "checkcard": bloc = new CheckCard(card, ctx); break;
+			case "checktile": bloc = new CheckTile(card, ctx); break;
 			case "cmpcards": bloc = new CompareCards(card, ctx); break;
 			case "cmptiles": bloc = new CompareTiles(card, ctx); break;
 			case "cmplocations": bloc = new CompareLocations(card, ctx); break;
@@ -77,6 +94,7 @@ class Reader {
 			case "counttiles": bloc = new CountTiles(card, ctx); break;
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;
+			case "timestamp": bloc = new Timestamp(card, ctx); break;
 			case "limitbrk": bloc = new LimitBreak(card, ctx); break;
 			case "manapool": bloc = new ManaPool(card, ctx); break;
 			case "findcard": bloc = new FindRandomCard(card, ctx); break;
@@ -107,6 +125,8 @@ class Reader {
 			case "opge": bloc = new GreaterEqual(card, ctx); break;
 			case "opl": bloc = new Lesser(card, ctx); break;
 			case "ople": bloc = new LesserEqual(card, ctx); break;
+			case "play-trigger": bloc = new Trigger(el.type, card, ctx, "playcard"); break;
+			case "play-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0] ? d.data[0].card : null, d.data[0], d.data[0] !== null && d.data[0] !== undefined]); break;
 			default: bloc = new Bloc(el.type, card, ctx); break;
 			}
 			ctx[key].push(bloc);

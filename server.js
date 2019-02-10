@@ -79,7 +79,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 		if (!room.started && players.length === 2 && players.every(player => player.ready)) {
 
 			var gb = rooms[socket.room].game;
-			gb.notify = (type, src, ...data) => io.sockets.in(socket.room).emit("notification", {type, src, data});
+			gb.send = (type, src, data) => io.sockets.in(socket.room).emit("notification", {type, src, data});
 			gb.whisper = (type, player, src, ...data) => players[player] ? players[player].socket.emit("notification", {type, src, data}) : {};
 			gb.init(players[0].deck, players[1].deck);
 			gb.start();

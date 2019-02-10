@@ -2,7 +2,7 @@ const targets = {
 
 	tile: (src, target) => true,
 	empty: (src, target) => target.isEmpty,
-	entity: (src, target) => target.occupied && target.card.isType("entity"),
+	entity: (src, target) => target.occupied && target.card.isType("entity") && !target.card.hasState("exaltation"),
 	character: (src, target) => targets.entity(src, target) && target.card.isType("character"),
 	hero: (src, target) => targets.entity(src, target) && target.card.isType("hero"),
 	figure: (src, target) => targets.entity(src, target) && target.card.isType("figure"),

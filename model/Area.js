@@ -3,21 +3,28 @@ var Card = require("./Card");
 var Field = require("./Field");
 var Hand = require("./Hand");
 var Court = require("./Court");
+var Cemetery = require("./Cemetery");
 var ManaPool = require("./ManaPool");
 
 class Area {
 
-	constructor (noId, decklist, gameboard) {
+	constructor (noId, gameboard) {
 
 		this.id = { type: "area", no: noId };
 
 		this.gameboard = gameboard;
-		this.deck = new Deck(decklist.body, this);
+		this.deck = new Deck(this);
 		this.field = new Field(this);
 		this.hand = new Hand(this);
 		this.manapool = new ManaPool(this);
 		this.court = new Court(this);
-		this.hero = new Card(decklist.hero, gameboard, this.field.tiles[6]);
+		this.cemetery = new Cemetery(this);
+	}
+
+	init (decklist) {
+
+		this.deck.init(decklist.body);
+		this.hero = new Card(decklist.hero, this.gameboard, this.field.tiles[6]);
 	}
 
 	get opposite () {
@@ -30,7 +37,7 @@ class Area {
 		if (n <= 0) return;
 		var d = this.deck.draw(filter);
 		d.goto(this.hand);
-		this.gameboard.notify("draw", this.id, d.id);
+		this.gameboard.notify("draw", this, d);
 		if (n > 1)
 			this.draw(n-1, filter);
 	}
@@ -42,7 +49,7 @@ class Area {
 
 	newTurn () {
 
-		this.gameboard.notify("newturn", this.id);
+		this.gameboard.notify("newturn", this);
 		this.manapool.refill();
 		this.field.entities.forEach(e => e.refresh());
 		this.draw();

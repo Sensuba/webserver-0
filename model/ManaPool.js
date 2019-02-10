@@ -17,7 +17,7 @@ class ManaPool {
 
 		if (this.maxMana < MAX_MANA) {
 			this.receptacles.push(filled);
-			this.area.gameboard.notify("createmana", this.id, { type: "boolean", value: filled });
+			this.area.gameboard.notify("createmana", this, { type: "boolean", value: filled });
 		}
 	}
 
@@ -62,7 +62,7 @@ class ManaPool {
 	use (value) {
 
 		if (value <= this.usableMana) {
-			this.area.gameboard.notify("usemana", this.id, { type: "int", value: value });
+			this.area.gameboard.notify("usemana", this, { type: "int", value: value });
 			for (var i = this.receptacles.length - 1; i >= 0 && value > 0; i--) {
 				if (this.receptacles[i]) {
 					this.receptacles[i] = false;

@@ -3,6 +3,7 @@ var Event = require("./Event");
 var Hand = require("./Hand");
 var Deck = require("./Deck");
 var Tile = require("./Tile");
+var Cemetery = require("./Cemetery");
 var Update = require("./Update");
 var Action = require("./Action");
 var Reader = require("./Blueprint/Reader");
@@ -13,13 +14,15 @@ class Card {
 
 		this.id = { type: "card", no: board.registerCard(this) };
 		this.model = noModel;
+		this.gameboard = board;
 
+		this.location = location;
 		this.resetBody();
 
 		this.location = null;
 		this.identified = [false, false];
 		if (location) {
-			location.area.gameboard.notify("newcard", this.id, location.id);
+			this.gameboard.notify("newcard", this, location);
 			this.goto(location);
 			if (this.onBoard) {
 				this.skillPt = 1;
@@ -47,7 +50,7 @@ class Card {
 
 	get destroyed() {
 
-		return this.location === null;
+		return this.location instanceof Cemetery;
 	}
 
 	get damaged() {
@@ -59,6 +62,7 @@ class Card {
 
 		var copy = Object.assign({}, this);
 		delete copy.location;
+		delete copy.gameboard;
 		return copy;
 	}
 
@@ -71,7 +75,7 @@ class Card {
 		this.goto(tile, true);
 		if (this.isType("character"))
 			this.resetSickness();
-		this.gameboard.notify("summon", this.id, tile.id);
+		this.gameboard.notify("summon", this, tile);
 	}
 
 	goto (loc) {
@@ -82,7 +86,7 @@ class Card {
 		var former = this.location;
 		this.location = loc;
 		if (this.area)
-			this.gameboard.notify("cardmove", this.id, loc.id);
+			this.gameboard.notify("cardmove", this, loc);
 		if (former && former.hasCard (this))
 			former.removeCard (this);
 		if (former && (loc === null || former.locationOrder > loc.locationOrder || loc.locationOrder === 0))
@@ -107,7 +111,10 @@ class Card {
 		for (var k in model)
 			this[k] = model[k];
 		delete this.supercode;
+		this.events = [];
 		this.faculties = [];
+		this.mutations = [];
+		this.states = {};
 		this.clearBoardInstance();
 		if (this.isType("hero"))
 			this.faculties.push(new Action(new Event(() => this.area.manapool.createReceptacle())));
@@ -123,9 +130,11 @@ class Card {
 
 	destroy () {
 
-		this.gameboard.notify("destroycard", this.id);
+		this.gameboard.notify("destroycard", this);
 		this.clearBoardInstance();
-		this.goto(null);
+		if (this.area)
+			this.goto(this.area.cemetery);
+		else this.location = null;
 	}
 
 	damage (dmg, src) {
@@ -134,7 +143,7 @@ class Card {
 			return;
 
 		this.chp -= dmg;
-		this.gameboard.notify("damagecard", this.id, dmg, src.id);
+		this.gameboard.notify("damagecard", this, dmg, src);
 		if (this.chp <= 0)
 			new Update(() => this.destroy(), this.gameboard);
 	}
@@ -145,7 +154,7 @@ class Card {
 			return;
 
 		this.chp = Math.min(this.hp, this.chp + amt);
-		this.gameboard.notify("healcard", this.id, amt, src.id);
+		this.gameboard.notify("healcard", this.id, amt, src);
 	}
 
 	boost (atk, hp, range) {
@@ -160,7 +169,7 @@ class Card {
 		else
 			this.chp = Math.min(this.chp, this.hp);
 		this.range += range;
-		this.gameboard.notify("boostcard", this.id, atk, hp, range);
+		this.gameboard.notify("boostcard", this, atk, hp, range);
 		if (this.chp <= 0)
 			new Update(() => this.destroy(), this.gameboard);
 	}
@@ -177,14 +186,30 @@ class Card {
 		}
 		if (range || range === 0)
 			this.range = range;
-		this.gameboard.notify("setcard", this.id, cost, atk, hp, range);
+		this.gameboard.notify("setcard", this, cost, atk, hp, range);
 		if (this.chp <= 0)
 			new Update(() => this.destroy(), this.gameboard);
 	}
 
+	get canAct () {
+
+		if (!this.onBoard)
+			return false;
+		if (this.motionPt)
+			return true;
+		if ((this.actionPt || (this.hasState("fury") && this.strikes === 1)) && (!this.firstTurn || this.hasState("rush")))
+			return true;
+
+		return false;
+	}
+
 	canAttack (target) {
 
-		if (this.firstTurn || !this.actionPt || !this.isType("character") || !this.onBoard || !target.onBoard || this.area === target.area)
+		if (!this.isType("character") || !this.onBoard || !target.onBoard || this.area === target.area)
+			return false;
+		if (this.firstTurn && !this.hasState("rush"))
+			return false;
+		if (!this.actionPt && (!this.hasState("fury") || this.strikes !== 1))
 			return false;
 
 		var needed = 1;
@@ -198,11 +223,14 @@ class Card {
 
 	attack (target) {
 
-		this.actionPt--;
+		if (!this.hasState("fury") || this.strikes !== 1)
+			this.actionPt--;
+		this.strikes++;
 		this.motionPt = 0;
 		target.damage(this.atk, this);
-		target.ripost(this);
-		this.gameboard.notify("charattack", this.id, target.id);
+		if (!this.hasState("initiative"))
+			target.ripost(this);
+		this.gameboard.notify("charattack", this, target);
 		this.gameboard.update();
 	}
 
@@ -217,11 +245,6 @@ class Card {
 		return this.location ? this.location.area : null;
 	}
 
-	get gameboard () {
-
-		return this.location ? this.location.area.gameboard : null;
-	}
-
 	isType (type) {
 
 		switch (type) {
@@ -234,6 +257,11 @@ class Card {
 	isArchetype (arc) {
 
 		return this.archetypes && this.archetypes.includes(arc);
+	}
+
+	hasState (state) {
+
+		return this.states && this.states[state];
 	}
 
 	identify () {
@@ -306,16 +334,15 @@ class Card {
 	play (targets) {
 
 		this.area.manapool.use(this.mana);
+		this.gameboard.notify("playcard", this, targets ? targets[0] : undefined);
 		switch(this.cardType) {
 		case "figure":
 			this.summon(targets[0]);
-			if (this.event)
-				this.event.execute(this.gameboard, targets.length > 1 ? targets[1] : undefined);
+			this.events.forEach(event => event.execute(this.gameboard, targets.length > 1 ? targets[1] : undefined));
 			break;
 		case "spell":
 			this.goto(this.area.court);
-			if (this.event)
-				this.event.execute(this.gameboard, targets ? targets[0] : undefined);
+			this.events.forEach(event => event.execute(this.gameboard, targets ? targets[0] : undefined));
 			this.destroy();
 			break;
 		default: break;
@@ -334,11 +361,22 @@ class Card {
 		return faculty.canBeUsed(this);
 	}
 
+	use (index) {
+
+		this.gameboard.notify("cardfaculty", this, { type: "boolean", value: this.faculties[index] instanceof Action });
+		this.faculties[index].execute(this.gameboard, this);
+	}
+
 	move (tile) {
 
 		this.motionPt--;
-		this.gameboard.notify("charmove", this.id, tile.id);
+		this.gameboard.notify("charmove", this, tile);
 		this.goto(tile);
+	}
+
+	attach (mutation, end) {
+
+
 	}
 
 	resetSickness () {
@@ -346,6 +384,7 @@ class Card {
 		this.actionPt = 1;
 		this.motionPt = 0;
 		this.firstTurn = true;
+		this.strikes = 0;
 	}
 
 	refresh () {
@@ -355,6 +394,7 @@ class Card {
 			this.actionPt = 1;
 			this.motionPt = 1;
 			this.firstTurn = false;
+			this.strikes = 0;
 		}
 	}
 

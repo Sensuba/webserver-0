@@ -16,11 +16,11 @@ class Play extends Bloc {
 
 		var req = this.computeIn()[0];
 		var reqf = this.target ? (req ? (target => req(this.src, target)) : (target => true)) : null;
-		this.src.event = new Event(target => {
+		this.src.events.push(new Event(target => {
 			if (target)
 				this.chosen = target;
 			this.execute();
-		}, reqf);
+		}, reqf));
 	}
 }
 

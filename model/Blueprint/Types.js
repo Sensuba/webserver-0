@@ -118,6 +118,36 @@ class Types {
 		default: return targets.tile;
 		}
 	}
+
+	static state (value, src) {
+
+		return value;
+	}
+
+	static event (value, src) {
+
+		return typeof value === 'string' ? () => {} : value;
+	}
+
+	static timestamp (value, src) {
+
+		if (!(typeof value === 'string'))
+			return value;
+		switch (value) {
+		case 'end of turn': 
+		case 'start of turn': return null;
+		case 'end of opponent\'s turn':
+		case 'start of your turn': return src.area;
+		case 'start of opponent\'s turn':
+		case 'end of your turn': return src.area.opposite;
+		default: return null;
+		}
+	}
+
+	static data (value, src) {
+
+		return value || [];
+	}
 }
 
 module.exports = Types;
