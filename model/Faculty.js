@@ -9,7 +9,7 @@ class Faculty {
 	execute (gameboard, src, target) {
 
 		this.cost(src);
-		this.event.execute(gameboard, target);
+		this.event.execute(gameboard, src, target);
 	}
 }
 

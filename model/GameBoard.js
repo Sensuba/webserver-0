@@ -93,9 +93,10 @@ class GameBoard {
 				card.move(tile);
 			break; }
 		case "faculty": {
-			let card = this.data.cards[cmd.id.no];
-			if (card.faculties && card.faculties.length > cmd.faculty && card.canUse(card.faculties[cmd.faculty]))
-				card.use(cmd.faculty);
+			let card = this.data.cards[cmd.id.no],
+				target = cmd.target ? this.tiles.find(t => t.id.no === cmd.target.no) : undefined;
+			if (card.faculties && card.faculties.length > cmd.faculty && card.canUse(card.faculties[cmd.faculty], target))
+				card.use(cmd.faculty, target);
 			break; }
 		case "endturn":
 			if (p.isPlaying)

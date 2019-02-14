@@ -116,8 +116,10 @@ class Card {
 		this.mutations = [];
 		this.states = {};
 		this.clearBoardInstance();
-		if (this.isType("hero"))
+		if (this.isType("hero")) {
+			this.level = 1;
 			this.faculties.push(new Action(new Event(() => this.area.manapool.createReceptacle())));
+		}
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
 		if (this.atk && typeof this.atk === 'string')
@@ -126,6 +128,35 @@ class Card {
 			this.hp = parseInt(this.hp, 10);
 		if (this.range && typeof this.range === 'string')
 			this.range = parseInt(this.range, 10);
+	}
+
+	levelUp () {
+
+		if (!this.isType("hero"))
+			return;
+		
+		this.level++;
+		var lv = this.level === 2 ? this.lv2 : this.lvmax;
+		if (!lv) {
+			this.level--;
+			return;
+		}
+
+		this.atk = lv.atk;
+		this.range = lv.range;
+		this.overload = lv.overload;
+		this.blueprint = lv.blueprint;
+		this.events = [];
+		this.faculties = [new Action(new Event(() => this.area.manapool.createReceptacle()))];
+		this.mutations = [];
+		this.states = {};
+		if (this.blueprint)
+			Reader.read(this.blueprint, this);
+		if (this.atk && typeof this.atk === 'string')
+			this.atk = parseInt(this.atk, 10);
+		if (this.range && typeof this.range === 'string')
+			this.range = parseInt(this.range, 10);
+		this.gameboard.notify("levelup", this);
 	}
 
 	destroy () {
@@ -154,7 +185,7 @@ class Card {
 			return;
 
 		this.chp = Math.min(this.hp, this.chp + amt);
-		this.gameboard.notify("healcard", this.id, amt, src);
+		this.gameboard.notify("healcard", this, amt, src);
 	}
 
 	boost (atk, hp, range) {
@@ -310,10 +341,14 @@ class Card {
 		var targets = [];
 		if (this.isType("entity"))
 			targets.push(Event.targets.friendlyEmpty);
-		if (this.blueprint && this.blueprint.triggers && this.blueprint.triggers.some(trigger => trigger.target)) {
+		/*if (this.blueprint && this.blueprint.triggers && this.blueprint.triggers.some(trigger => trigger.target)) {
 			var filter = this.blueprint.triggers.find(trigger => trigger.target).in[0];
 			targets.push((src, target) => !filter || (target.occupied && target.card.isType(filter)));
-		}
+		}*/
+		this.events.forEach(e => {
+			if (e.requirement) 
+				targets.push(e.requirement);
+		});
 		return targets;
 	}
 
@@ -338,11 +373,11 @@ class Card {
 		switch(this.cardType) {
 		case "figure":
 			this.summon(targets[0]);
-			this.events.forEach(event => event.execute(this.gameboard, targets.length > 1 ? targets[1] : undefined));
+			this.events.forEach(event => event.execute(this.gameboard, this, targets.length > 1 ? targets[1] : undefined));
 			break;
 		case "spell":
 			this.goto(this.area.court);
-			this.events.forEach(event => event.execute(this.gameboard, targets ? targets[0] : undefined));
+			this.events.forEach(event => event.execute(this.gameboard, this, targets ? targets[0] : undefined));
 			this.destroy();
 			break;
 		default: break;
@@ -356,15 +391,21 @@ class Card {
 		return this.location.isAdjacentTo(tile);
 	}
 
-	canUse (faculty) {
+	canUse (faculty, target) {
 
-		return faculty.canBeUsed(this);
+		return faculty.canBeUsed(this, target);
 	}
 
-	use (index) {
+	use (index, target) {
 
-		this.gameboard.notify("cardfaculty", this, { type: "boolean", value: this.faculties[index] instanceof Action });
-		this.faculties[index].execute(this.gameboard, this);
+		this.gameboard.notify("cardfaculty", this, { type: "boolean", value: this.faculties[index] instanceof Action }, target ? target.id : undefined);
+		this.faculties[index].execute(this.gameboard, this, target);
+	}
+
+	setState (state, value) {
+
+		this.states[state] = value;
+		this.gameboard.notify("setstate", this, { type: "string", value: state }, { type: "boolean", value: value });
 	}
 
 	move (tile) {

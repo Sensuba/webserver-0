@@ -1,27 +1,29 @@
 var Bloc = require('./Bloc');
 var Types = require('./Types');
+var ESkill = require('../Skill');
 var Event = require('../Event');
 
-class Play extends Bloc {
+class Skill extends Bloc {
 
 	constructor (src, ctx, target) {
 
-		super("play", src, ctx, true);
+		super("skill", src, ctx, true);
 		this.f = (src, ins) => [this, this.chosen ? this.chosen.card : null, this.chosen];
-		this.types = [Types.tilefilter];
+		this.types = [Types.tilefilter, Types.string, Types.int];
 		this.target = target;
 	}
 
 	setup () {
 
-		var req = this.computeIn()[0];
+		var ins = this.computeIn();
+		var req = ins[0];
 		req = this.target ? (req ? req : (src, target) => true) : null;
-		this.src.events.push(new Event(target => {
+		this.src.faculties.push(new ESkill(new Event(target => {
 			if (target)
 				this.chosen = target;
 			this.execute();
-		}, req));
+		}, req), ins[2]));
 	}
 }
 
-module.exports = Play;
+module.exports = Skill;

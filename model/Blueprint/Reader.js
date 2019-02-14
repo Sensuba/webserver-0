@@ -4,6 +4,8 @@ var Data = require('./Data');
 
 var State = require('./State');
 var Play = require('./Play');
+var Action = require('./Action');
+var Skill = require('./Skill');
 var Listener = require('./Listener');
 var LastWill = require('./LastWill');
 var Frenzy = require('./Frenzy');
@@ -14,13 +16,17 @@ var Heal = require('./Heal');
 var SetCard = require('./Set');
 var Boost = require('./Boost');
 var Destroy = require('./Destroy');
+var LevelUp = require('./LevelUp');
 var SetState = require('./SetState');
 
 var CanPay = require('./CanPay');
+var FilterStats = require('./FilterStats');
 var CheckCard = require('./CheckCard');
 var CheckTile = require('./CheckTile');
 var CompareCards = require('./CompareCards');
 var CompareTiles = require('./CompareTiles');
+var MergeCardFilters = require('./MergeCardFilters');
+var MergeTileFilters = require('./MergeTileFilters');
 var CompareLocations = require('./CompareLocations');
 var ComparePlayers = require('./ComparePlayers');
 var TileToTiles = require('./TileToTiles');
@@ -73,6 +79,8 @@ class Reader {
 			switch(el.type) {
 			case "state": bloc = new State(card, ctx); break;
 			case "play": bloc = new Play(card, ctx, el.target); break;
+			case "action": bloc = new Action(card, ctx, el.target); break;
+			case "skill": bloc = new Skill(card, ctx, el.target); break;
 			case "listener": bloc = new Listener(card, ctx); break;
 			case "lw": bloc = new LastWill(card, ctx); break;
 			case "frenzy": bloc = new Frenzy(card, ctx); break;
@@ -82,15 +90,19 @@ class Reader {
 			case "set": bloc = new SetCard(card, ctx); break;
 			case "boost": bloc = new Boost(card, ctx); break;
 			case "destroy": bloc = new Destroy(card, ctx); break;
+			case "levelup": bloc = new LevelUp(card, ctx); break;
 			case "setstate": bloc = new SetState(card, ctx); break;
 			case "canpay": bloc = new CanPay(card, ctx); break;
 			case "checkcard": bloc = new CheckCard(card, ctx); break;
 			case "checktile": bloc = new CheckTile(card, ctx); break;
+			case "mergecfilters": bloc = new MergeCardFilters(card, ctx); break;
+			case "mergetfilters": bloc = new MergeTileFilters(card, ctx); break;
 			case "cmpcards": bloc = new CompareCards(card, ctx); break;
 			case "cmptiles": bloc = new CompareTiles(card, ctx); break;
 			case "cmplocations": bloc = new CompareLocations(card, ctx); break;
 			case "cmpplayers": bloc = new ComparePlayers(card, ctx); break;
 			case "tiletotiles": bloc = new TileToTiles(card, ctx); break;
+			case "filterstats": bloc = new FilterStats(card, ctx); break;
 			case "counttiles": bloc = new CountTiles(card, ctx); break;
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;

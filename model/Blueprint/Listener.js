@@ -1,6 +1,5 @@
 var Bloc = require('./Bloc');
 var Types = require('./Types');
-var Event = require('../Event');
 
 class Listener extends Bloc {
 

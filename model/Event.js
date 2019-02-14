@@ -27,9 +27,9 @@ class Event {
 		this.requirement = requirement;
 	}
 
-	execute (gameboard, target) {
+	execute (gameboard, src, target) {
 
-		if (!this.requirement || this.requirement(target))
+		if (!this.requirement || this.requirement(src, target))
 			this.action(target);
 		gameboard.update();
 	}

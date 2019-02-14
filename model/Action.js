@@ -7,9 +7,9 @@ class Action extends Faculty {
 		super(event, src => src.actionPt--);
 	}
 
-	canBeUsed (src) {
+	canBeUsed (src, target) {
 
-		return src.actionPt > 0;
+		return src.actionPt > 0 && (!this.event.requirement || this.event.requirement(src, target));
 	}
 }
 

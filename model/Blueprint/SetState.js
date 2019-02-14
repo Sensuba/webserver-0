@@ -7,7 +7,7 @@ class SetState extends Bloc {
 
 		super("setstate", src, ctx, true);
 		this.f = (src, ins) => {
-			ins[0].states[ins[1]] = ins[2];
+			ins[0].setState(ins[1], ins[2]);
 			return [];
 		};
 		this.types = [Types.card, Types.state, Types.bool];

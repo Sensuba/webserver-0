@@ -1,14 +1,15 @@
 var Bloc = require('./Bloc');
 var Types = require('./Types');
+var EAction = require('../Action');
 var Event = require('../Event');
 
-class Play extends Bloc {
+class Action extends Bloc {
 
 	constructor (src, ctx, target) {
 
-		super("play", src, ctx, true);
+		super("action", src, ctx, true);
 		this.f = (src, ins) => [this, this.chosen ? this.chosen.card : null, this.chosen];
-		this.types = [Types.tilefilter];
+		this.types = [Types.tilefilter, Types.string];
 		this.target = target;
 	}
 
@@ -16,12 +17,12 @@ class Play extends Bloc {
 
 		var req = this.computeIn()[0];
 		req = this.target ? (req ? req : (src, target) => true) : null;
-		this.src.events.push(new Event(target => {
+		this.src.faculties.push(new EAction(new Event(target => {
 			if (target)
 				this.chosen = target;
 			this.execute();
-		}, req));
+		}, req)));
 	}
 }
 
-module.exports = Play;
+module.exports = Action;
