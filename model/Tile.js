@@ -86,6 +86,11 @@ class Tile {
 		return this.inFront ? this.field.front : this.field.back;
 	}
 
+	get cards () {
+
+		return this.occupied ? [this.card] : [];
+	}
+
 	get neighbors () {
 
 		var n = [];

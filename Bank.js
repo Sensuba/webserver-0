@@ -18,7 +18,16 @@ var Bank = (() => {
 	  	.catch(error);
 	}
 
-	get = no => Object.assign({}, this.list[no]);
+	get = model => {
+
+		if (typeof model === "object") {
+
+			var parent = Object.assign({}, this.list[model.parent]);
+			parent.tokens[model.token].parent = parent;
+			return parent.tokens[model.token];
+		}
+		return Object.assign({}, this.list[model]);
+	};
 
 	return {
 		init: init,

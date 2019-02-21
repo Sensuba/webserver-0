@@ -47,16 +47,16 @@ class Types {
 		case 'field': return src.area.field.tiles;
 		case 'front': return src.area.field.front;
 		case 'back': return src.area.field.back;
-		case 'hand': return src.area.hand;
-		case 'deck': return src.area.deck;
-		case 'cemetery': return src.location;
+		case 'hand': return [src.area.hand];
+		case 'deck': return [src.area.deck];
+		case 'cemetery': return [src.location];
 		case 'opponent\'s field': return src.area.opposite.field.tiles;
 		case 'opponent\'s front': return src.area.opposite.field.front;
 		case 'opponent\'s back': return src.area.opposite.field.back;
-		case 'opponent\'s hand': return src.area.opposite.hand;
-		case 'opponent\'s deck': return src.area.opposite.deck;
-		case 'opponent\'s cemetery': return src.location;
-		default: src.location;
+		case 'opponent\'s hand': return [src.area.opposite.hand];
+		case 'opponent\'s deck': return [src.area.opposite.deck];
+		case 'opponent\'s cemetery': return [src.location];
+		default: [src.location];
 		}
 	}
 
@@ -72,9 +72,9 @@ class Types {
 		}
 	}
 
-	static model (value, src) {
+	static model (value, src) {console.log(value);
 
-		return typeof value === 'string' ? src.loadModel() : value;
+		return typeof value === 'string' ? src.model : value;
 	}
 
 	static cardfilter (value, src) {
@@ -90,7 +90,7 @@ class Types {
 		case 'artifact':
 			return target => target.isType(value);
 		case 'damaged': return target => target.damaged;
-		default: target => true;
+		default: return target => true;
 		}
 	}
 

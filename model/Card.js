@@ -1,4 +1,3 @@
-var Bank = require("../Bank");
 var Event = require("./Event");
 var Hand = require("./Hand");
 var Deck = require("./Deck");
@@ -10,10 +9,10 @@ var Reader = require("./Blueprint/Reader");
 
 class Card {
 
-	constructor (noModel, board, location) {
+	constructor (model, board, location) {
 
 		this.id = { type: "card", no: board.registerCard(this) };
-		this.model = noModel;
+		this.model = model;
 		this.gameboard = board;
 
 		this.location = location;
@@ -63,6 +62,9 @@ class Card {
 		var copy = Object.assign({}, this);
 		delete copy.location;
 		delete copy.gameboard;
+		delete copy.parent;
+		delete copy.tokens;
+		copy.model = this.model.idCardmodel;
 		return copy;
 	}
 
@@ -100,14 +102,16 @@ class Card {
 			lastTileOn = location as Tile;*/
 	}
 
-	loadModel () {
+	/*loadModel () {
 
 		return Bank.get(this.model);
-	}
+	}*/
 
 	resetBody () {
 
-		var model = this.loadModel();
+		//var model = this.loadModel();
+		var model = this.model;
+		//console.log(this.model);
 		for (var k in model)
 			this[k] = model[k];
 		delete this.supercode;

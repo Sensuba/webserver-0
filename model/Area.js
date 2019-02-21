@@ -5,6 +5,7 @@ var Hand = require("./Hand");
 var Court = require("./Court");
 var Cemetery = require("./Cemetery");
 var ManaPool = require("./ManaPool");
+var Bank = require('../Bank');
 
 class Area {
 
@@ -24,7 +25,7 @@ class Area {
 	init (decklist) {
 
 		this.deck.init(decklist.body);
-		this.hero = new Card(decklist.hero, this.gameboard, this.field.tiles[6]);
+		this.hero = new Card(Bank.get(decklist.hero), this.gameboard, this.field.tiles[6]);
 	}
 
 	get opposite () {

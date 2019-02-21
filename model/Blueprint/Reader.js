@@ -18,6 +18,8 @@ var Boost = require('./Boost');
 var Destroy = require('./Destroy');
 var LevelUp = require('./LevelUp');
 var SetState = require('./SetState');
+var Generate = require('./Generate');
+var Summon = require('./Summon');
 
 var CanPay = require('./CanPay');
 var FilterStats = require('./FilterStats');
@@ -40,6 +42,7 @@ var BreakLocation = require('./BreakLocation');
 var BreakPlayer = require('./BreakPlayer');
 
 var Archetype = require('./Archetype');
+var Token = require('./Token');
 var Timestamp = require('./Timestamp');
 var LimitBreak = require('./LimitBreak');
 var ManaPool = require('./ManaPool');
@@ -92,6 +95,8 @@ class Reader {
 			case "destroy": bloc = new Destroy(card, ctx); break;
 			case "levelup": bloc = new LevelUp(card, ctx); break;
 			case "setstate": bloc = new SetState(card, ctx); break;
+			case "generate": bloc = new Generate(card, ctx); break;
+			case "summon": bloc = new Summon(card, ctx); break;
 			case "canpay": bloc = new CanPay(card, ctx); break;
 			case "checkcard": bloc = new CheckCard(card, ctx); break;
 			case "checktile": bloc = new CheckTile(card, ctx); break;
@@ -106,6 +111,7 @@ class Reader {
 			case "counttiles": bloc = new CountTiles(card, ctx); break;
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;
+			case "token": bloc = new Token(card, ctx); break;
 			case "timestamp": bloc = new Timestamp(card, ctx); break;
 			case "limitbrk": bloc = new LimitBreak(card, ctx); break;
 			case "manapool": bloc = new ManaPool(card, ctx); break;

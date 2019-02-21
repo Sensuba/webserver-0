@@ -1,4 +1,5 @@
 var Card = require("./Card");
+var Bank = require("../Bank");
 
 class Deck {
 
@@ -15,7 +16,7 @@ class Deck {
 	init (list) {
 
 		this.cards = [];
-		list.forEach(el => new Card(el, this.area.gameboard, this));
+		list.forEach(el => new Card(Bank.get(el), this.area.gameboard, this));
 		this.shuffle();
 	}
 

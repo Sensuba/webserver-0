@@ -14,7 +14,7 @@ const targets = {
 	friendlyFigure: (src, target) => targets.friendly(src, target) && targets.figure(src, target),
 	enemy: (src, target) => !targets.friendly(src, target),
 	enemyEmpty: (src, target) => targets.enemy(src, target) && targets.empty(src, target),
-	enemyEntity: (src, target) => targets.enemy(src, target) &&targets. entity(src, target),
+	enemyEntity: (src, target) => targets.enemy(src, target) &&targets.entity(src, target),
 	enemyCharacter: (src, target) => targets.enemy(src, target) && targets.character(src, target),
 	enemyFigure: (src, target) => targets.enemy(src, target) && targets.figure(src, target)
 };
