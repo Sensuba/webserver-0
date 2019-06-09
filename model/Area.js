@@ -50,6 +50,10 @@ class Area {
 
 	newTurn () {
 
+		this.field.opposite.entities.forEach(e => {
+			if (e.frozen && e.frozenTimer)
+				e.setState("frozen", false);
+		})
 		this.gameboard.notify("newturn", this);
 		this.manapool.refill();
 		this.field.entities.forEach(e => e.refresh());

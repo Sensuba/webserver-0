@@ -7,7 +7,7 @@ class Timestamp extends Bloc {
 
 		super("timestamp", src, ctx);
 		this.f = (src, ins) => [f => this.src.gameboard.subscribe("newturn", (t,s,d) => {
-			if (ins[0] == null || ins[0].isPlaying)
+			if (ins[0] === null || ins[0].isPlaying)
 				f(t,s,d);
 		})];
 		this.types = [Types.timestamp];

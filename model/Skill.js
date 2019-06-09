@@ -10,7 +10,7 @@ class Skill extends Faculty {
 
 	canBeUsed (src, target) {
 
-		return src.skillPt > 0 && src.area && src.area.manapool.usableMana >= this.mana && (!this.event.requirement || this.event.requirement(src, target));
+		return src.skillPt > 0 && !src.frozen && src.area && src.area.manapool.usableMana >= this.mana && (!this.event.requirement || this.event.requirement(src, target));
 	}
 }
 

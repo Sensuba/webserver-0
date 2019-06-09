@@ -5,18 +5,19 @@ class Bloc {
 		this.ctx = ctx;
 		this.src = src;
 		this.type = type;
-		this.static= stc;
+		this.static = stc;
 		this.in = [];
 		this.types = [];
+		this.images = {};
 		this.toPrepare = ["to"];
 	}
 
-	execute () {
+	execute (src) {
 		
 		var f = this.f || (() => []);
-		this.out = f(this.src, this.computeIn());
+		this.out = f(this.src, this.computeIn(src), src);
 		if (this.to)
-			this.to.execute();
+			this.to.execute(src);
 	}
 
 	prepare (src, blueprint) {
@@ -29,29 +30,31 @@ class Bloc {
 		});
 	}
 
-	setup() {
+	setup(owner) {
 
 	}
 
-	compute () {
+	compute (src) {
 
+		if (src && this.images[src])
+			return this.images[src];
 		if (this.static && this.out !== null && this.out !== undefined)
 			return this.out;
-		this.execute();
+		this.execute(src);
 		return this.out;
 	}
 
-	computeIn() {
+	computeIn(src) {
 
-		return this.in.map(el => el());
+		return this.in.map(el => el(src));
 	}
 
 	updateIn(ins) {
 
 		this.in = ins.map((el, i) => {
 			if (el !== null && typeof el === 'object')
-				return () => this.ctx[el.type][el.index].compute()[el.out];
-			return () => (this.types[i] || (x => x))(el, this.src);
+				return (src) => this.ctx[el.type][el.index].compute(src)[el.out];
+			return (src) => (this.types[i] || (x => x))(el, this.src);
 		})
 	}
 }

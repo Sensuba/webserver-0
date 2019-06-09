@@ -4,12 +4,15 @@ class Action extends Faculty {
 
 	constructor (event) {
 
-		super(event, src => src.actionPt--);
+		super(event, src => {
+			src.actionPt--;
+			src.motionPt = 0;
+		});
 	}
 
 	canBeUsed (src, target) {
 
-		return src.actionPt > 0 && (!this.event.requirement || this.event.requirement(src, target));
+		return src.actionPt > 0 && !src.frozen && (!this.event.requirement || this.event.requirement(src, target));
 	}
 }
 

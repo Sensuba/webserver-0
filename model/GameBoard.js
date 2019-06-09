@@ -53,7 +53,7 @@ class GameBoard {
 		this.currentArea = area;
 		this.currentArea.draw (4);
 		this.currentArea.opposite.draw (5);
-		//otherArea.duellist.manapool.NewGem();
+		this.currentArea.opposite.manapool.createGem ();
 		this.currentArea.newTurn ();
 		//console.log(this.currentArea.hand.cards);
 	}

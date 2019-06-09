@@ -8,13 +8,14 @@ class LastWill extends Bloc {
 		super("lw", src, ctx, true);
 		this.f = (src, ins) => [this];
 		this.types = [];
+		this.out = [this];
 	}
 
-	setup () {
+	setup (owner, image) {
 
 		this.src.gameboard.subscribe("destroycard", (t,s,d) => {
-			if (s === this.src && this.src.onBoard)
-				this.execute();
+			if (s === owner && owner.onBoard)
+				this.execute(image);
 		});
 	}
 }

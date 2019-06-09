@@ -6,18 +6,18 @@ class ForEachTile extends Bloc {
 	constructor (src, ctx) {
 
 		super("fortile", src, ctx, true);
-		this.f = (src, ins) => {
+		this.f = (src, ins, image) => {
 			var area = ins[0], targets = ins[1];
 			area.forEach (tile => {
-				if (tile.occupied && ins[1](src, tile)) {
+				if (tile.occupied && targets(src, tile)) {
 					this.out = [tile];
 					if (this["for each"])
-						this["for each"].execute();
+						this["for each"].execute(image);
 				}
 			})
 			this.out = null;
 			if (this.completed)
-				this.completed.execute();
+				this.completed.execute(image);
 			return;
 		}
 		this.types = [Types.locations, Types.tilefilter];

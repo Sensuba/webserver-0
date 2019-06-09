@@ -49,13 +49,13 @@ class Types {
 		case 'back': return src.area.field.back;
 		case 'hand': return [src.area.hand];
 		case 'deck': return [src.area.deck];
-		case 'cemetery': return [src.location];
+		case 'cemetery': return [src.area.cemetery];
 		case 'opponent\'s field': return src.area.opposite.field.tiles;
 		case 'opponent\'s front': return src.area.opposite.field.front;
 		case 'opponent\'s back': return src.area.opposite.field.back;
 		case 'opponent\'s hand': return [src.area.opposite.hand];
 		case 'opponent\'s deck': return [src.area.opposite.deck];
-		case 'opponent\'s cemetery': return [src.location];
+		case 'opponent\'s cemetery': return [src.area.opposite.cemetery];
 		default: [src.location];
 		}
 	}
@@ -72,9 +72,14 @@ class Types {
 		}
 	}
 
-	static model (value, src) {console.log(value);
+	static model (value, src) {
 
 		return typeof value === 'string' ? src.model : value;
+	}
+
+	static mutation (value, src) {
+
+		return typeof value === 'string' ? (x => x) : value;
 	}
 
 	static cardfilter (value, src) {
@@ -100,6 +105,8 @@ class Types {
 			return value;
 		switch (value) {
 		case 'empty': return targets.empty;
+		case 'this': return targets.this;
+		case 'not this': return targets.notThis;
 		case 'entity': return targets.entity;
 		case 'character': return targets.character;
 		case 'hero': return targets.hero;

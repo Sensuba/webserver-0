@@ -11,16 +11,17 @@ class Action extends Bloc {
 		this.f = (src, ins) => [this, this.chosen ? this.chosen.card : null, this.chosen];
 		this.types = [Types.tilefilter, Types.string];
 		this.target = target;
+		this.out = [this, null, null];
 	}
 
-	setup () {
+	setup (owner, image) {
 
 		var req = this.computeIn()[0];
 		req = this.target ? (req ? req : (src, target) => true) : null;
-		this.src.faculties.push(new EAction(new Event(target => {
+		owner.faculties.push(new EAction(new Event(target => {
 			if (target)
 				this.chosen = target;
-			this.execute();
+			this.execute(image);
 		}, req)));
 	}
 }

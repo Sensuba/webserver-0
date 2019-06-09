@@ -3,23 +3,36 @@ var Trigger = require('./Trigger');
 var Data = require('./Data');
 
 var State = require('./State');
+var Variation = require('./Variation');
 var Play = require('./Play');
 var Action = require('./Action');
 var Skill = require('./Skill');
 var Listener = require('./Listener');
 var LastWill = require('./LastWill');
 var Frenzy = require('./Frenzy');
+var PassiveMutation = require('./PassiveMutation');
 
 var Draw = require('./Draw');
+var Move = require('./Move');
 var Damage = require('./Damage');
 var Heal = require('./Heal');
+var PushBack = require('./PushBack');
+var PushForward = require('./PushForward');
+var AddShield = require('./AddShield');
+var BreakShield = require('./BreakShield');
+var Freeze = require('./Freeze');
+var Silence = require('./Silence');
 var SetCard = require('./Set');
 var Boost = require('./Boost');
 var Destroy = require('./Destroy');
+var AddEffect = require('./AddEffect');
 var LevelUp = require('./LevelUp');
 var SetState = require('./SetState');
 var Generate = require('./Generate');
 var Summon = require('./Summon');
+var CreateReceptacle = require('./CreateReceptacle');
+var CreateGem = require('./CreateGem');
+var DestroyGem = require('./DestroyGem');
 
 var CanPay = require('./CanPay');
 var FilterStats = require('./FilterStats');
@@ -34,6 +47,8 @@ var ComparePlayers = require('./ComparePlayers');
 var TileToTiles = require('./TileToTiles');
 var CountTiles = require('./CountTiles');
 var CardToTileFilter = require('./CardToTileFilter');
+var IsCovered = require('./IsCovered');
+var ConditionalMutation = require('./ConditionalMutation');
 
 var BreakCard = require('./BreakCard');
 var BreakModel = require('./BreakModel');
@@ -54,6 +69,7 @@ var Branch = require('./Branch');
 var Loop = require('./Loop');
 var AreaOfEffect = require('./AreaOfEffect');
 var ForEachTile = require('./ForEachTile');
+var Timer = require('./Timer');
 
 var Plus = require('./Plus');
 var Minus = require('./Minus');
@@ -81,22 +97,35 @@ class Reader {
 			var bloc = null;
 			switch(el.type) {
 			case "state": bloc = new State(card, ctx); break;
+			case "variation": bloc = new Variation(card, ctx); break;
 			case "play": bloc = new Play(card, ctx, el.target); break;
 			case "action": bloc = new Action(card, ctx, el.target); break;
 			case "skill": bloc = new Skill(card, ctx, el.target); break;
 			case "listener": bloc = new Listener(card, ctx); break;
 			case "lw": bloc = new LastWill(card, ctx); break;
 			case "frenzy": bloc = new Frenzy(card, ctx); break;
+			case "passivemut": bloc = new PassiveMutation(card, ctx); break;
 			case "draw": bloc = new Draw(card, ctx); break;
+			case "move": bloc = new Move(card, ctx); break;
 			case "damage": bloc = new Damage(card, ctx); break;
 			case "heal": bloc = new Heal(card, ctx); break;
+			case "pushback": bloc = new PushBack(card, ctx); break;
+			case "pushforward": bloc = new PushForward(card, ctx); break;
+			case "addshield": bloc = new AddShield(card, ctx); break;
+			case "breakshield": bloc = new BreakShield(card, ctx); break;
 			case "set": bloc = new SetCard(card, ctx); break;
 			case "boost": bloc = new Boost(card, ctx); break;
+			case "silence": bloc = new Silence(card, ctx); break;
+			case "freeze": bloc = new Freeze(card, ctx); break;
 			case "destroy": bloc = new Destroy(card, ctx); break;
 			case "levelup": bloc = new LevelUp(card, ctx); break;
+			case "addeffect": bloc = new AddEffect(card, ctx); break;
 			case "setstate": bloc = new SetState(card, ctx); break;
 			case "generate": bloc = new Generate(card, ctx); break;
 			case "summon": bloc = new Summon(card, ctx); break;
+			case "createreceptacle": bloc = new CreateReceptacle(card, ctx); break;
+			case "creategem": bloc = new CreateGem(card, ctx); break;
+			case "destroygem": bloc = new DestroyGem(card, ctx); break;
 			case "canpay": bloc = new CanPay(card, ctx); break;
 			case "checkcard": bloc = new CheckCard(card, ctx); break;
 			case "checktile": bloc = new CheckTile(card, ctx); break;
@@ -110,6 +139,8 @@ class Reader {
 			case "filterstats": bloc = new FilterStats(card, ctx); break;
 			case "counttiles": bloc = new CountTiles(card, ctx); break;
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
+			case "covered": bloc = new IsCovered(card, ctx); break;
+			case "conditionmut": bloc = new ConditionalMutation(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;
 			case "token": bloc = new Token(card, ctx); break;
 			case "timestamp": bloc = new Timestamp(card, ctx); break;
@@ -125,6 +156,7 @@ class Reader {
 			case "brkplayer": bloc = new BreakPlayer(card, ctx); break;
 			case "branch": bloc = new Branch(card, ctx); break;
 			case "loop": bloc = new Loop(card, ctx); break;
+			case "timer": bloc = new Timer(card, ctx); break;
 			case "aoe": bloc = new AreaOfEffect(card, ctx); break;
 			case "fortile": bloc = new ForEachTile(card, ctx); break;
 			case "opplus": bloc = new Plus(card, ctx); break;
@@ -143,8 +175,29 @@ class Reader {
 			case "opge": bloc = new GreaterEqual(card, ctx); break;
 			case "opl": bloc = new Lesser(card, ctx); break;
 			case "ople": bloc = new LesserEqual(card, ctx); break;
+
 			case "play-trigger": bloc = new Trigger(el.type, card, ctx, "playcard"); break;
 			case "play-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0] ? d.data[0].card : null, d.data[0], d.data[0] !== null && d.data[0] !== undefined]); break;
+			case "draw-trigger": bloc = new Trigger(el.type, card, ctx, "draw"); break;
+			case "draw-data": bloc = new Data(el.type, card, ctx, d => [d.data[0], d.src]); break;
+			case "attack-trigger": bloc = new Trigger(el.type, card, ctx, "charattack"); break;
+			case "attack-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0]]); break;
+			case "summon-trigger": bloc = new Trigger(el.type, card, ctx, "summon"); break;
+			case "summon-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0]]); break;
+			case "destroy-trigger": bloc = new Trigger(el.type, card, ctx, "destroycard"); break;
+			case "destroy-data": bloc = new Data(el.type, card, ctx, d => [d.src]); break;
+			case "damage-trigger": bloc = new Trigger(el.type, card, ctx, "damagecard"); break;
+			case "damage-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[1], d.data[0]]); break;
+			case "heal-trigger": bloc = new Trigger(el.type, card, ctx, "healcard"); break;
+			case "heal-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[1], d.data[0]]); break;
+			case "boost-trigger": bloc = new Trigger(el.type, card, ctx, "boostcard"); break;
+			case "boost-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0], d.data[1], d.data[2]]); break;
+			case "set-trigger": bloc = new Trigger(el.type, card, ctx, "setcard"); break;
+			case "set-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0], d.data[1], d.data[2], d.data[3]]); break;
+			case "addshield-trigger": bloc = new Trigger(el.type, card, ctx, "addshield"); break;
+			case "addshield-data": bloc = new Data(el.type, card, ctx, d => [d.src]); break;
+			case "breakshield-trigger": bloc = new Trigger(el.type, card, ctx, "breakshield"); break;
+			case "breakshield-data": bloc = new Data(el.type, card, ctx, d => [d.src]); break;
 			default: bloc = new Bloc(el.type, card, ctx); break;
 			}
 			ctx[key].push(bloc);
@@ -153,11 +206,13 @@ class Reader {
 			var bloc = ctx[key][i];
 			bloc.updateIn(el.in);
 		}));
+		blueprint.triggers.forEach((trigger, i) => {
+			var bloc = ctx.triggers[i];
+			bloc.prepare(trigger, blueprint);
+		})
 		blueprint.basis.forEach(basis => {
-			var src = blueprint[basis.type][basis.index];
 			var bloc = ctx[basis.type][basis.index];
-			bloc.prepare(src, blueprint);
-			bloc.setup();
+			bloc.setup(card);
 		})
 	}
 }

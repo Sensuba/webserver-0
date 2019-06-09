@@ -29,14 +29,18 @@ class ManaPool {
 
 	createGem () {
 
-		if (this.gems < MAX_GEMS)
+		if (this.gems < MAX_GEMS) {
 			this.gems++;
+			this.area.gameboard.notify("creategem", this);
+		}
 	}
 
 	useGem() {
 
-		if (this.gems > 0)
+		if (this.gems > 0) {
 			this.gems--;
+			this.area.gameboard.notify("usegem", this);
+		}
 	}
 
 	get mana () {

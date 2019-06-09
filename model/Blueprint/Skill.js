@@ -11,17 +11,18 @@ class Skill extends Bloc {
 		this.f = (src, ins) => [this, this.chosen ? this.chosen.card : null, this.chosen];
 		this.types = [Types.tilefilter, Types.string, Types.int];
 		this.target = target;
+		this.out = [this, null, null];
 	}
 
-	setup () {
+	setup (owner, image) {
 
 		var ins = this.computeIn();
 		var req = ins[0];
 		req = this.target ? (req ? req : (src, target) => true) : null;
-		this.src.faculties.push(new ESkill(new Event(target => {
+		owner.faculties.push(new ESkill(new Event(target => {
 			if (target)
 				this.chosen = target;
-			this.execute();
+			this.execute(image);
 		}, req), ins[2]));
 	}
 }

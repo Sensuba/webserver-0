@@ -1,6 +1,8 @@
 const targets = {
 
 	tile: (src, target) => true,
+	this: (src, target) => target.occupied && target.card === src,
+	notThis: (src, target) => !targets.this(src, target),
 	empty: (src, target) => target.isEmpty,
 	entity: (src, target) => target.occupied && target.card.isType("entity") && !target.card.hasState("exaltation"),
 	character: (src, target) => targets.entity(src, target) && target.card.isType("character"),

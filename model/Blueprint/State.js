@@ -6,7 +6,7 @@ class State extends Bloc {
 	constructor (src, ctx) {
 
 		super("state", src, ctx, true);
-		this.f = (src, ins) => [this, null, (src, target) => target.states[ins[0]]];
+		this.f = (src, ins) => [this, x => { x.states[ins[0]] = true; return x; }, target => target.hasState(ins[0])];
 		this.types = [Types.state];
 	}
 

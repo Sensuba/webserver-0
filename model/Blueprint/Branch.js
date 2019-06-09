@@ -6,10 +6,10 @@ class Branch extends Bloc {
 	constructor (src, ctx) {
 
 		super("branch", src, ctx, true);
-		this.f = (src, ins) => {
+		this.f = (src, ins, image) => {
 			var next = ins[0] ? this.true : this.false;
 			if (next)
-				next.execute();
+				next.execute(image);
 		}
 		this.types = [Types.bool];
 		this.toPrepare.push("true");

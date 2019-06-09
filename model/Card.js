@@ -32,6 +32,25 @@ class Card {
 		}
 	}
 
+	get eff () {
+
+		if (this.computing)
+			return this;
+		this.computing = true;
+		var res;
+		if (this.isEff)
+			res = this;
+		else {
+			res = Object.assign({}, this);
+			res.isEff = true;
+			res.states = Object.assign({}, this.states);
+			res = this.mutations.reduce((card, mut) => mut(card), res);
+		}
+		this.computing = false;
+
+		return res;
+	}
+
 	get inHand() {
 
 		return this.location instanceof Hand;
@@ -70,10 +89,10 @@ class Card {
 
 	summon (tile) {
 
-		if (tile.occupied || tile.card === this)
-			return;
+		if (this.onBoard && this.chp !== undefined && this.chp <= 0)
+			this.resetBody();
 		this.skillPt = 1;
-		this.chp = this.hp;
+		this.chp = this.eff.hp;
 		this.goto(tile, true);
 		if (this.isType("character"))
 			this.resetSickness();
@@ -87,8 +106,6 @@ class Card {
 
 		var former = this.location;
 		this.location = loc;
-		if (this.area)
-			this.gameboard.notify("cardmove", this, loc);
 		if (former && former.hasCard (this))
 			former.removeCard (this);
 		if (former && (loc === null || former.locationOrder > loc.locationOrder || loc.locationOrder === 0))
@@ -96,6 +113,8 @@ class Card {
 		if (loc && !loc.hasCard (this))
 			loc.addCard (this);
 		this.identify();
+		if (this.area)
+			this.gameboard.notify("cardmove", this, loc);
 		/*if (former != null && !destroyed)
 			Notify ("card.move", former, value);
 		if (location is Tile)
@@ -161,12 +180,30 @@ class Card {
 		if (this.range && typeof this.range === 'string')
 			this.range = parseInt(this.range, 10);
 		this.gameboard.notify("levelup", this);
+		this.events.forEach(event => {
+			if (!event.requirement)
+				event.execute(this.gameboard, this)
+		});
+	}
+
+	freeze () {
+
+		this.states.frozen = true;
+		this.frozenTimer = false;
+		this.gameboard.notify("charfreeze", this);
+	}
+
+	get frozen () {
+
+		return this.states && this.states.frozen ? true : false;
 	}
 
 	destroy () {
 
-		this.gameboard.notify("destroycard", this);
 		this.clearBoardInstance();
+		this.gameboard.notify("destroycard", this);
+		if (!this.onBoard || this.chp)
+			return;
 		if (this.area)
 			this.goto(this.area.cemetery);
 		else this.location = null;
@@ -176,10 +213,17 @@ class Card {
 
 		if (!this.chp || dmg <= 0)
 			return;
+		if (this.hasState("immune"))
+			return;
+
+		if (this.hasShield) {
+			this.breakShield();
+			return;
+		}
 
 		this.chp -= dmg;
 		this.gameboard.notify("damagecard", this, dmg, src);
-		if (this.chp <= 0)
+		if (this.chp <= 0 || (!this.isType("hero") && src.hasState("lethal")))
 			new Update(() => this.destroy(), this.gameboard);
 	}
 
@@ -188,7 +232,7 @@ class Card {
 		if (!this.chp || amt <= 0)
 			return;
 
-		this.chp = Math.min(this.hp, this.chp + amt);
+		this.chp = Math.min(this.eff.hp, this.chp + amt);
 		this.gameboard.notify("healcard", this, amt, src);
 	}
 
@@ -202,7 +246,7 @@ class Card {
 		if (hp >= 0)
 			this.chp += hp;
 		else
-			this.chp = Math.min(this.chp, this.hp);
+			this.chp = Math.min(this.chp, this.eff.hp);
 		this.range += range;
 		this.gameboard.notify("boostcard", this, atk, hp, range);
 		if (this.chp <= 0)
@@ -226,9 +270,67 @@ class Card {
 			new Update(() => this.destroy(), this.gameboard);
 	}
 
+	silence () {
+
+		this.faculties = [];
+		this.mutations = [];
+		this.events = [];
+		this.states = {};
+		this.shield = false;
+		delete this.blueprint;
+		this.atk = parseInt(this.model.atk, 10);
+		this.hp = parseInt(this.model.hp, 10);
+		this.chp = Math.min(this.eff.hp, this.chp);
+		this.breakShield();
+		this.gameboard.notify("silence", this);
+	}
+
+	pushBack () {
+
+		if (!this.onBoard)
+			return;
+		var back = this.location.tilesBehind.filter(t => t.isEmpty);
+		if (back.length <= 0)
+			return;
+		this.goto(back[Math.floor(Math.random() * back.length)]);
+	}
+
+	pushForward () {
+
+		if (!this.onBoard)
+			return;
+		var forward = this.location.tilesAhead.filter(t => t.isEmpty);
+		if (forward.length <= 0)
+			return;
+		this.goto(forward[Math.floor(Math.random() * forward.length)]);
+	}
+
+	addShield () {
+
+		if (this.shield)
+			return;
+		this.shield = true;
+		this.gameboard.notify("addshield", this);
+	}
+
+	breakShield () {
+
+		if (!this.shield)
+			return;
+		this.shield = false;
+		this.gameboard.notify("breakshield", this);
+	}
+
+	get hasShield () {
+
+		return this.shield ? true : false;
+	}
+
 	get canAct () {
 
 		if (!this.onBoard)
+			return false;
+		if (this.frozen)
 			return false;
 		if (this.motionPt)
 			return true;
@@ -240,7 +342,7 @@ class Card {
 
 	canAttack (target) {
 
-		if (!this.isType("character") || !this.onBoard || !target.onBoard || this.area === target.area)
+		if (!this.isType("character") || !this.onBoard || !target.onBoard || this.area === target.area || this.frozen || this.eff.atk <= 0 || this.hasState("static"))
 			return false;
 		if (this.firstTurn && !this.hasState("rush"))
 			return false;
@@ -250,7 +352,9 @@ class Card {
 		var needed = 1;
 		if (this.location.inBack)
 			needed++;
-		if (target.covered)
+		if (target.isCovered(this.hasState("flying")))
+			needed++;
+		if (!this.hasState("flying") && target.hasState("flying"))
 			needed++;
 
 		return this.range >= needed;
@@ -262,17 +366,17 @@ class Card {
 			this.actionPt--;
 		this.strikes++;
 		this.motionPt = 0;
-		target.damage(this.atk, this);
+		this.gameboard.notify("charattack", this, target);
+		target.damage(this.eff.atk, this);
 		if (!this.hasState("initiative"))
 			target.ripost(this);
-		this.gameboard.notify("charattack", this, target);
 		this.gameboard.update();
 	}
 
 	ripost (other) {
 
-		if (this.isType("figure") && this.atk > 0)
-			other.damage(this.atk, this);
+		if (this.isType("figure") && this.eff.atk > 0)
+			other.damage(this.eff.atk, this);
 	}
 
 	get area () {
@@ -296,7 +400,7 @@ class Card {
 
 	hasState (state) {
 
-		return this.states && this.states[state];
+		return this.states && this.eff.states[state] ? true : false;
 	}
 
 	identify () {
@@ -315,12 +419,12 @@ class Card {
 
 	get canBePaid () {
 
-		return (this.mana || this.mana === 0) && this.area && this.mana <= this.area.manapool.usableMana;
+		return (this.mana || this.eff.mana === 0) && this.area && this.eff.mana <= this.area.manapool.usableMana;
 	}
 
 	get canBePlayed () {
 
-		if (!this.inHand || !this.canBePaid)
+		if (!this.inHand || !this.canBePaid || !this.area.isPlaying)
 			return false;
 		if (this.targets.length === 0)
 			return true;
@@ -330,11 +434,11 @@ class Card {
 
 	canBePlayedOn (targets) {
 
-		if (!this.canBePaid)
+		if (!this.canBePaid || !this.area.isPlaying)
 			return false;
 		if (this.targets.length === 0)
 			return true;
-		if (targets.length === 0)
+		if (!targets || targets.length === 0)
 			return false;
 
 		return targets.every((t, i) => this.targets[i](this, t));
@@ -356,18 +460,23 @@ class Card {
 		return targets;
 	}
 
-	cover (other) {
+	cover (other, flying = false) {
 
 		if (!this.isType("character") || !this.onBoard || !other.onBoard)
 			return false;
-		return other.location.isBehind(this.location);
+		return (other.location.isBehind(this.location) || (this.hasState("cover neighbors") && other.location.isNeighborTo(this.location))) && flying === this.hasState("flying");
 	}
 
 	get covered () {
 
+		return this.isCovered();
+	}
+
+	isCovered (flying = false) {
+
 		if (!this.onBoard)
 			return false;
-		return this.location.field.entities.some(e => e.cover(this));
+		return this.location.field.entities.some(e => e.cover(this, flying));
 	}
 
 	play (targets) {
@@ -377,7 +486,10 @@ class Card {
 		switch(this.cardType) {
 		case "figure":
 			this.summon(targets[0]);
-			this.events.forEach(event => event.execute(this.gameboard, this, targets.length > 1 ? targets[1] : undefined));
+			this.events.forEach(event => {
+				if (!event.requirement || targets.length > 1)
+					event.execute(this.gameboard, this, targets.length > 1 ? targets[1] : undefined)
+			});
 			break;
 		case "spell":
 			this.goto(this.area.court);
@@ -390,8 +502,8 @@ class Card {
 
 	canMoveOn (tile) {
 
-		if (!this.onBoard || !this.motionPt)
-			return;
+		if (!this.onBoard || !this.motionPt || this.frozen || tile.occupied || this.hasState("static"))
+			return false;
 		return this.location.isAdjacentTo(tile);
 	}
 
@@ -440,6 +552,8 @@ class Card {
 			this.motionPt = 1;
 			this.firstTurn = false;
 			this.strikes = 0;
+			if (this.frozen)
+				this.frozenTimer = true;
 		}
 	}
 
