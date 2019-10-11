@@ -482,10 +482,10 @@ class Card {
 	play (targets) {
 
 		this.area.manapool.use(this.mana);
-		this.gameboard.notify("playcard", this, targets ? targets[0] : undefined);
 		switch(this.cardType) {
 		case "figure":
 			this.summon(targets[0]);
+			this.gameboard.notify("playcard", this, targets[0], targets[1]);
 			this.events.forEach(event => {
 				if (!event.requirement || targets.length > 1)
 					event.execute(this.gameboard, this, targets.length > 1 ? targets[1] : undefined)
@@ -493,6 +493,7 @@ class Card {
 			break;
 		case "spell":
 			this.goto(this.area.court);
+			this.gameboard.notify("playcard", this, targets ? targets[0] : undefined);
 			this.events.forEach(event => event.execute(this.gameboard, this, targets ? targets[0] : undefined));
 			this.destroy();
 			break;
