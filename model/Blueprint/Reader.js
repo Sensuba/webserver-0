@@ -20,6 +20,7 @@ var PushBack = require('./PushBack');
 var PushForward = require('./PushForward');
 var AddShield = require('./AddShield');
 var BreakShield = require('./BreakShield');
+var AddPoints = require('./AddPoints');
 var Freeze = require('./Freeze');
 var Silence = require('./Silence');
 var SetCard = require('./Set');
@@ -120,6 +121,7 @@ class Reader {
 			case "destroy": bloc = new Destroy(card, ctx); break;
 			case "levelup": bloc = new LevelUp(card, ctx); break;
 			case "addeffect": bloc = new AddEffect(card, ctx); break;
+			case "addpoints": bloc = new AddPoints(card, ctx); break;
 			case "setstate": bloc = new SetState(card, ctx); break;
 			case "generate": bloc = new Generate(card, ctx); break;
 			case "summon": bloc = new Summon(card, ctx); break;

@@ -537,6 +537,14 @@ class Card {
 
 	}
 
+	setPoints (action, skill, motion) {
+
+		this.actionPt = action;
+		this.skillPt = skill;
+		this.motionPt = motion;
+		this.gameboard.notify("setpoints", this, { type: "int", value: action }, { type: "int", value: skill }, { type: "int", value: motion });
+	}
+
 	resetSickness () {
 
 		this.actionPt = 1;
