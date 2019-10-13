@@ -8,6 +8,7 @@ class GameBoard {
 
 		this.send = () => {};
 		this.whisper = () => {};
+		this.end = () => {};
 	}
 
 	init (d1, d2) {
@@ -116,6 +117,14 @@ class GameBoard {
 
 		while (this.updates.length > 0)
 			this.updates[0].trigger();
+	}
+
+	heroDies (m) {
+
+		//console.log(m);
+		//console.log(this.currentArea.id);
+		//console.log(this.currentArea.opposite.id);
+		this.end();
 	}
 }
 

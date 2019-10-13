@@ -202,6 +202,8 @@ class Card {
 
 		this.clearBoardInstance();
 		this.gameboard.notify("destroycard", this);
+		if (this.isType("hero"))
+			this.gameboard.heroDies(this.area.id.no);
 		if (!this.onBoard || this.chp)
 			return;
 		if (this.area)

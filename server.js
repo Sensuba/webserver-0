@@ -81,6 +81,10 @@ var start = () => io.sockets.on('connection', function (socket) {
 			var gb = rooms[socket.room].game;
 			gb.send = (type, src, data) => io.sockets.in(socket.room).emit("notification", {type, src, data});
 			gb.whisper = (type, player, src, ...data) => players[player] ? players[player].socket.emit("notification", {type, src, data}) : {};
+			gb.end = (winner) => {
+				io.sockets.in(socket.room).emit("endgame", {win: false});
+				delete rooms[socket.room];
+			}
 			gb.init(players[0].deck, players[1].deck);
 			gb.start();
 			room.started = true;
@@ -91,6 +95,8 @@ var start = () => io.sockets.on('connection', function (socket) {
 	socket.on('command', function(cmd){
 
 		var room = rooms[socket.room];
+		if (!room)
+			return;
 		var no = room.players.findIndex(p => p.socket === socket);
 		if (no >= 0)
 			room.game.command(cmd, no);
@@ -108,10 +114,10 @@ var start = () => io.sockets.on('connection', function (socket) {
 
 		let room = socket.room;
 		socket.leave(room);
-		if (room)
+		if (room && rooms[room])
 			rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
-		if (room && rooms[room].players.length == 0)
-			delete rooms[rooms];
+		if (room && rooms[room] && rooms[room].players.length == 0)
+			delete rooms[room];
 	}
 
 	socket.on('quit', quit);
