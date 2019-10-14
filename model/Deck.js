@@ -1,6 +1,8 @@
 var Card = require("./Card");
 var Bank = require("../Bank");
 
+const FATIGUE_DAMAGE = 500;
+
 class Deck {
 
 	constructor (area) {
@@ -22,12 +24,21 @@ class Deck {
 
 	draw(filter) {
 
-		if (this.cards.length <= 0)
-			return;
+		if (this.cards.length <= 0) {
+			if (filter)
+				return;
+			this.fatigue();
+		}
 
 		if (!filter)
 			return this.cards[0];
 		return this.cards.find(filter);
+	}
+
+	fatigue() {
+
+		this.area.gameboard.notify("fatigue", this);
+		this.area.hero.damage(FATIGUE_DAMAGE, this.area.hero);
 	}
 
 	shuffle() {

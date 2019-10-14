@@ -37,8 +37,10 @@ class Area {
 
 		if (n <= 0) return;
 		var d = this.deck.draw(filter);
-		d.goto(this.hand);
-		this.gameboard.notify("draw", this, d);
+		if (d) {
+			d.goto(this.hand);
+			this.gameboard.notify("draw", this, d);
+		}
 		if (n > 1)
 			this.draw(n-1, filter);
 	}

@@ -119,12 +119,12 @@ class GameBoard {
 			this.updates[0].trigger();
 	}
 
-	heroDies (m) {
+	heroDies (player) {
 
 		//console.log(m);
 		//console.log(this.currentArea.id);
 		//console.log(this.currentArea.opposite.id);
-		this.end();
+		this.end(1-player);
 	}
 }
 

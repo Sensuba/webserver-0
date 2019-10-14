@@ -82,7 +82,8 @@ var start = () => io.sockets.on('connection', function (socket) {
 			gb.send = (type, src, data) => io.sockets.in(socket.room).emit("notification", {type, src, data});
 			gb.whisper = (type, player, src, ...data) => players[player] ? players[player].socket.emit("notification", {type, src, data}) : {};
 			gb.end = (winner) => {
-				io.sockets.in(socket.room).emit("endgame", {win: false});
+				players[winner].socket.emit("endgame", {win: true});
+				players[1-winner].socket.emit("endgame", {win: false});
 				delete rooms[socket.room];
 			}
 			gb.init(players[0].deck, players[1].deck);
