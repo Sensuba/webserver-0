@@ -18,6 +18,7 @@ class GameBoard {
 		}
 
 		this.updates = [];
+		this.auras = [];
 		this.subscriptions = {};
 		this.indexSubscription = 0;
 
@@ -117,13 +118,21 @@ class GameBoard {
 
 		while (this.updates.length > 0)
 			this.updates[0].trigger();
+		this.data.cards.forEach(card => card.update());
+	}
+
+	addAura (aura) {
+
+		this.auras.push(aura);
+	}
+
+	clearAura (aura) {
+
+		this.auras = this.auras.filter(a => a != aura)
 	}
 
 	heroDies (player) {
 
-		//console.log(m);
-		//console.log(this.currentArea.id);
-		//console.log(this.currentArea.opposite.id);
 		this.end(1-player);
 	}
 }

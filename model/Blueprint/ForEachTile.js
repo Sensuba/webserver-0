@@ -9,7 +9,7 @@ class ForEachTile extends Bloc {
 		this.f = (src, ins, image) => {
 			var area = ins[0], targets = ins[1];
 			area.forEach (tile => {
-				if (tile.occupied && targets(src, tile)) {
+				if (targets(src, tile)) {
 					this.out = [tile];
 					if (this["for each"])
 						this["for each"].execute(image);

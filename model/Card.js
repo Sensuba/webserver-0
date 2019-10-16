@@ -32,25 +32,6 @@ class Card {
 		}
 	}
 
-	get eff () {
-
-		if (this.computing)
-			return this;
-		this.computing = true;
-		var res;
-		if (this.isEff)
-			res = this;
-		else {
-			res = Object.assign({}, this);
-			res.isEff = true;
-			res.states = Object.assign({}, this.states);
-			res = this.mutations.reduce((card, mut) => mut(card), res);
-		}
-		this.computing = false;
-
-		return res;
-	}
-
 	get inHand() {
 
 		return this.location instanceof Hand;
@@ -82,7 +63,9 @@ class Card {
 		delete copy.location;
 		delete copy.gameboard;
 		delete copy.parent;
+		delete copy.passives;
 		delete copy.tokens;
+		delete copy.mutatedState;
 		copy.model = this.model.idCardmodel;
 		return copy;
 	}
@@ -96,6 +79,7 @@ class Card {
 		this.goto(tile, true);
 		if (this.isType("character"))
 			this.resetSickness();
+		this.activate();
 		this.gameboard.notify("summon", this, tile);
 	}
 
@@ -130,12 +114,13 @@ class Card {
 
 		//var model = this.loadModel();
 		var model = this.model;
-		//console.log(this.model);
 		for (var k in model)
 			this[k] = model[k];
 		delete this.supercode;
 		this.events = [];
 		this.faculties = [];
+		this.passives = [];
+		this.deactivate();
 		this.mutations = [];
 		this.states = {};
 		this.clearBoardInstance();
@@ -145,6 +130,8 @@ class Card {
 		}
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
+		if (this.mana && typeof this.mana === 'string')
+			this.mana = parseInt(this.mana, 10);
 		if (this.atk && typeof this.atk === 'string')
 			this.atk = parseInt(this.atk, 10);
 		if (this.hp && typeof this.hp === 'string')
@@ -170,6 +157,7 @@ class Card {
 		this.overload = lv.overload;
 		this.blueprint = lv.blueprint;
 		this.events = [];
+		this.passives = [];
 		this.faculties = [new Action(new Event(() => this.area.manapool.createReceptacle()))];
 		this.mutations = [];
 		this.states = {};
@@ -275,11 +263,13 @@ class Card {
 	silence () {
 
 		this.faculties = [];
+		this.passives = [];
 		this.mutations = [];
 		this.events = [];
 		this.states = {};
 		this.shield = false;
 		delete this.blueprint;
+		this.mana = parseInt(this.model.mana, 10);
 		this.atk = parseInt(this.model.atk, 10);
 		this.hp = parseInt(this.model.hp, 10);
 		this.chp = Math.min(this.eff.hp, this.chp);
@@ -330,13 +320,15 @@ class Card {
 
 	get canAct () {
 
+		var eff = this.eff;
+
 		if (!this.onBoard)
 			return false;
-		if (this.frozen)
+		if (eff.frozen)
 			return false;
-		if (this.motionPt)
+		if (eff.motionPt)
 			return true;
-		if ((this.actionPt || (this.hasState("fury") && this.strikes === 1)) && (!this.firstTurn || this.hasState("rush")))
+		if ((eff.actionPt || (this.hasState("fury") && eff.strikes === 1)) && (!eff.firstTurn || this.hasState("rush")))
 			return true;
 
 		return false;
@@ -344,11 +336,13 @@ class Card {
 
 	canAttack (target) {
 
-		if (!this.isType("character") || !this.onBoard || !target.onBoard || this.area === target.area || this.frozen || this.eff.atk <= 0 || this.hasState("static"))
+		var eff = this.eff;
+
+		if (!this.isType("character") || !this.onBoard || !target.onBoard || this.area === target.area || eff.frozen || eff.atk <= 0)
 			return false;
-		if (this.firstTurn && !this.hasState("rush"))
+		if (eff.firstTurn && !this.hasState("rush"))
 			return false;
-		if (!this.actionPt && (!this.hasState("fury") || this.strikes !== 1))
+		if (!eff.actionPt && (!this.hasState("fury") || eff.strikes !== 1))
 			return false;
 
 		var needed = 1;
@@ -359,7 +353,7 @@ class Card {
 		if (!this.hasState("flying") && target.hasState("flying"))
 			needed++;
 
-		return this.range >= needed;
+		return eff.range >= needed;
 	}
 
 	attack (target) {
@@ -483,7 +477,7 @@ class Card {
 
 	play (targets) {
 
-		this.area.manapool.use(this.mana);
+		this.area.manapool.use(this.eff.mana);
 		switch(this.cardType) {
 		case "figure":
 			this.summon(targets[0]);
@@ -501,6 +495,7 @@ class Card {
 			break;
 		default: break;
 		}
+		this.gameboard.update();
 	}
 
 	canMoveOn (tile) {
@@ -532,6 +527,7 @@ class Card {
 		this.motionPt--;
 		this.gameboard.notify("charmove", this, tile);
 		this.goto(tile);
+		this.gameboard.update();
 	}
 
 	attach (mutation, end) {
@@ -568,6 +564,65 @@ class Card {
 		}
 	}
 
+	activate () {
+
+		this.activated = true;
+		this.passives.forEach(passive => passive.activate());
+	}
+
+	deactivate () {
+
+		this.activated = false;
+		this.passives.forEach(passive => passive.deactivate());
+	}
+
+	get eff () {
+
+		if (this.isEff)
+			return this;
+		if (!this.mutatedState)
+			this.update();
+		return this.mutatedState;
+	}
+
+	update () {
+
+		if (this.isEff)
+			return;
+		var res;
+		res = Object.assign({}, this);
+		res.isEff = true;
+		res.states = Object.assign({}, this.states);
+		res = this.mutations.reduce((card, mut) => mut(card), res);
+		this.gameboard.auras.forEach(aura => {
+			if (aura.applicable(this))
+				res = aura.apply(res);
+		});
+
+		this.mutatedState = res;
+	}
+
+	/*get eff () {
+
+		if (this.computing)
+			return this;
+		this.computing = true;
+		var res;
+		if (this.isEff)
+			res = this;
+		else {
+			res = Object.assign({}, this);
+			res.isEff = true;
+			res.states = Object.assign({}, this.states);
+			res = this.mutations.reduce((card, mut) => mut(card), res);
+		}
+		this.computing = false;
+
+		return res;
+	}
+
+	update () {}*/
+
 	clearBoardInstance () {
 
 		delete this.chp;
@@ -575,6 +630,7 @@ class Card {
 		delete this.skillPt;
 		delete this.motionPt;
 		delete this.firstTurn;
+		this.deactivate();
 	}
 }
 

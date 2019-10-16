@@ -43,6 +43,7 @@ class Area {
 		}
 		if (n > 1)
 			this.draw(n-1, filter);
+		return d;
 	}
 
 	get isPlaying () {
@@ -60,6 +61,7 @@ class Area {
 		this.manapool.refill();
 		this.field.entities.forEach(e => e.refresh());
 		this.draw();
+		this.gameboard.update();
 	}
 
 	endTurn () {

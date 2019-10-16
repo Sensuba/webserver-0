@@ -11,6 +11,7 @@ var Listener = require('./Listener');
 var LastWill = require('./LastWill');
 var Frenzy = require('./Frenzy');
 var PassiveMutation = require('./PassiveMutation');
+var Aura = require('./Aura');
 
 var Draw = require('./Draw');
 var Move = require('./Move');
@@ -106,6 +107,7 @@ class Reader {
 			case "lw": bloc = new LastWill(card, ctx); break;
 			case "frenzy": bloc = new Frenzy(card, ctx); break;
 			case "passivemut": bloc = new PassiveMutation(card, ctx); break;
+			case "aura": bloc = new Aura(card, ctx); break;
 			case "draw": bloc = new Draw(card, ctx); break;
 			case "move": bloc = new Move(card, ctx); break;
 			case "damage": bloc = new Damage(card, ctx); break;

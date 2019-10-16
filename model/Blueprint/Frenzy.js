@@ -13,10 +13,15 @@ class Frenzy extends Bloc {
 
 	setup (owner, image) {
 
-		this.src.gameboard.subscribe("charattack", (t,s,d) => {
-			if (s === owner && owner.onBoard && d[0].chp !== undefined && d[0].chp <= 0) {
-				this.victim = d[0];
-				this.execute(image);
+		this.src.gameboard.subscribe("damagecard", (t,s,d) => {
+			if (d[1] === owner && owner.onBoard && s.chp !== undefined && s.chp <= 0) {
+				this.victim = s;
+				this.unsubVictim = this.src.gameboard.subscribe("destroycard", (t2,s2,d2) => {
+					if (this.victim === s2) {
+						this.execute(image);
+						this.unsubVictim();
+					}
+				});
 			}
 		});
 	}
