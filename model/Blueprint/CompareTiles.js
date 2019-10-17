@@ -6,7 +6,7 @@ class CompareTiles extends Bloc {
 	constructor (src, ctx) {
 
 		super("cmptiles", src, ctx);
-		this.f = (src, ins) => [ins[0] === ins[1], ins[0].area === ins[1].area && ins[0].inFront === ins[1].inFront, ins[0].area === ins[1].area, ins[0].isNeighborTo(ins[1]), ins[0].isAdjacentTo(ins[1]), ins[0].distanceTo(ins[1])];
+		this.f = (src, ins) => [ins[0].id === ins[1].id, ins[0].area.id === ins[1].area.id && ins[0].inFront === ins[1].inFront, ins[0].area.id === ins[1].area.id, ins[0].isNeighborTo(ins[1]), ins[0].isAdjacentTo(ins[1]), ins[0].distanceTo(ins[1])];
 		this.types = [Types.location, Types.location];
 	}
 }

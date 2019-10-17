@@ -6,7 +6,7 @@ class CompareLocations extends Bloc {
 	constructor (src, ctx) {
 
 		super("cmplocations", src, ctx);
-		this.f = (src, ins) => [ins[0] === ins[1], ins[0].area === ins[1].area];
+		this.f = (src, ins) => [ins[0].id === ins[1].id, ins[0].area.id === ins[1].area.id];
 		this.types = [Types.location, Types.location];
 	}
 }

@@ -61,6 +61,7 @@ var BreakLocation = require('./BreakLocation');
 var BreakPlayer = require('./BreakPlayer');
 
 var Archetype = require('./Archetype');
+var MutationTarget = require('./MutationTarget');
 var Token = require('./Token');
 var Timestamp = require('./Timestamp');
 var LimitBreak = require('./LimitBreak');
@@ -150,6 +151,7 @@ class Reader {
 			case "covered": bloc = new IsCovered(card, ctx); break;
 			case "conditionmut": bloc = new ConditionalMutation(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;
+			case "innerdata": bloc = new MutationTarget(card, ctx); break;
 			case "token": bloc = new Token(card, ctx); break;
 			case "timestamp": bloc = new Timestamp(card, ctx); break;
 			case "limitbrk": bloc = new LimitBreak(card, ctx); break;

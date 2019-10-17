@@ -12,10 +12,10 @@ class Bloc {
 		this.toPrepare = ["to"];
 	}
 
-	execute (src) {
+	execute (src, data) {
 		
 		var f = this.f || (() => []);
-		this.out = f(this.src, this.computeIn(src), src);
+		this.out = f(this.src, this.computeIn(src, data), src, data);
 		if (this.to)
 			this.to.execute(src);
 	}
@@ -34,27 +34,27 @@ class Bloc {
 
 	}
 
-	compute (src) {
+	compute (src, data) {
 
 		if (src && this.images[src])
 			return this.images[src];
 		if (this.static && this.out !== null && this.out !== undefined)
 			return this.out;
-		this.execute(src);
+		this.execute(src, data);
 		return this.out;
 	}
 
-	computeIn(src) {
+	computeIn(src, data) {
 
-		return this.in.map(el => el(src));
+		return this.in.map(el => el(src, data));
 	}
 
 	updateIn(ins) {
 
 		this.in = ins.map((el, i) => {
 			if (el !== null && typeof el === 'object')
-				return (src) => this.ctx[el.type][el.index].compute(src)[el.out];
-			return (src) => (this.types[i] || (x => x))(el, this.src);
+				return (src, data) => this.ctx[el.type][el.index].compute(src, data)[el.out];
+			return (src, data) => (this.types[i] || (x => x))(el, this.src);
 		})
 	}
 }
