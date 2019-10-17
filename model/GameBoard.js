@@ -128,7 +128,7 @@ class GameBoard {
 
 	clearAura (aura) {
 
-		this.auras = this.auras.filter(a => a != aura)
+		this.auras = this.auras.filter(a => a !== aura)
 	}
 
 	heroDies (player) {

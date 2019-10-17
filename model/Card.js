@@ -120,7 +120,6 @@ class Card {
 		this.events = [];
 		this.faculties = [];
 		this.passives = [];
-		this.deactivate();
 		this.mutations = [];
 		this.states = {};
 		this.clearBoardInstance();
@@ -338,7 +337,7 @@ class Card {
 
 		var eff = this.eff;
 
-		if (!this.isType("character") || !this.onBoard || !target.onBoard || this.area === target.area || eff.frozen || eff.atk <= 0)
+		if (!this.isType("character") || !this.onBoard || !target.onBoard || this.area === target.area || eff.frozen || eff.atk <= 0 || eff.range <= 0)
 			return false;
 		if (eff.firstTurn && !this.hasState("rush"))
 			return false;

@@ -45,6 +45,8 @@ var CompareTiles = require('./CompareTiles');
 var MergeCardFilters = require('./MergeCardFilters');
 var MergeTileFilters = require('./MergeTileFilters');
 var CompareLocations = require('./CompareLocations');
+var MergeLocations = require('./MergeLocations');
+var EditLocations = require('./EditLocations');
 var ComparePlayers = require('./ComparePlayers');
 var TileToTiles = require('./TileToTiles');
 var CountTiles = require('./CountTiles');
@@ -138,6 +140,8 @@ class Reader {
 			case "cmpcards": bloc = new CompareCards(card, ctx); break;
 			case "cmptiles": bloc = new CompareTiles(card, ctx); break;
 			case "cmplocations": bloc = new CompareLocations(card, ctx); break;
+			case "mergeloc": bloc = new MergeLocations(card, ctx); break;
+			case "editloc": bloc = new EditLocations(card, ctx); break;
 			case "cmpplayers": bloc = new ComparePlayers(card, ctx); break;
 			case "tiletotiles": bloc = new TileToTiles(card, ctx); break;
 			case "filterstats": bloc = new FilterStats(card, ctx); break;
