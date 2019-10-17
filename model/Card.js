@@ -5,6 +5,7 @@ var Tile = require("./Tile");
 var Cemetery = require("./Cemetery");
 var Update = require("./Update");
 var Action = require("./Action");
+var Mutation = require("./Mutation");
 var Reader = require("./Blueprint/Reader");
 
 class Card {
@@ -65,7 +66,9 @@ class Card {
 		delete copy.parent;
 		delete copy.passives;
 		delete copy.tokens;
+		delete copy.mutations;
 		delete copy.mutatedState;
+		delete copy.mutdata;
 		copy.model = this.model.idCardmodel;
 		return copy;
 	}
@@ -529,11 +532,6 @@ class Card {
 		this.gameboard.update();
 	}
 
-	attach (mutation, end) {
-
-
-	}
-
 	setPoints (action, skill, motion) {
 
 		this.actionPt = action;
@@ -561,6 +559,17 @@ class Card {
 			if (this.frozen)
 				this.frozenTimer = true;
 		}
+	}
+
+	mutate (effect, end) {
+
+		var mut = new Mutation(effect);
+		mut.attach(this);
+		if (end)
+			var unsub = end((t,s,d) => {
+				mut.detach();
+				unsub();
+			});
 	}
 
 	activate () {
@@ -592,7 +601,7 @@ class Card {
 		res = Object.assign({}, this);
 		res.isEff = true;
 		res.states = Object.assign({}, this.states);
-		res = this.mutations.reduce((card, mut) => mut(card), res);
+		res = this.mutations.reduce((card, mut) => mut.apply(card), res);
 		this.gameboard.auras.forEach(aura => {
 			if (aura.applicable(this))
 				res = aura.apply(res);

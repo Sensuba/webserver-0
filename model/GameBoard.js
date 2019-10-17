@@ -36,7 +36,7 @@ class GameBoard {
 		this.send(type, src.id, data.map(d => d ? d.id || d : d));
 		if (!this.subscriptions[type])
 			return;
-		this.subscriptions[type].forEach(sub => sub.notify(type, src, data));
+		this.subscriptions[type].slice().forEach(sub => sub.notify(type, src, data));
 	}
 
 	subscribe (type, notify) {

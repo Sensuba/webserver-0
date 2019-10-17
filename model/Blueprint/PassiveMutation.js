@@ -1,5 +1,6 @@
 var Bloc = require('./Bloc');
 var Types = require('./Types');
+var Mutation = require('../Mutation');
 
 class PassiveMutation extends Bloc {
 
@@ -15,7 +16,7 @@ class PassiveMutation extends Bloc {
 
 		var cpt = this.computeIn();
 		var mut = cpt[0];
-		owner.mutations.push(mut);
+		new Mutation(mut).attach(owner);
 	}
 }
 

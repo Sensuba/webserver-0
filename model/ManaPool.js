@@ -73,7 +73,7 @@ class ManaPool {
 					value--;
 				}
 			}
-			while (value-- > 0)
+			while (--value > 0)
 				this.useGem();
 		}
 	}
