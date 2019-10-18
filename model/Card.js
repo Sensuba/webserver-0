@@ -27,6 +27,7 @@ class Card {
 			if (this.onBoard) {
 				this.skillPt = 1;
 				this.chp = this.hp;
+				this.activated = true;
 				if (this.isType("character"))
 					this.resetSickness();
 			}
