@@ -82,6 +82,7 @@ class ManaPool {
 
 		nb = nb || MAX_MANA;
 		this.receptacles = this.receptacles.map(r => r || nb-- > 0);
+		this.area.gameboard.notify("refillmana", this, { type: "int", value: nb });
 	}
 }
 

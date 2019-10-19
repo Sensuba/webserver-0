@@ -36,6 +36,7 @@ var AddMutation = require('./AddMutation');
 var CreateReceptacle = require('./CreateReceptacle');
 var CreateGem = require('./CreateGem');
 var DestroyGem = require('./DestroyGem');
+var RefillMana = require('./RefillMana');
 var UseMana = require('./UseMana');
 
 var CanPay = require('./CanPay');
@@ -140,6 +141,7 @@ class Reader {
 			case "createreceptacle": bloc = new CreateReceptacle(card, ctx); break;
 			case "creategem": bloc = new CreateGem(card, ctx); break;
 			case "destroygem": bloc = new DestroyGem(card, ctx); break;
+			case "createmana": bloc = new RefillMana(card, ctx); break;
 			case "usemana": bloc = new UseMana(card, ctx); break;
 			case "canpay": bloc = new CanPay(card, ctx); break;
 			case "checkcard": bloc = new CheckCard(card, ctx); break;

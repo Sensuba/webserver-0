@@ -59,7 +59,7 @@ class Card {
 
 		if (!this.isType("character"))
 			return false;
-		return this.hp && this.chp && this.chp < this.hp;
+		return this.hp && this.chp && this.chp < this.eff.hp;
 	}
 
 	get data() {
@@ -73,6 +73,7 @@ class Card {
 		delete copy.mutations;
 		delete copy.mutatedState;
 		delete copy.mutdata;
+		delete copy.php;
 		copy.model = this.model.idCardmodel;
 		return copy;
 	}
@@ -236,7 +237,7 @@ class Card {
 			return;
 
 		if (this.isType("artifact"))
-			this.chp += amt
+			this.chp += amt;
 		else
 			this.chp = Math.min(this.eff.hp, this.chp + amt);
 		this.gameboard.notify("healcard", this, amt, src);
@@ -624,6 +625,13 @@ class Card {
 			if (aura.applicable(this))
 				res = aura.apply(res);
 		});
+		if (this.isType("character")) {
+			this.php = this.php || { hp: this.hp, chp: this.chp };
+			var plushp = Math.max (0, res.hp - this.php.hp);
+			this.chp = Math.min(res.hp, this.chp + plushp);
+			res.chp = this.chp;
+			this.php = { hp: res.hp, chp: res.chp };
+		}
 		this.computing = false;
 
 		this.mutatedState = res;
