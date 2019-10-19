@@ -93,6 +93,8 @@ var Greater = require('./Greater');
 var GreaterEqual = require('./GreaterEqual');
 var Lesser = require('./Lesser');
 var LesserEqual = require('./LesserEqual');
+var Max = require('./Max');
+var Min = require('./Min');
 
 class Reader {
 
@@ -187,6 +189,8 @@ class Reader {
 			case "opge": bloc = new GreaterEqual(card, ctx); break;
 			case "opl": bloc = new Lesser(card, ctx); break;
 			case "ople": bloc = new LesserEqual(card, ctx); break;
+			case "opmax": bloc = new Max(card, ctx); break;
+			case "opmin": bloc = new Min(card, ctx); break;
 
 			case "play-trigger": bloc = new Trigger(el.type, card, ctx, "playcard"); break;
 			case "play-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0] ? d.data[0].card : null, d.data[0], d.data[0] !== null && d.data[0] !== undefined]); break;

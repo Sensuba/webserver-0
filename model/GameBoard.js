@@ -29,6 +29,7 @@ class GameBoard {
 
 		this.areas[0].init(d1);
 		this.areas[1].init(d2);
+		this.started = true;
 	}
 
 	notify (type, src, ...data) {

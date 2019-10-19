@@ -528,8 +528,8 @@ class Card {
 	move (tile) {
 
 		this.motionPt--;
-		this.gameboard.notify("charmove", this, tile);
 		this.goto(tile);
+		this.gameboard.notify("charmove", this, tile);
 		this.gameboard.update();
 	}
 
@@ -587,7 +587,7 @@ class Card {
 
 	get eff () {
 
-		if (this.isEff)
+		if (this.isEff || this.computing)
 			return this;
 		if (!this.mutatedState)
 			this.update();
@@ -598,6 +598,9 @@ class Card {
 
 		if (this.isEff)
 			return;
+		if (this.computing)
+			return;
+		this.computing = true;
 		var res;
 		res = Object.assign({}, this);
 		res.isEff = true;
@@ -607,6 +610,7 @@ class Card {
 			if (aura.applicable(this))
 				res = aura.apply(res);
 		});
+		this.computing = false;
 
 		this.mutatedState = res;
 	}

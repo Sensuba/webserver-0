@@ -73,8 +73,9 @@ class Deck {
 
 		this.cards.push(card);
 		if (card.location !== this)
-				card.goto(this);
-
+			card.goto(this);
+		if (this.area.gameboard.started)
+			this.shuffle();
 	}
 
 	removeCard (card) {

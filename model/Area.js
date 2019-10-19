@@ -43,6 +43,7 @@ class Area {
 		}
 		if (n > 1)
 			this.draw(n-1, filter);
+		this.gameboard.update();
 		return d;
 	}
 

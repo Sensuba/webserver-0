@@ -15,7 +15,7 @@ class Aura extends Bloc {
 	setup (owner, image) {
 
 		var cpt = this.computeIn();
-		owner.passives.push(new AuraEffect(owner, cpt[0], cpt[1], cpt[2]));
+		owner.passives.push(new AuraEffect(owner, x => this.in[0](owner, x)(x), cpt[1], cpt[2]));
 	}
 }
 

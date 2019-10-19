@@ -49,6 +49,11 @@ class Bloc {
 		return this.in.map(el => el(src, data));
 	}
 
+	computeSingle(no, src, data) {
+
+		return this.in[no](src, data);
+	}
+
 	updateIn(ins) {
 
 		this.in = ins.map((el, i) => {

@@ -5,7 +5,7 @@ class Variation extends Bloc {
 
 	constructor (src, ctx) {
 
-		super("variation", src, ctx, true);
+		super("variation", src, ctx);
 		this.f = (src, ins) => [ x => {
 			if (ins[0])
 				x.mana = Math.max(0, x.mana + ins[0]);
