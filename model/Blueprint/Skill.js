@@ -18,12 +18,12 @@ class Skill extends Bloc {
 
 		var ins = this.computeIn();
 		var req = ins[0];
-		req = this.target ? (req ? req : (src, target) => true) : null;
+		var tar = this.target ? (req ? (src, target) => (req(src, target) && (!target.card || !target.card.hasState("exaltation"))) : (src, target) => true) : null;
 		owner.faculties.push(new ESkill(new Event(target => {
 			if (target)
 				this.chosen = target;
 			this.execute(image);
-		}, req), ins[2]));
+		}, tar), ins[2]));
 	}
 }
 

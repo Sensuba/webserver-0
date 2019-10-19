@@ -52,6 +52,7 @@ var ComparePlayers = require('./ComparePlayers');
 var TileToTiles = require('./TileToTiles');
 var CountTiles = require('./CountTiles');
 var CardToTileFilter = require('./CardToTileFilter');
+var DoesCover = require('./DoesCover');
 var IsCovered = require('./IsCovered');
 var ConditionalMutation = require('./ConditionalMutation');
 
@@ -152,6 +153,7 @@ class Reader {
 			case "filterstats": bloc = new FilterStats(card, ctx); break;
 			case "counttiles": bloc = new CountTiles(card, ctx); break;
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
+			case "cover": bloc = new DoesCover(card, ctx); break;
 			case "covered": bloc = new IsCovered(card, ctx); break;
 			case "conditionmut": bloc = new ConditionalMutation(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;

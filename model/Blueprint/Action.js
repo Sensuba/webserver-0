@@ -17,12 +17,12 @@ class Action extends Bloc {
 	setup (owner, image) {
 
 		var req = this.computeIn()[0];
-		req = this.target ? (req ? req : (src, target) => true) : null;
+		var tar = this.target ? (req ? (src, target) => (req(src, target) && (!target.card || !target.card.hasState("exaltation"))) : (src, target) => true) : null;
 		owner.faculties.push(new EAction(new Event(target => {
 			if (target)
 				this.chosen = target;
 			this.execute(image);
-		}, req)));
+		}, tar)));
 	}
 }
 

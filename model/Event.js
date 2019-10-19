@@ -4,7 +4,7 @@ const targets = {
 	this: (src, target) => target.occupied && target.card === src,
 	notThis: (src, target) => !targets.this(src, target),
 	empty: (src, target) => target.isEmpty,
-	entity: (src, target) => target.occupied && target.card.isType("entity") && !target.card.hasState("exaltation"),
+	entity: (src, target) => target.occupied && target.card.isType("entity"),
 	character: (src, target) => targets.entity(src, target) && target.card.isType("character"),
 	hero: (src, target) => targets.entity(src, target) && target.card.isType("hero"),
 	figure: (src, target) => targets.entity(src, target) && target.card.isType("figure"),

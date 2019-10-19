@@ -509,7 +509,7 @@ class Card {
 	}
 
 	canUse (faculty, target) {
-
+		
 		return faculty.canBeUsed(this, target);
 	}
 
