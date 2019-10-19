@@ -36,6 +36,7 @@ var AddMutation = require('./AddMutation');
 var CreateReceptacle = require('./CreateReceptacle');
 var CreateGem = require('./CreateGem');
 var DestroyGem = require('./DestroyGem');
+var UseMana = require('./UseMana');
 
 var CanPay = require('./CanPay');
 var FilterStats = require('./FilterStats');
@@ -50,6 +51,7 @@ var MergeLocations = require('./MergeLocations');
 var EditLocations = require('./EditLocations');
 var ComparePlayers = require('./ComparePlayers');
 var TileToTiles = require('./TileToTiles');
+var CountCards = require('./CountCards');
 var CountTiles = require('./CountTiles');
 var CardToTileFilter = require('./CardToTileFilter');
 var DoesCover = require('./DoesCover');
@@ -138,6 +140,7 @@ class Reader {
 			case "createreceptacle": bloc = new CreateReceptacle(card, ctx); break;
 			case "creategem": bloc = new CreateGem(card, ctx); break;
 			case "destroygem": bloc = new DestroyGem(card, ctx); break;
+			case "usemana": bloc = new UseMana(card, ctx); break;
 			case "canpay": bloc = new CanPay(card, ctx); break;
 			case "checkcard": bloc = new CheckCard(card, ctx); break;
 			case "checktile": bloc = new CheckTile(card, ctx); break;
@@ -151,6 +154,7 @@ class Reader {
 			case "cmpplayers": bloc = new ComparePlayers(card, ctx); break;
 			case "tiletotiles": bloc = new TileToTiles(card, ctx); break;
 			case "filterstats": bloc = new FilterStats(card, ctx); break;
+			case "countcards": bloc = new CountCards(card, ctx); break;
 			case "counttiles": bloc = new CountTiles(card, ctx); break;
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
 			case "cover": bloc = new DoesCover(card, ctx); break;

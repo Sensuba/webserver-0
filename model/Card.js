@@ -5,6 +5,7 @@ var Tile = require("./Tile");
 var Cemetery = require("./Cemetery");
 var Update = require("./Update");
 var Action = require("./Action");
+var ArtifactSkill = require("./ArtifactSkill");
 var Mutation = require("./Mutation");
 var Reader = require("./Blueprint/Reader");
 
@@ -56,6 +57,8 @@ class Card {
 
 	get damaged() {
 
+		if (!this.isType("character"))
+			return false;
 		return this.hp && this.chp && this.chp < this.hp;
 	}
 
@@ -133,6 +136,8 @@ class Card {
 		}
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
+		if (this.isType("artifact"))
+			this.faculties.push(new ArtifactSkill(new Event(() => new Update(() => this.destroy(), this.gameboard)), 0));
 		if (this.mana && typeof this.mana === 'string')
 			this.mana = parseInt(this.mana, 10);
 		if (this.atk && typeof this.atk === 'string')
@@ -186,7 +191,12 @@ class Card {
 
 	get frozen () {
 
-		return this.states && this.states.frozen ? true : false;
+		return this.states && this.hasState("frozen") ? true : false;
+	}
+
+	get exalted () {
+
+		return this.states && this.hasState("exaltation") ? true : false;
 	}
 
 	destroy () {
@@ -225,7 +235,10 @@ class Card {
 		if (!this.chp || amt <= 0)
 			return;
 
-		this.chp = Math.min(this.eff.hp, this.chp + amt);
+		if (this.isType("artifact"))
+			this.chp += amt
+		else
+			this.chp = Math.min(this.eff.hp, this.chp + amt);
 		this.gameboard.notify("healcard", this, amt, src);
 	}
 
@@ -236,7 +249,7 @@ class Card {
 
 		this.atk += atk;
 		this.hp += hp;
-		if (hp >= 0)
+		if (hp >= 0 || this.isType("artifact"))
 			this.chp += hp;
 		else
 			this.chp = Math.min(this.chp, this.eff.hp);
@@ -483,6 +496,7 @@ class Card {
 		this.area.manapool.use(this.eff.mana);
 		switch(this.cardType) {
 		case "figure":
+		case "artifact":
 			this.summon(targets[0]);
 			this.gameboard.notify("playcard", this, targets[0], targets[1]);
 			this.events.forEach(event => {
