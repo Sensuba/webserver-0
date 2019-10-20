@@ -233,6 +233,8 @@ class Card {
 
 	heal (amt, src) {
 
+		if (amt === null || amt === undefined)
+			amt = this.eff.hp;
 		if (!this.chp || amt <= 0)
 			return;
 

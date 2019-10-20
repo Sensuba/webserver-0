@@ -7,7 +7,7 @@ class AddPoints extends Bloc {
 
 		super("addpoints", src, ctx);
 		this.f = (src, ins) => {
-			ins[0].setPoints(ins[0].actionPt + ins[1], ins[0].actionPt + ins[2], ins[0].actionPt + ins[3]);
+			ins[0].setPoints(ins[0].actionPt + ins[1], ins[0].skillPt + ins[2], ins[0].motionPt + ins[3]);
 			return [];
 		};
 		this.types = [Types.card, Types.int, Types.int, Types.int];
