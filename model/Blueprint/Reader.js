@@ -11,6 +11,7 @@ var Listener = require('./Listener');
 var LastWill = require('./LastWill');
 var Frenzy = require('./Frenzy');
 var PassiveMutation = require('./PassiveMutation');
+var ContactMutation = require('./ContactMutation');
 var Aura = require('./Aura');
 
 var Draw = require('./Draw');
@@ -57,6 +58,7 @@ var CountTiles = require('./CountTiles');
 var CardToTileFilter = require('./CardToTileFilter');
 var DoesCover = require('./DoesCover');
 var IsCovered = require('./IsCovered');
+var MergeMutations = require('./MergeMutations');
 var ConditionalMutation = require('./ConditionalMutation');
 
 var BreakCard = require('./BreakCard');
@@ -117,6 +119,7 @@ class Reader {
 			case "lw": bloc = new LastWill(card, ctx); break;
 			case "frenzy": bloc = new Frenzy(card, ctx); break;
 			case "passivemut": bloc = new PassiveMutation(card, ctx); break;
+			case "contactmut": bloc = new ContactMutation(card, ctx); break;
 			case "aura": bloc = new Aura(card, ctx); break;
 			case "draw": bloc = new Draw(card, ctx); break;
 			case "move": bloc = new Move(card, ctx); break;
@@ -161,6 +164,7 @@ class Reader {
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
 			case "cover": bloc = new DoesCover(card, ctx); break;
 			case "covered": bloc = new IsCovered(card, ctx); break;
+			case "mergemut": bloc = new MergeMutations(card, ctx); break;
 			case "conditionmut": bloc = new ConditionalMutation(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;
 			case "innerdata": bloc = new MutationTarget(card, ctx); break;

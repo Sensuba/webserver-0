@@ -71,6 +71,8 @@ class Card {
 		delete copy.passives;
 		delete copy.tokens;
 		delete copy.mutations;
+		delete copy.cmutations;
+		delete copy.oncontact;
 		delete copy.mutatedState;
 		delete copy.mutdata;
 		delete copy.php;
@@ -130,6 +132,7 @@ class Card {
 		this.faculties = [];
 		this.passives = [];
 		this.mutations = [];
+		this.cmutations = [];
 		this.states = {};
 		this.clearBoardInstance();
 		if (this.isType("hero")) {
@@ -171,6 +174,7 @@ class Card {
 		this.passives = [];
 		this.faculties = [new Action(new Event(() => this.area.manapool.createReceptacle()))];
 		this.mutations = [];
+		this.cmutations = [];
 		this.states = {};
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
@@ -294,6 +298,7 @@ class Card {
 		this.faculties = [];
 		this.passives = [];
 		this.mutations = [];
+		this.cmutations = [];
 		this.events = [];
 		this.states = {};
 		this.shield = false;
@@ -392,16 +397,20 @@ class Card {
 		this.strikes++;
 		this.motionPt = 0;
 		this.gameboard.notify("charattack", this, target);
+		this.oncontact = target;
 		target.damage(this.eff.atk, this);
-		if (!this.hasState("initiative"))
+		if (!this.eff.states.initiative)
 			target.ripost(this);
+		this.oncontact = null;
 		this.gameboard.update();
 	}
 
 	ripost (other) {
 
+		other.oncontact = this;
 		if (this.isType("figure") && this.eff.atk > 0)
 			other.damage(this.eff.atk, this);
+		other.oncontact = null;
 	}
 
 	get area () {
@@ -614,11 +623,23 @@ class Card {
 
 	get eff () {
 
+		var contacteffect = (eff) => {
+
+			if (!this.oncontact)
+				return eff;
+			var res = Object.assign({}, eff);
+			this.cmutations.forEach(cmut => {
+				if (!cmut.targets || cmut.targets(this.oncontact))
+					res = cmut.effect(res);
+			});
+			return res;
+		}
+
 		if (this.isEff || this.computing)
-			return this;
+			return contacteffect(this);
 		if (!this.mutatedState)
 			this.update();
-		return this.mutatedState;
+		return contacteffect(this.mutatedState);
 	}
 
 	update () {
