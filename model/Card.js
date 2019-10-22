@@ -105,7 +105,7 @@ class Card {
 		if (loc && !loc.hasCard (this))
 			loc.addCard (this);
 		this.identify();
-		if (this.area)
+		if (this.area && loc.hasCard(this))
 			this.gameboard.notify("cardmove", this, loc);
 		/*if (former != null && !destroyed)
 			Notify ("card.move", former, value);
@@ -125,6 +125,7 @@ class Card {
 		for (var k in model)
 			this[k] = model[k];
 		delete this.supercode;
+		this.ol = 0;
 		this.events = [];
 		this.faculties = [];
 		this.passives = [];
@@ -161,6 +162,7 @@ class Card {
 			return;
 		}
 
+		this.ol = 0;
 		this.atk = lv.atk;
 		this.range = lv.range;
 		this.overload = lv.overload;
@@ -198,6 +200,16 @@ class Card {
 	get exalted () {
 
 		return this.states && this.hasState("exaltation") ? true : false;
+	}
+
+	get concealed () {
+
+		return this.states && this.hasState("concealed") ? true : false;
+	}
+
+	get targetable () {
+
+		return !this.exalted && !this.concealed;
 	}
 
 	destroy () {
@@ -355,7 +367,7 @@ class Card {
 
 		var eff = this.eff;
 
-		if (!this.isType("character") || !this.onBoard || !target.onBoard || this.area === target.area || eff.frozen || eff.atk <= 0 || eff.range <= 0)
+		if (!this.isType("character") || !this.onBoard || !target.onBoard || this.area === target.area || eff.frozen || eff.atk <= 0 || eff.range <= 0 || target.concealed)
 			return false;
 		if (eff.firstTurn && !this.hasState("rush"))
 			return false;
@@ -475,7 +487,7 @@ class Card {
 
 	cover (other, flying = false) {
 
-		if (!this.isType("character") || !this.onBoard || !other.onBoard)
+		if (!this.isType("character") || !this.onBoard || !other.onBoard || this.concealed)
 			return false;
 		return (other.location.isBehind(this.location) || (this.hasState("cover neighbors") && other.location.isNeighborTo(this.location))) && flying === this.hasState("flying");
 	}

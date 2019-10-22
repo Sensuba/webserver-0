@@ -15,6 +15,8 @@ class Variation extends Bloc {
 				x.hp = Math.max(0, x.hp + ins[2]);
 			if (ins[3])
 				x.range = Math.max(0, x.range + ins[3]);
+			if (ins[4])
+				x.ol = Math.max(0, x.ol + ins[4]);
 			return x;
 		}];
 		this.types = [Types.int, Types.int, Types.int, Types.int, Types.int];

@@ -8,12 +8,14 @@ class AreaOfEffect extends Bloc {
 		super("aoe", src, ctx, true);
 		this.f = (src, ins, image) => {
 			var area = ins[0], targets = ins[1];
-			area.forEach (tile => {
-				if (tile.occupied && targets(tile.card)) {
-					this.out = [tile.card];
-					if (this["for each"])
-						this["for each"].execute(image);
-				}
+			area.forEach (loc => {
+				loc.cards.forEach(card => {
+					if (targets === null || targets(card)) {
+						this.out = [card];
+						if (this["for each"])
+							this["for each"].execute(image);
+					}
+				});
 			})
 			this.out = null;
 			if (this.completed)

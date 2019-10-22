@@ -46,10 +46,12 @@ class Hand {
 	addCard (card) {
 
 		if (this.count >= MAX_CARDS && !this.hasCard(card))
-			card.destroy();
-		this.cards.push(card);
-		if (card.location !== this)
-			card.goto(this);
+			this.discard(card);
+		else {
+			this.cards.push(card);
+			if (card.location !== this)
+				card.goto(this);
+		}
 	}
 
 	removeCard (card) {
@@ -64,6 +66,11 @@ class Hand {
 	hasCard (card) {
 
 		return this.cards.includes (card);
+	}
+
+	discard (card) {
+		
+		card.destroy();
 	}
 }
 
