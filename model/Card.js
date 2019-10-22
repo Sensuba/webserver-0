@@ -209,7 +209,7 @@ class Card {
 
 	get targetable () {
 
-		return !this.exalted && !this.concealed;
+		return !this.exalted && (!this.concealed || (this.area && this.area.isPlaying));
 	}
 
 	destroy () {
