@@ -302,6 +302,7 @@ class Card {
 		this.events = [];
 		this.states = {};
 		this.shield = false;
+		this.deactivate();
 		delete this.blueprint;
 		this.mana = parseInt(this.model.mana, 10);
 		this.atk = parseInt(this.model.atk, 10);
