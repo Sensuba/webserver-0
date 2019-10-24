@@ -580,7 +580,8 @@ class Card {
 
 	resetSickness () {
 
-		this.actionPt = 1;
+		this.actionPt = 0;
+		this.skillPt = 1;
 		this.motionPt = 0;
 		this.firstTurn = true;
 		this.strikes = 0;
