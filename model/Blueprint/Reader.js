@@ -230,6 +230,8 @@ class Reader {
 			case "addshield-data": bloc = new Data(el.type, card, ctx, d => [d.src]); break;
 			case "breakshield-trigger": bloc = new Trigger(el.type, card, ctx, "breakshield"); break;
 			case "breakshield-data": bloc = new Data(el.type, card, ctx, d => [d.src]); break;
+			case "destroygem-trigger": bloc = new Trigger(el.type, card, ctx, "usegem"); break;
+			case "destroygem-data": bloc = new Data(el.type, card, ctx, d => [d.src.area]); break;
 			default: bloc = new Bloc(el.type, card, ctx); break;
 			}
 			ctx[key].push(bloc);

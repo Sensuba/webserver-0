@@ -1,5 +1,6 @@
 var Bloc = require('./Bloc');
 var Types = require('./Types');
+var EListener = require('../Listener');
 
 class Listener extends Bloc {
 
@@ -16,12 +17,13 @@ class Listener extends Bloc {
 		var cpt = this.computeIn();
 		var event = cpt[0];
 		var onBoard = cpt[1];
-		event.subscribe((t,s,d) => {
+		var that = this;
+		owner.passives.push(new EListener(owner, () => event.subscribe((t,s,d) => {
 			if (!onBoard || owner.onBoard) {
-				this.data = { src: s, data: d };
-				this.execute(image);
+				that.data = { src: s, data: d };
+				that.execute(image);
 			}
-		});
+		})));
 	}
 }
 
