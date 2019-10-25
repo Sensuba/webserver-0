@@ -77,6 +77,7 @@ class Card {
 		delete copy.mutdata;
 		delete copy.php;
 		delete copy.dying;
+		delete copy.variables;
 		copy.model = this.model.idCardmodel;
 		return copy;
 	}
@@ -126,8 +127,11 @@ class Card {
 
 		//var model = this.loadModel();
 		var model = this.model;
-		for (var k in model)
+		for (var k in model) {
 			this[k] = model[k];
+			if (!isNaN(this[k]))
+				this[k] = parseInt(this[k], 10);
+		}
 		delete this.supercode;
 		this.ol = 0;
 		this.events = [];
@@ -145,14 +149,6 @@ class Card {
 			Reader.read(this.blueprint, this);
 		if (this.isType("artifact"))
 			this.faculties.push(new ArtifactSkill(new Event(() => new Update(() => this.destroy(), this.gameboard)), 0));
-		if (this.mana && typeof this.mana === 'string')
-			this.mana = parseInt(this.mana, 10);
-		if (this.atk && typeof this.atk === 'string')
-			this.atk = parseInt(this.atk, 10);
-		if (this.hp && typeof this.hp === 'string')
-			this.hp = parseInt(this.hp, 10);
-		if (this.range && typeof this.range === 'string')
-			this.range = parseInt(this.range, 10);
 	}
 
 	levelUp () {
@@ -309,14 +305,13 @@ class Card {
 		this.cmutations = [];
 		this.events = [];
 		this.states = {};
-		this.shield = false;
+		this.breakShield();
 		this.deactivate();
 		delete this.blueprint;
 		this.mana = parseInt(this.model.mana, 10);
 		this.atk = parseInt(this.model.atk, 10);
 		this.hp = parseInt(this.model.hp, 10);
 		this.chp = Math.min(this.eff.hp, this.chp);
-		this.breakShield();
 		this.gameboard.notify("silence", this);
 	}
 
@@ -584,6 +579,69 @@ class Card {
 		this.skillPt = skill;
 		this.motionPt = motion;
 		this.gameboard.notify("setpoints", this, { type: "int", value: action }, { type: "int", value: skill }, { type: "int", value: motion });
+	}
+
+	setVariable (name, value) {
+
+		this.variables = this.variables || {};
+		this.variables[name] = value;
+	}
+
+	getVariable (name) {
+
+		return this.variables ? this.variables[name] : undefined;
+	}
+
+	clearVariable (name) {
+
+		this.setVariable(name, null);
+	}
+
+	transform (model) {
+
+		this.model = model;
+		this.resetBody();
+
+		if (this.onBoard) {
+			this.skillPt = 1;
+			this.chp = this.hp;
+			this.activate();
+			if (this.isType("character"))
+				this.resetSickness();
+		}
+		this.gameboard.notify("transform", this, {data:this.data});
+	}
+
+	copy (other) {
+
+		var data = other.data;
+		for (var k in data) {
+			if (k === "id")
+				continue;
+			this[k] = data[k];
+			if (!isNaN(this[k]))
+				this[k] = parseInt(this[k], 10);
+		}
+		this.model = other.model;
+		if (this.isType("entity")) {
+			this.update();
+			this.chp = other.chp;
+		}
+		this.events = [];
+		this.faculties = [];
+		this.passives = [];
+		this.mutations = [];
+		this.cmutations = [];
+		if (this.blueprint)
+			Reader.read(this.blueprint, this);
+
+		if (this.onBoard) {
+			this.skillPt = 1;
+			this.activate();
+			if (this.isType("character"))
+				this.resetSickness();
+		}
+		this.gameboard.notify("transform", this, {data:this.data});
 	}
 
 	resetSickness () {
