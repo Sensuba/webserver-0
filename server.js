@@ -115,8 +115,10 @@ var start = () => io.sockets.on('connection', function (socket) {
 
 		let room = socket.room;
 		socket.leave(room);
-		if (room && rooms[room])
+		if (room && rooms[room]) {
 			rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
+			io.sockets.in(socket.room).emit("endgame", {win: true});
+		}
 		if (room && rooms[room] && rooms[room].players.length == 0)
 			delete rooms[room];
 	}
