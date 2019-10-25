@@ -1,4 +1,5 @@
 var Area = require("./Area");
+var Log = require("./Log");
 
 class GameBoard {
 
@@ -21,6 +22,7 @@ class GameBoard {
 		this.auras = [];
 		this.subscriptions = {};
 		this.indexSubscription = 0;
+		this.log = new Log();
 
 		this.areas = [
 			new Area(0, this),
@@ -34,7 +36,9 @@ class GameBoard {
 
 	notify (type, src, ...data) {
 
-		this.send(type, src.id, data.map(d => d ? d.id || d : d));
+		var datamap = data.map(d => d ? d.id || d : d);
+		this.log.add({ type, src, data });
+		this.send(type, src.id, datamap);
 		if (!this.subscriptions[type])
 			return;
 		this.subscriptions[type].slice().forEach(sub => sub.notify(type, src, data));

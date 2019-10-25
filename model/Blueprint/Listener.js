@@ -16,7 +16,7 @@ class Listener extends Bloc {
 		var cpt = this.computeIn();
 		var event = cpt[0];
 		var onBoard = cpt[1];
-		event((t,s,d) => {
+		event.subscribe((t,s,d) => {
 			if (!onBoard || owner.onBoard) {
 				this.data = { src: s, data: d };
 				this.execute(image);

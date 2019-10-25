@@ -151,6 +151,20 @@ class Types {
 		}
 	}
 
+	static period (value, src) {
+
+		if (!(typeof value === 'string'))
+			return value;
+		switch (value) {
+		case 'this turn': return 1;
+		case 'opponent\'s turn': return 2;
+		case 'since previous turn': return 3;
+		case 'previous turn': return 4;
+		case 'all game': return 0;
+		default: return 0;
+		}
+	}
+
 	static data (value, src) {
 
 		return value || [];

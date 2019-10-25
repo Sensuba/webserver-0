@@ -76,6 +76,7 @@ class Card {
 		delete copy.mutatedState;
 		delete copy.mutdata;
 		delete copy.php;
+		delete copy.dying;
 		copy.model = this.model.idCardmodel;
 		return copy;
 	}
@@ -98,6 +99,7 @@ class Card {
 		if (this.location === loc)
 			return;
 
+		delete this.dying;
 		var former = this.location;
 		this.location = loc;
 		if (former && former.hasCard (this))
@@ -218,11 +220,15 @@ class Card {
 
 	destroy () {
 
+		if (this.destroyed)
+			return;
+		this.dying = true;
+		let onboard = this.onBoard;
 		this.clearBoardInstance();
-		this.gameboard.notify("destroycard", this);
+		this.gameboard.notify("destroycard", this, { type: "boolean", value: onboard });
 		if (this.isType("hero"))
 			this.gameboard.heroDies(this.area.id.no);
-		if (!this.onBoard || this.chp)
+		if (!this.dying)
 			return;
 		if (this.area)
 			this.goto(this.area.cemetery);
@@ -580,7 +586,7 @@ class Card {
 
 	resetSickness () {
 
-		this.actionPt = 0;
+		this.actionPt = 1;
 		this.skillPt = 1;
 		this.motionPt = 0;
 		this.firstTurn = true;
@@ -605,7 +611,7 @@ class Card {
 		var mut = new Mutation(effect);
 		mut.attach(this);
 		if (end)
-			var unsub = end((t,s,d) => {
+			var unsub = end.subscribe((t,s,d) => {
 				mut.detach();
 				unsub();
 			});

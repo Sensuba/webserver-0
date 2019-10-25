@@ -44,6 +44,7 @@ var CanPay = require('./CanPay');
 var FilterStats = require('./FilterStats');
 var CheckCard = require('./CheckCard');
 var CheckTile = require('./CheckTile');
+var CheckLocation = require('./CheckLocation');
 var CompareCards = require('./CompareCards');
 var CompareTiles = require('./CompareTiles');
 var MergeCardFilters = require('./MergeCardFilters');
@@ -68,7 +69,8 @@ var BreakLocation = require('./BreakLocation');
 var BreakPlayer = require('./BreakPlayer');
 
 var Archetype = require('./Archetype');
-var MutationTarget = require('./MutationTarget');
+var Analyse = require('./Analyse');
+var InnerData = require('./InnerData');
 var Token = require('./Token');
 var Timestamp = require('./Timestamp');
 var LimitBreak = require('./LimitBreak');
@@ -149,6 +151,7 @@ class Reader {
 			case "canpay": bloc = new CanPay(card, ctx); break;
 			case "checkcard": bloc = new CheckCard(card, ctx); break;
 			case "checktile": bloc = new CheckTile(card, ctx); break;
+			case "checkloc": bloc = new CheckLocation(card, ctx); break;
 			case "mergecfilters": bloc = new MergeCardFilters(card, ctx); break;
 			case "mergetfilters": bloc = new MergeTileFilters(card, ctx); break;
 			case "cmpcards": bloc = new CompareCards(card, ctx); break;
@@ -167,7 +170,8 @@ class Reader {
 			case "mergemut": bloc = new MergeMutations(card, ctx); break;
 			case "conditionmut": bloc = new ConditionalMutation(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;
-			case "innerdata": bloc = new MutationTarget(card, ctx); break;
+			case "analyse": bloc = new Analyse(card, ctx); break;
+			case "innerdata": bloc = new InnerData(card, ctx); break;
 			case "token": bloc = new Token(card, ctx); break;
 			case "timestamp": bloc = new Timestamp(card, ctx); break;
 			case "limitbrk": bloc = new LimitBreak(card, ctx); break;
@@ -213,7 +217,7 @@ class Reader {
 			case "summon-trigger": bloc = new Trigger(el.type, card, ctx, "summon"); break;
 			case "summon-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0]]); break;
 			case "destroy-trigger": bloc = new Trigger(el.type, card, ctx, "destroycard"); break;
-			case "destroy-data": bloc = new Data(el.type, card, ctx, d => [d.src]); break;
+			case "destroy-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0].value]); break;
 			case "damage-trigger": bloc = new Trigger(el.type, card, ctx, "damagecard"); break;
 			case "damage-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[1], d.data[0]]); break;
 			case "heal-trigger": bloc = new Trigger(el.type, card, ctx, "healcard"); break;

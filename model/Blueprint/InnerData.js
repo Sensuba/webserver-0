@@ -1,6 +1,6 @@
 var Bloc = require('./Bloc');
 
-class MutationTarget extends Bloc {
+class InnerData extends Bloc {
 
 	constructor (src, ctx) {
 
@@ -10,4 +10,4 @@ class MutationTarget extends Bloc {
 	}
 }
 
-module.exports = MutationTarget;
+module.exports = InnerData;

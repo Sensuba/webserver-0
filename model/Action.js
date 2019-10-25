@@ -12,7 +12,7 @@ class Action extends Faculty {
 
 	canBeUsed (src, target) {
 
-		return src.actionPt > 0 && !src.frozen && (!this.event.requirement || this.event.requirement(src, target));
+		return src.actionPt > 0 && !src.firstTurn && !src.frozen && (!this.event.requirement || this.event.requirement(src, target));
 	}
 }
 
