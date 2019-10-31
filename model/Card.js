@@ -379,6 +379,8 @@ class Card {
 
 		var eff = this.eff;
 
+		if (!this.area.isPlaying)
+			return false;
 		if (!this.onBoard)
 			return false;
 		if (eff.frozen)
@@ -569,6 +571,8 @@ class Card {
 
 	canUse (faculty, target) {
 		
+		if (!this.area.isPlaying)
+			return false;
 		return faculty.canBeUsed(this, target);
 	}
 
