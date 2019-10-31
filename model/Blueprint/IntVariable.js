@@ -5,7 +5,7 @@ class IntVariable extends Bloc {
 
 	constructor (src, ctx) {
 
-		super("intvar", src, ctx, true);
+		super("intvar", src, ctx);
 		this.f = (src, ins) => [src.getVariable(ins[0]), src.getVariable(ins[0]) !== undefined];
 		this.types = [Types.string];
 	}

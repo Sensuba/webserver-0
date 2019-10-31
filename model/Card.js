@@ -55,6 +55,11 @@ class Card {
 		return this.location instanceof Cemetery;
 	}
 
+	get isGhost() {
+
+		return this.onBoard && this.chp <= 0;
+	}
+
 	get damaged() {
 
 		if (!this.isType("character"))
@@ -295,6 +300,15 @@ class Card {
 		this.gameboard.notify("setcard", this, cost, atk, hp, range);
 		if (this.chp <= 0)
 			new Update(() => this.destroy(), this.gameboard);
+	}
+
+	boostoverload (value) {
+
+		if (!value)
+			return;
+
+		this.ol += value;
+		this.gameboard.notify("overloadcard", this, value);
 	}
 
 	silence () {
