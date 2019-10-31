@@ -263,6 +263,11 @@ class Card {
 		if (!this.chp || amt <= 0)
 			return;
 
+		if (!this.isType("artifact") && src.hasState("corruption")) {
+			this.damage(amt, src);
+			return;
+		}
+
 		if (this.isType("artifact"))
 			this.chp += amt;
 		else
