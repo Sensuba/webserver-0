@@ -11,6 +11,7 @@ class ManaPool {
 
 		this.receptacles = [];
 		this.gems = 0;
+		this.extramana = 0;
 	}
 
 	createReceptacle (filled = true) {
@@ -43,6 +44,12 @@ class ManaPool {
 		}
 	}
 
+	addExtraMana (value) {
+
+		this.extramana += value;
+		this.area.gameboard.notify("extramana", this, { type: "int", value: value });
+	}
+
 	get mana () {
 
 		return this.receptacles.filter(r => r).length;
@@ -50,7 +57,7 @@ class ManaPool {
 
 	get usableMana () {
 
-		return this.mana + this.gems;
+		return this.mana + this.gems + this.extramana;
 	}
 
 	get maxMana() {
@@ -67,6 +74,9 @@ class ManaPool {
 
 		if (value <= this.usableMana) {
 			this.area.gameboard.notify("usemana", this, { type: "int", value: value });
+			let usedextramana = Math.min(value, this.extramana)
+			value -= usedextramana;
+			this.extramana -= usedextramana;
 			for (var i = this.receptacles.length - 1; i >= 0 && value > 0; i--) {
 				if (this.receptacles[i]) {
 					this.receptacles[i] = false;
@@ -83,6 +93,12 @@ class ManaPool {
 		let mnb = nb || MAX_MANA;
 		this.receptacles = this.receptacles.map(r => r || mnb-- > 0);
 		this.area.gameboard.notify("refillmana", this, { type: "int", value: nb });
+	}
+
+	reload () {
+
+		this.receptacles = this.receptacles.map(r => true);
+		this.extramana = 0;
 	}
 }
 

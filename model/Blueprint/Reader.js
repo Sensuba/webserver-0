@@ -41,6 +41,7 @@ var CreateReceptacle = require('./CreateReceptacle');
 var CreateGem = require('./CreateGem');
 var DestroyGem = require('./DestroyGem');
 var RefillMana = require('./RefillMana');
+var ExtraMana = require('./ExtraMana');
 var UseMana = require('./UseMana');
 var StoreInteger = require('./StoreInteger');
 var StoreCard = require('./StoreCard');
@@ -160,6 +161,7 @@ class Reader {
 			case "creategem": bloc = new CreateGem(card, ctx); break;
 			case "destroygem": bloc = new DestroyGem(card, ctx); break;
 			case "createmana": bloc = new RefillMana(card, ctx); break;
+			case "extramana": bloc = new ExtraMana(card, ctx); break;
 			case "usemana": bloc = new UseMana(card, ctx); break;
 			case "writeintvar": bloc = new StoreInteger(card, ctx); break;
 			case "writecardvar": bloc = new StoreCard(card, ctx); break;
