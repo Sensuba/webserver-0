@@ -727,7 +727,7 @@ class Card {
 		}
 
 		if (this.isEff || this.computing)
-			return contacteffect(this);
+			return contacteffect(this.mutatedState || this);
 		if (!this.mutatedState)
 			this.update();
 		return contacteffect(this.mutatedState);
