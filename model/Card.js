@@ -9,11 +9,13 @@ var ArtifactSkill = require("./ArtifactSkill");
 var Mutation = require("./Mutation");
 var Reader = require("./Blueprint/Reader");
 
+const MAX_RANGE = 3;
+
 class Card {
 
 	constructor (model, board, location) {
 
-		this.id = { type: "card", no: board.registerCard(this) };
+		this.id = { type: "card", no: board ? board.registerCard(this) : -1 };
 		this.model = model;
 		this.gameboard = board;
 
@@ -278,6 +280,8 @@ class Card {
 
 	boost (atk, hp, range) {
 
+		if (this.range >= MAX_RANGE && range > 0)
+			range = null;
 		if (!atk && !hp && !range)
 			return;
 
@@ -285,7 +289,7 @@ class Card {
 		this.hp += hp;
 		if (hp < 0 && !this.isType("artifact"))
 			this.chp = Math.min(this.chp, this.eff.hp);
-		this.range += range;
+		this.range = Math.min(this.range + range, MAX_RANGE);
 		this.gameboard.notify("boostcard", this, atk, hp, range);
 		if (this.chp <= 0)
 			new Update(() => this.destroy(), this.gameboard);
@@ -438,6 +442,8 @@ class Card {
 		if (!this.eff.states.initiative)
 			target.ripost(this);
 		this.oncontact = null;
+		if (!target.isType("artifact"))
+			this.gameboard.notify("charcontact", this, target);
 		this.gameboard.update();
 	}
 
@@ -510,8 +516,7 @@ class Card {
 			return true;
 		if (!targets || targets.length === 0)
 			return false;
-
-		return targets.every((t, i) => this.targets[i](this, t));
+		return targets.every((t, i) => this.targets[i] && this.targets[i](this, t));
 	}
 
 	get targets () {

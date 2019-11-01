@@ -31,7 +31,8 @@ var Bank = (() => {
 
 	return {
 		init: init,
-		get: get
+		get: get,
+		list: () => Object.assign({}, this.list)
 	}
 })();
 
