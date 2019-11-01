@@ -27,6 +27,7 @@ var Freeze = require('./Freeze');
 var Silence = require('./Silence');
 var SetCard = require('./Set');
 var Boost = require('./Boost');
+var ChangeCost = require('./ChangeCost');
 var Overload = require('./Overload');
 var Destroy = require('./Destroy');
 var AddEffect = require('./AddEffect');
@@ -144,6 +145,7 @@ class Reader {
 			case "breakshield": bloc = new BreakShield(card, ctx); break;
 			case "set": bloc = new SetCard(card, ctx); break;
 			case "boost": bloc = new Boost(card, ctx); break;
+			case "changecost": bloc = new ChangeCost(card, ctx); break;
 			case "overload": bloc = new Overload(card, ctx); break;
 			case "silence": bloc = new Silence(card, ctx); break;
 			case "freeze": bloc = new Freeze(card, ctx); break;

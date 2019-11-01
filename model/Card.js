@@ -145,6 +145,7 @@ class Card {
 		this.mutations = [];
 		this.cmutations = [];
 		this.states = {};
+		this.shield = false;
 		this.clearBoardInstance();
 		if (this.isType("hero")) {
 			this.level = 1;
@@ -288,6 +289,16 @@ class Card {
 		this.gameboard.notify("boostcard", this, atk, hp, range);
 		if (this.chp <= 0)
 			new Update(() => this.destroy(), this.gameboard);
+	}
+
+	changeCost (value) {
+
+		if (!value || (value < 0 && this.mana <= 0))
+			return;
+
+		value = Math.min(this.mana, value);
+		this.mana += value;
+		this.gameboard.notify("changecost", this, value);
 	}
 
 	set (cost, atk, hp, range) {
