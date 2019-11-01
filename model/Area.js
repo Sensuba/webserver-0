@@ -70,6 +70,11 @@ class Area {
 		if (this.isPlaying)
 			this.gameboard.newTurn();
 	}
+
+	extraTurn () {
+
+		this.extraTurns = (this.extraTurns || 0) + 1;
+	}
 }
 
 module.exports = Area;

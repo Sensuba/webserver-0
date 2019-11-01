@@ -72,7 +72,10 @@ class GameBoard {
 
 	newTurn () {
 
-		this.currentArea = this.currentArea.opposite;
+		if (this.currentArea.extraTurns)
+			this.currentArea.extraTurns--;
+		else
+			this.currentArea = this.currentArea.opposite;
 		this.currentArea.newTurn();
 	}
 

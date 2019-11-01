@@ -9,6 +9,7 @@ var Action = require('./Action');
 var Skill = require('./Skill');
 var Listener = require('./Listener');
 var LastWill = require('./LastWill');
+var Trap = require('./Trap');
 var Frenzy = require('./Frenzy');
 var PassiveMutation = require('./PassiveMutation');
 var ContactMutation = require('./ContactMutation');
@@ -97,6 +98,8 @@ var AreaOfEffect = require('./AreaOfEffect');
 var ForEachTile = require('./ForEachTile');
 var Timer = require('./Timer');
 
+var ExtraTurn = require('./ExtraTurn');
+
 var Plus = require('./Plus');
 var Minus = require('./Minus');
 var Times = require('./Times');
@@ -131,6 +134,7 @@ class Reader {
 			case "skill": bloc = new Skill(card, ctx, el.target); break;
 			case "listener": bloc = new Listener(card, ctx); break;
 			case "lw": bloc = new LastWill(card, ctx); break;
+			case "trap": bloc = new Trap(card, ctx); break;
 			case "frenzy": bloc = new Frenzy(card, ctx); break;
 			case "passivemut": bloc = new PassiveMutation(card, ctx); break;
 			case "contactmut": bloc = new ContactMutation(card, ctx); break;
@@ -213,6 +217,7 @@ class Reader {
 			case "timer": bloc = new Timer(card, ctx); break;
 			case "aoe": bloc = new AreaOfEffect(card, ctx); break;
 			case "fortile": bloc = new ForEachTile(card, ctx); break;
+			case "extraturn": bloc = new ExtraTurn(card, ctx); break;
 			case "opplus": bloc = new Plus(card, ctx); break;
 			case "opminus": bloc = new Minus(card, ctx); break;
 			case "optimes": bloc = new Times(card, ctx); break;
