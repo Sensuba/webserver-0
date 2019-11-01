@@ -115,6 +115,8 @@ var start = () => io.sockets.on('connection', function (socket) {
 
 		let room = socket.room;
 		socket.leave(room);
+		if (rooms[room].players.every(p => p.socket !== socket))
+			return;
 		if (room && rooms[room]) {
 			rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
 			io.sockets.in(socket.room).emit("endgame", {win: true});
