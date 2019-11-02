@@ -6,7 +6,7 @@ class Listener {
 		this.subscribe = subscribe;
 		this.unsubscribe = () => {};
 		this.activated = false;
-		if (src.activated || this.globaleff)
+		if (src.activated || globaleff)
 			this.activate();
 	}
 
