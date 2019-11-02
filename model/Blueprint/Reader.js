@@ -56,6 +56,7 @@ var FilterStats = require('./FilterStats');
 var CheckCard = require('./CheckCard');
 var CheckTile = require('./CheckTile');
 var CheckLocation = require('./CheckLocation');
+var CheckModel = require('./CheckModel');
 var CompareCards = require('./CompareCards');
 var CompareTiles = require('./CompareTiles');
 var MergeCardFilters = require('./MergeCardFilters');
@@ -179,6 +180,7 @@ class Reader {
 			case "canpay": bloc = new CanPay(card, ctx); break;
 			case "checkcard": bloc = new CheckCard(card, ctx); break;
 			case "checktile": bloc = new CheckTile(card, ctx); break;
+			case "checkmodel": bloc = new CheckModel(card, ctx); break;
 			case "checkloc": bloc = new CheckLocation(card, ctx); break;
 			case "mergecfilters": bloc = new MergeCardFilters(card, ctx); break;
 			case "mergetfilters": bloc = new MergeTileFilters(card, ctx); break;

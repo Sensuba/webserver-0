@@ -126,6 +126,20 @@ class Types {
 		}
 	}
 
+	static modelfilter (value, src) {
+
+		if (!(typeof value === 'string'))
+			return value;
+		switch (value) {
+		case 'hero':
+		case 'figure':
+		case 'spell':
+		case 'artifact':
+			return target => target.cardType === value;
+		default: return target => true;
+		}
+	}
+
 	static state (value, src) {
 
 		return value;
