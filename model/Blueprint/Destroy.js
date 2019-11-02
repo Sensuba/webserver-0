@@ -8,7 +8,10 @@ class Destroy extends Bloc {
 
 		super("destroy", src, ctx, true);
 		this.f = (src, ins) => {
-			new Update(() => ins[0].destroy(), ins[0].gameboard);
+			if (ins[0].onBoard)
+				new Update(() => ins[0].destroy(), ins[0].gameboard);
+			else
+				ins[0].destroy();
 			return [];
 		};
 		this.types = [Types.card];
