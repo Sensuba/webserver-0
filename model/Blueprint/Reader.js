@@ -94,11 +94,13 @@ var RandomBool = require('./RandomBool');
 var IntVariable = require('./IntVariable');
 var CardVariable = require('./CardVariable');
 var LocationVariable = require('./LocationVariable');
+var TriggerEffect = require('./TriggerEffect');
 
 var Branch = require('./Branch');
 var Loop = require('./Loop');
 var AreaOfEffect = require('./AreaOfEffect');
 var ForEachTile = require('./ForEachTile');
+var ForEachEffect = require('./ForEachEffect');
 var Timer = require('./Timer');
 
 var ExtraTurn = require('./ExtraTurn');
@@ -176,6 +178,7 @@ class Reader {
 			case "writeintvar": bloc = new StoreInteger(card, ctx); break;
 			case "writecardvar": bloc = new StoreCard(card, ctx); break;
 			case "writelocvar": bloc = new StoreLocation(card, ctx); break;
+			case "trigger": bloc = new TriggerEffect(card, ctx); break;
 			case "clearvar": bloc = new ClearVariable(card, ctx); break;
 			case "canpay": bloc = new CanPay(card, ctx); break;
 			case "checkcard": bloc = new CheckCard(card, ctx); break;
@@ -223,6 +226,7 @@ class Reader {
 			case "timer": bloc = new Timer(card, ctx); break;
 			case "aoe": bloc = new AreaOfEffect(card, ctx); break;
 			case "fortile": bloc = new ForEachTile(card, ctx); break;
+			case "foreffect": bloc = new ForEachEffect(card, ctx); break;
 			case "extraturn": bloc = new ExtraTurn(card, ctx); break;
 			case "opplus": bloc = new Plus(card, ctx); break;
 			case "opminus": bloc = new Minus(card, ctx); break;

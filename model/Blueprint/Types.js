@@ -145,6 +145,11 @@ class Types {
 		return value;
 	}
 
+	static innereffect (value, src) {
+
+		return value;
+	}
+
 	static event (value, src) {
 
 		return typeof value === 'string' ? () => {} : value;
