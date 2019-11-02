@@ -15,10 +15,14 @@ class LastWill extends Bloc {
 	setup (owner, image) {
 
 		var that = this;
-		owner.passives.push(new Listener(owner, () => that.src.gameboard.subscribe("destroycard", (t,s,d) => {
+		var trigger = (t,s,d) => {
 			if (s === owner && owner.onBoard)
 				that.execute(image);
-		})));
+		};
+		var listener = new Listener(owner, () => that.src.gameboard.subscribe("destroycard", trigger));
+		listener.effecttype = "last will";
+		listener.trigger = trigger;
+		owner.passives.push(listener);
 	}
 }
 

@@ -641,6 +641,11 @@ class Card {
 		this.setVariable(name, null);
 	}
 
+	getInnerEffects () {
+
+		return this.passives.slice();
+	}
+
 	transform (model) {
 
 		this.model = model;

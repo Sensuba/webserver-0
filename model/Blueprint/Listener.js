@@ -23,7 +23,7 @@ class Listener extends Bloc {
 				that.data = { src: s, data: d };
 				that.execute(image);
 			}
-		})));
+		}), true));
 	}
 }
 

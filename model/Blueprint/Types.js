@@ -179,6 +179,16 @@ class Types {
 		}
 	}
 
+	static effecttype (value, src) {
+
+		if (!(typeof value === 'string'))
+			return value;
+		switch (value) {
+		case 'last will': return target => target.effecttype === "last will";
+		default: return target => true;
+		}
+	}
+
 	static data (value, src) {
 
 		return value || [];

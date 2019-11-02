@@ -1,12 +1,12 @@
 class Listener {
 
-	constructor (src, subscribe) {
+	constructor (src, subscribe, globaleff) {
 		
 		this.src = src;
 		this.subscribe = subscribe;
 		this.unsubscribe = () => {};
 		this.activated = false;
-		if (src.activated)
+		if (src.activated || this.globaleff)
 			this.activate();
 	}
 
