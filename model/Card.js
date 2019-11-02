@@ -118,7 +118,7 @@ class Card {
 			loc.addCard (this);
 		this.identify();
 		if (this.area && loc.hasCard(this))
-			this.gameboard.notify("cardmove", this, loc);
+			this.gameboard.notify("cardmove", this, loc, former);
 		/*if (former != null && !destroyed)
 			Notify ("card.move", former, value);
 		if (location is Tile)
