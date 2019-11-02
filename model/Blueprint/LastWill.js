@@ -1,5 +1,6 @@
 var Bloc = require('./Bloc');
 var Types = require('./Types');
+var Listener = require('../Listener');
 
 class LastWill extends Bloc {
 
@@ -13,10 +14,11 @@ class LastWill extends Bloc {
 
 	setup (owner, image) {
 
-		this.src.gameboard.subscribe("destroycard", (t,s,d) => {
+		var that = this;
+		owner.passives.push(new Listener(owner, () => that.src.gameboard.subscribe("destroycard", (t,s,d) => {
 			if (s === owner && owner.onBoard)
-				this.execute(image);
-		});
+				that.execute(image);
+		})));
 	}
 }
 

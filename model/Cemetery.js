@@ -5,7 +5,7 @@ class Cemetery {
 
 		this.id = { type: "cemetery", no: area.id.no };
 
-		this.locationOrder = 4;
+		this.locationOrder = 0;
 
 		this.area = area;
 

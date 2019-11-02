@@ -112,7 +112,7 @@ class Card {
 		this.location = loc;
 		if (former && former.hasCard (this))
 			former.removeCard (this);
-		if (former && (loc === null || former.locationOrder > loc.locationOrder || loc.locationOrder === 4))
+		if (former && (loc === null || former.locationOrder > loc.locationOrder || loc.locationOrder === 0))
 			this.resetBody ();
 		if (loc && !loc.hasCard (this))
 			loc.addCard (this);
@@ -235,8 +235,8 @@ class Card {
 			return;
 		this.dying = true;
 		let onboard = this.onBoard;
-		this.clearBoardInstance();
 		this.gameboard.notify("destroycard", this, { type: "boolean", value: onboard });
+		this.clearBoardInstance();
 		if (this.isType("hero"))
 			this.gameboard.heroDies(this.area.id.no);
 		if (!this.dying)
