@@ -32,7 +32,7 @@ class Event {
 	execute (gameboard, src, target) {
 
 		if (!this.requirement || this.requirement(src, target))
-			this.action(target);
+			this.action(src, target);
 		gameboard.update();
 	}
 

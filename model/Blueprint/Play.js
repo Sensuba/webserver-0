@@ -17,10 +17,10 @@ class Play extends Bloc {
 
 		var req = this.in[0]();
 		var tar = this.target ? (req ? (src, target) => (req(src, target) && (!target.card || target.card.targetable)) : (src, target) => true) : null;
-		owner.events.push(new Event(target => {
+		owner.events.push(new Event((src, target) => {
 			if (target)
 				this.chosen = target;
-			this.execute(image);
+			this.execute(src);
 		}, tar));
 	}
 }
