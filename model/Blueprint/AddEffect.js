@@ -1,5 +1,6 @@
 var Bloc = require('./Bloc');
 var Types = require('./Types');
+var PassiveMutation = require('./PassiveMutation');
 
 class AddEffect extends Bloc {
 
@@ -15,7 +16,8 @@ class AddEffect extends Bloc {
 				}
 			}));
 			ins[1].setup(ins[0], ctx.image);
-			//src.gameboard.notify("addeffect", ins[0], src, {type: "int", value: this.mutno});
+			if (ins[1] instanceof PassiveMutation)
+				src.gameboard.notify("addmut", ins[0], src, {type: "int", value: ins[1].mutno});
 			return [];
 		};
 		this.types = [Types.card, Types.effect];
