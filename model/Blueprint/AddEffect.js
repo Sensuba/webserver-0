@@ -15,6 +15,7 @@ class AddEffect extends Bloc {
 				}
 			}));
 			ins[1].setup(ins[0], ctx.image);
+			//src.gameboard.notify("addeffect", ins[0], src, {type: "int", value: this.mutno});
 			return [];
 		};
 		this.types = [Types.card, Types.effect];

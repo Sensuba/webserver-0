@@ -771,19 +771,23 @@ class Card {
 		res = Object.assign({}, this);
 		res.isEff = true;
 		res.states = Object.assign({}, this.states);
+		let updatephp = () => {
+			if (this.isType("character")) {
+				this.php = this.php || { hp: this.hp, chp: this.chp };
+				var plushp = Math.max (0, res.hp - this.php.hp);
+				this.chp = Math.min(res.hp, this.chp + plushp);
+				res.chp = this.chp;
+				this.php = { hp: res.hp, chp: res.chp };
+			}
+		}
 		this.gameboard.auras.forEach(aura => {
 			if (aura.applicable(this))
 				res = aura.apply(res);
 		});
+		updatephp();
 		this.mutatedState = res;
 		res = this.mutations.reduce((card, mut) => mut.apply(card), res);
-		if (this.isType("character")) {
-			this.php = this.php || { hp: this.hp, chp: this.chp };
-			var plushp = Math.max (0, res.hp - this.php.hp);
-			this.chp = Math.min(res.hp, this.chp + plushp);
-			res.chp = this.chp;
-			this.php = { hp: res.hp, chp: res.chp };
-		}
+		updatephp();
 		this.computing = false;
 
 		this.mutatedState = res;
