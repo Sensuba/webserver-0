@@ -7,8 +7,8 @@ class Timer extends Bloc {
 
 		super("timer", src, ctx);
 		this.f = (src, ins, image) => {
-			var unsub = src.gameboard.subscribe("newturn", (t,s,d) => {
-				if (ins[0] === null || ins[0].isPlaying) {
+			var unsub = src.gameboard.subscribe(ins[0].time ? "endturn" : "newturn", (t,s,d) => {
+				if (ins[0].player === null || ins[0].player.isPlaying) {
 					if (this.callback) {
 						this.callback.execute(image);
 						src.gameboard.update();

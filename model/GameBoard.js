@@ -72,6 +72,8 @@ class GameBoard {
 
 	newTurn () {
 
+
+		this.notify("endturn", this.currentArea);
 		if (this.currentArea.extraTurns)
 			this.currentArea.extraTurns--;
 		else
