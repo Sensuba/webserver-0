@@ -91,7 +91,7 @@ class Card {
 
 	summon (tile) {
 
-		if (this.onBoard && this.chp !== undefined && this.chp <= 0)
+		if (this.dying)
 			this.resetBody();
 		this.skillPt = 1;
 		this.chp = this.eff.hp;
@@ -152,6 +152,7 @@ class Card {
 		this.states = {};
 		this.shield = false;
 		this.dying = false;
+		delete this.variables;
 		this.clearBoardInstance();
 		if (wasActivated)
 			this.activate();
@@ -237,6 +238,8 @@ class Card {
 		this.dying = true;
 		let onboard = this.onBoard;
 		this.gameboard.notify("destroycard", this, { type: "boolean", value: onboard });
+		if (!this.dying)
+			return;
 		this.clearBoardInstance();
 		if (this.isType("hero"))
 			this.gameboard.heroDies(this.area.id.no);

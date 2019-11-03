@@ -49,6 +49,7 @@ var ExtraMana = require('./ExtraMana');
 var UseMana = require('./UseMana');
 var StoreInteger = require('./StoreInteger');
 var StoreCard = require('./StoreCard');
+var StoreModel = require('./StoreModel');
 var StoreLocation = require('./StoreLocation');
 var ClearVariable = require('./ClearVariable');
 
@@ -94,6 +95,7 @@ var RandomInt = require('./RandomInt');
 var RandomBool = require('./RandomBool');
 var IntVariable = require('./IntVariable');
 var CardVariable = require('./CardVariable');
+var ModelVariable = require('./ModelVariable');
 var LocationVariable = require('./LocationVariable');
 var TriggerEffect = require('./TriggerEffect');
 
@@ -179,6 +181,7 @@ class Reader {
 			case "usemana": bloc = new UseMana(card, ctx); break;
 			case "writeintvar": bloc = new StoreInteger(card, ctx); break;
 			case "writecardvar": bloc = new StoreCard(card, ctx); break;
+			case "writemodelvar": bloc = new StoreModel(card, ctx); break;
 			case "writelocvar": bloc = new StoreLocation(card, ctx); break;
 			case "trigger": bloc = new TriggerEffect(card, ctx); break;
 			case "clearvar": bloc = new ClearVariable(card, ctx); break;
@@ -213,6 +216,7 @@ class Reader {
 			case "manapool": bloc = new ManaPool(card, ctx); break;
 			case "intvar": bloc = new IntVariable(card, ctx); break;
 			case "cardvar": bloc = new CardVariable(card, ctx); break;
+			case "modelvar": bloc = new ModelVariable(card, ctx); break;
 			case "locvar": bloc = new LocationVariable(card, ctx); break;
 			case "findcard": bloc = new FindRandomCard(card, ctx); break;
 			case "findmodel": bloc = new FindRandomModel(card, ctx); break;
