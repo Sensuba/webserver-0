@@ -151,6 +151,7 @@ class Card {
 		this.cmutations = [];
 		this.states = {};
 		this.shield = false;
+		this.dying = false;
 		this.clearBoardInstance();
 		if (wasActivated)
 			this.activate();
