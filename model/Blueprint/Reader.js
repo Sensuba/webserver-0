@@ -40,6 +40,7 @@ var Summon = require('./Summon');
 var Transform = require('./Transform');
 var Copy = require('./Copy');
 var AddMutation = require('./AddMutation');
+var MutateNextCard = require('./MutateNextCard');
 var CreateReceptacle = require('./CreateReceptacle');
 var CreateGem = require('./CreateGem');
 var DestroyGem = require('./DestroyGem');
@@ -163,6 +164,7 @@ class Reader {
 			case "levelup": bloc = new LevelUp(card, ctx); break;
 			case "addeffect": bloc = new AddEffect(card, ctx); break;
 			case "addmut": bloc = new AddMutation(card, ctx); break;
+			case "mutnext": bloc = new MutateNextCard(card, ctx); break;
 			case "addpoints": bloc = new AddPoints(card, ctx); break;
 			case "setstate": bloc = new SetState(card, ctx); break;
 			case "generate": bloc = new Generate(card, ctx); break;
