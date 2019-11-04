@@ -15,6 +15,7 @@ class Aspect {
 			return;
 		this.player.gameboard.addAura(this);
 		this.activated = true;
+		this.player.gameboard.update();
 	}
 
 	deactivate () {
@@ -23,6 +24,7 @@ class Aspect {
 			return;
 		this.player.gameboard.clearAura(this);
 		this.activated = false;
+		this.player.gameboard.update();
 	}
 
 	applicable (target) {

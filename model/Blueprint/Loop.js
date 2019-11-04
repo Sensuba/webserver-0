@@ -8,7 +8,7 @@ class Loop extends Bloc {
 		super("loop", src, ctx, true);
 		this.f = (src, ins) => {
 			this.times = this.times === 0 ? this.times - 1 : (this.times || ins[0] || 256) - 1;
-			if (!ins[1] || this.times < 0) {
+			if (!this.in[1](src) || this.times < 0) {
 				if (this.completed)
 					this.completed.execute();
 				return [0];
