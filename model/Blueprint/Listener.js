@@ -22,8 +22,6 @@ class Listener extends Bloc {
 			if (!onBoard || owner.onBoard) {
 				that.data = { src: s, data: d };
 				that.execute(image);
-				if (owner.onBoard)
-					owner.gameboard.notify("listener", owner);
 			}
 		}), !onBoard));
 	}
