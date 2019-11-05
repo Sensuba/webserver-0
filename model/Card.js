@@ -285,8 +285,12 @@ class Card {
 
 		if (this.isType("artifact"))
 			this.chp += amt;
-		else
-			this.chp = Math.min(this.eff.hp, this.chp + amt);
+		else {
+			amt = Math.min(this.eff.hp, this.chp + amt);
+			if (amt <= 0)
+				return;
+			this.chp = amt;
+		}
 		this.gameboard.notify("healcard", this, amt, src);
 	}
 
