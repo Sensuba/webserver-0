@@ -20,7 +20,7 @@ class Frenzy extends Bloc {
 				that.victim = s;
 				that.unsubVictim = that.src.gameboard.subscribe("destroycard", (t2,s2,d2) => {
 					if (that.victim === s2) {
-						that.execute(image);
+						that.execute({src: owner, image: image});
 						that.unsubVictim();
 					}
 				});

@@ -13,7 +13,7 @@ class ContactMutation extends Bloc {
 
 	setup (owner, image) {
 
-		var mut = x => this.in[0](owner, x)(x);
+		var mut = x => this.in[0]({src: owner, data: x})(x);
 		owner.cmutations.push({effect: mut, targets: this.in[1]()});
 	}
 }

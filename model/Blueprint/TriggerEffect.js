@@ -7,15 +7,15 @@ class TriggerEffect extends Bloc {
 
 		super("trigger", src, ctx, true);
 		this.f = (src, ins) => {
-			switch (ins[0].effecttype) {
-			case "last will":
-				ins[0].trigger("trigger", ins[2]);
+			switch (ins[0].type) {
+			case "lw":
+				ins[0].trigger(ins[2]);
 				break;
 			default: break;
 			}
 			return [];
 		};
-		this.types = [Types.innereffect, Types.location, Types.card];
+		this.types = [Types.effect, Types.location, Types.card];
 	}
 }
 

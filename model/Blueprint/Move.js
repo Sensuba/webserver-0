@@ -6,7 +6,7 @@ class Move extends Bloc {
 	constructor (src, ctx) {
 
 		super("move", src, ctx, true);
-		this.f = (src, ins, image) => {
+		this.f = (src, ins) => {
 			ins[0].goto(ins[1]);
 			return [];
 		}

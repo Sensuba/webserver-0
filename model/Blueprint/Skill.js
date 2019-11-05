@@ -23,7 +23,7 @@ class Skill extends Bloc {
 		var e = new Event((src, target) => {
 			if (target)
 				this.chosen = target;
-			this.execute(src);
+			this.execute({src: owner, image: image});
 		}, tar);
 		var skill = owner.isType("artifact") ? new ASkill(e, ins[2]) : new ESkill(e, ins[2]);
 		owner.faculties.push(skill);

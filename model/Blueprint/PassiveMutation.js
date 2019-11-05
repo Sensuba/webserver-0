@@ -20,13 +20,13 @@ class PassiveMutation extends Bloc {
 	setup (owner, image) {
 
 		//var cpt = this.computeIn();
-		var mut = x => this.in[0](owner, x)(x);
+		var mut = x => this.in[0]({src: owner, data: x})(x);
 		new Mutation(mut).attach(owner);
 	}
 
 	getMutation () {
 
-		return {effect: this.in[0](this.src)};
+		return {effect: this.in[0]()};
 	}
 }
 

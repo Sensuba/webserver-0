@@ -23,7 +23,7 @@ class AddMutation extends Bloc {
 
 	getMutation () {
 
-		return {effect: this.in[1](this.src), end: this.in[2](this.src)};
+		return {effect: this.in[1](), end: this.in[2]()};
 	}
 }
 

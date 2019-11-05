@@ -145,11 +145,6 @@ class Types {
 		return value;
 	}
 
-	static innereffect (value, src) {
-
-		return value;
-	}
-
 	static event (value, src) {
 
 		return typeof value === 'string' ? () => {} : value;
@@ -189,7 +184,7 @@ class Types {
 		if (!(typeof value === 'string'))
 			return value;
 		switch (value) {
-		case 'last will': return target => target.effecttype === "last will";
+		case 'last will': return target => target.type === "lw";
 		default: return target => true;
 		}
 	}

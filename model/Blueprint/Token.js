@@ -12,10 +12,10 @@ class Token extends Bloc {
 			if (ins[0] === null)
 				ins[0] = 0;
 			if (ins[0] < 0) {
-				noModel = src.parent.model || src.parent.idCardmodel;
+				noModel = this.src.parent.model || this.parent.idCardmodel;
 			}
 			else {
-				noModel = { parent: this.genParent(src), token: ins[0] };
+				noModel = { parent: this.genParent(this.src), token: ins[0] };
 			}
 			return [Bank.get(noModel)];
 		};

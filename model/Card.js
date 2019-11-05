@@ -76,6 +76,7 @@ class Card {
 		delete copy.gameboard;
 		delete copy.parent;
 		delete copy.passives;
+		delete copy.innereffects;
 		delete copy.tokens;
 		delete copy.mutations;
 		delete copy.cmutations;
@@ -147,6 +148,7 @@ class Card {
 		this.events = [];
 		this.faculties = [];
 		this.passives = [];
+		this.innereffects = [];
 		this.mutations = [];
 		this.cmutations = [];
 		this.states = {};
@@ -186,6 +188,7 @@ class Card {
 		this.blueprint = lv.blueprint;
 		this.events = [];
 		this.passives = [];
+		this.innereffects = [];
 		this.faculties = [new Action(new Event(() => this.area.manapool.createReceptacle()))];
 		this.mutations = [];
 		this.cmutations = [];
@@ -345,6 +348,7 @@ class Card {
 		this.deactivate();
 		this.faculties = [];
 		this.passives = [];
+		this.innereffects = [];
 		this.mutations = [];
 		this.cmutations = [];
 		this.events = [];
@@ -645,11 +649,6 @@ class Card {
 		this.setVariable(name, null);
 	}
 
-	getInnerEffects () {
-
-		return this.passives.slice();
-	}
-
 	transform (model) {
 
 		this.model = model;
@@ -683,6 +682,7 @@ class Card {
 		this.events = [];
 		this.faculties = [];
 		this.passives = [];
+		this.innereffects = [];
 		this.mutations = [];
 		this.cmutations = [];
 		if (this.blueprint)

@@ -6,17 +6,18 @@ class ConditionalMutation extends Bloc {
 	constructor (src, ctx) {
 
 		super("conditionmut", src, ctx);
-		this.f = (src, ins, image) => [(x => this.in[1](image, x) ? this.in[0](image)(x) : x)];
+		this.f = (src, ins, props) => [(x => this.in[1](Object.assign({}, props, {data: x})) ? this.in[0](props)(x) : x)];
 		this.types = [Types.mutation, Types.bool];
 	}
 
-	execute (src, data) {
+	execute (props) {
 		
+		props = props || {};
+		let src = props.src || this.src;
 		var f = this.f || (() => []);
-		//var mut = this.in[0](src, data);
-		this.out = f(this.src, [], src, data);
+		this.out = f(src, [], props);
 		if (this.to)
-			this.to.execute(src);
+			this.to.execute(props);
 	}
 }
 

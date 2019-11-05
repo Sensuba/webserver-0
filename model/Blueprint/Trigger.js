@@ -6,7 +6,7 @@ class Trigger extends Bloc {
 	constructor (name, src, ctx, event) {
 
 		super(name, src, ctx);
-		this.f = (src, ins) => [ new Event(this.src, event, (s,t,d) => true) ];
+		this.f = (src, ins) => [ new Event(src, event, (s,t,d) => true) ];
 		this.types = [];
 	}
 }

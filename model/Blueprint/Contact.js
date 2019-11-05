@@ -16,7 +16,7 @@ class Contact extends Bloc {
 		owner.passives.push(new Listener(owner, () => that.src.gameboard.subscribe("charcontact", (t,s,d) => {
 			if (s === owner || d[0] === owner) {
 				this.other = s === owner ? d[0] : s;
-				this.execute(image);
+				this.execute({src: owner, image: image});
 			}
 		})));
 	}

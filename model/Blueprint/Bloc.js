@@ -12,12 +12,14 @@ class Bloc {
 		this.toPrepare = ["to"];
 	}
 
-	execute (src, data) {
+	execute (props) {
 		
+		props = props || {};
+		let src = props.src || this.src;
 		var f = this.f || (() => []);
-		this.out = f(this.src, this.computeIn(src, data), src, data);
+		this.out = f(src, this.computeIn(props), props);
 		if (this.to)
-			this.to.execute(src);
+			this.to.execute(props);
 	}
 
 	prepare (src, blueprint) {
@@ -37,32 +39,33 @@ class Bloc {
 
 	}
 
-	compute (src, data) {
+	compute (props) {
 
-		if (src && this.images[src])
-			return this.images[src];
+		props = props || {};
+		if (props.image && this.images[props.image])
+			return this.images[props.image];
 		if (this.static && this.out !== null && this.out !== undefined)
 			return this.out;
-		this.execute(src, data);
+		this.execute(props);
 		return this.out;
 	}
 
-	computeIn(src, data) {
+	computeIn(props) {
 
-		return this.in.map(el => el(src, data));
+		return this.in.map(el => el(props));
 	}
 
-	computeSingle(no, src, data) {
+	computeSingle(no, props) {
 
-		return this.in[no](src, data);
+		return this.in[no](props);
 	}
 
 	updateIn(ins) {
 
 		this.in = ins.map((el, i) => {
 			if (el !== null && typeof el === 'object')
-				return (src, data) => this.ctx[el.type][el.index].compute(src, data)[el.out];
-			return (src, data) => (this.types[i] || (x => x))(el, this.src);
+				return (props) => this.ctx[el.type][el.index].compute(props)[el.out];
+			return (props) => (this.types[i] || (x => x))(el, props && props.src ? props.src : this.src);
 		})
 	}
 }

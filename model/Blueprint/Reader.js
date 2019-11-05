@@ -132,7 +132,7 @@ class Reader {
 	static read (blueprint, card) {
 
 		var ctx = { triggers: [], actions: [], parameters: [] };
-		Object.keys(ctx).forEach(key => blueprint[key].forEach(el => {
+		Object.keys(ctx).forEach(key => blueprint[key].forEach((el,i) => {
 			var bloc = null;
 			switch(el.type) {
 			case "state": bloc = new State(card, ctx); break;
