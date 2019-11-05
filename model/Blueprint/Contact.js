@@ -1,4 +1,5 @@
 var Bloc = require('./Bloc');
+var Listener = require('../Listener');
 
 class Contact extends Bloc {
 
