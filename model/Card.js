@@ -86,7 +86,7 @@ class Card {
 		delete copy.php;
 		delete copy.dying;
 		delete copy.variables;
-		copy.model = this.model.idCardmodel;console.log(copy);
+		copy.model = this.model.idCardmodel;
 		return copy;
 	}
 
