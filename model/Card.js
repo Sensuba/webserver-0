@@ -625,6 +625,7 @@ class Card {
 
 	setState (state, value) {
 
+		this.states = this.states || {};
 		this.states[state] = value;
 		this.gameboard.notify("setstate", this, { type: "string", value: state }, { type: "boolean", value: value });
 	}
