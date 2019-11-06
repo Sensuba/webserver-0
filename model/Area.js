@@ -38,8 +38,13 @@ class Area {
 		if (n <= 0) return;
 		var d = this.deck.draw(filter);
 		if (d) {
-			d.goto(this.hand);
-			this.gameboard.notify("draw", this, d);
+			if (this.hand.isMaxed) {
+				this.gameboard.notify("burncard", this, d);
+				d.destroy();
+			} else {
+				d.goto(this.hand);
+				this.gameboard.notify("draw", this, d);
+			}
 		}
 		if (n > 1)
 			this.draw(n-1, filter);

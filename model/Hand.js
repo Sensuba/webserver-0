@@ -28,6 +28,11 @@ class Hand {
 		return this.cards.length;
 	}
 
+	get idMaxed () {
+
+		return this.count >= MAX_CARDS;
+	}
+
 	get isEmpty () {
 
 		return this.count === 0;
