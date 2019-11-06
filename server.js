@@ -117,9 +117,10 @@ var start = () => io.sockets.on('connection', function (socket) {
 		socket.leave(room);
 		if (room && rooms[rooms] && rooms[room].players.every(p => p.socket !== socket))
 			return;
-		if (room && rooms[room] && rooms[room].started && rooms[room].players.length <= 1) {
+		if (room && rooms[room]) {
 			rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
-			io.sockets.in(socket.room).emit("endgame", {win: true});
+			if (rooms[room].started && rooms[room].players.length <= 1)
+				io.sockets.in(socket.room).emit("endgame", {win: true});
 		}
 		if (room && rooms[room] && rooms[room].players.length == 0)
 			delete rooms[room];
