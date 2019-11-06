@@ -286,7 +286,7 @@ class Card {
 		if (this.isType("artifact"))
 			this.chp += amt;
 		else {
-			amt = Math.min(amt, this.eff.hp - amt);
+			amt = Math.min(amt, this.eff.hp - this.chp);
 			if (amt <= 0)
 				return;
 			this.chp += amt;
