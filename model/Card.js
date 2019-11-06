@@ -268,8 +268,9 @@ class Card {
 		this.chp -= dmg;
 		if (!discret)
 			this.gameboard.notify("damagecard", this, dmg, src);
-		if (this.chp <= 0 || (!this.isType("hero") && src.hasState("lethal")))
+		if (this.chp <= 0 || (!this.isType("hero") && src.hasState("lethal"))) {
 			new Update(() => this.destroy(), this.gameboard);
+		}
 		if (discret)
 			return () => this.gameboard.notify("damagecard", this, dmg, src);
 	}
@@ -781,10 +782,10 @@ class Card {
 		if (this.computing)
 			return;
 		this.computing = true;
-		var res = this; //
-		//res = Object.assign({}, this);
+		var res;
+		res = Object.assign({}, this);
 		res.isEff = true;
-		//res.states = Object.assign({}, this.states);
+		res.states = Object.assign({}, this.states);
 		let updatephp = () => {
 			if (this.isType("character")) {
 				this.php = this.php || { hp: this.hp, chp: this.chp };
@@ -795,19 +796,17 @@ class Card {
 			}
 		}
 		this.gameboard.auras.forEach(aura => {
-			if (aura.applicable(this)) {
-				aura.apply(this);
-			}
+			if (aura.applicable(this))
+				res = aura.apply(res);
 		});
 		if (!this.mutatedState)
-			this.mutatedState = Object.assign({}, this)//res;
-		this.mutatedState.states = Object.assign({}, this.states);
+			this.mutatedState = res;
+		this.mutatedState.states = Object.assign({}, res.states);
 		res = this.mutations.reduce((card, mut) => mut.apply(card), res);
 		updatephp();
 		this.computing = false;
-		res.isEff = false; //
 
-		this.mutatedState = Object.assign({}, this)//res;
+		this.mutatedState = res;
 	}
 
 	/*get eff () {
