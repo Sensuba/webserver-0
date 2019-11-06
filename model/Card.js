@@ -676,7 +676,7 @@ class Card {
 		this.gameboard.notify("transform", this, {data:this.data});
 	}
 
-	copy (other) {
+	copy (other, glaze) {
 
 		var data = other.data;
 		for (var k in data) {
@@ -697,6 +697,7 @@ class Card {
 		this.innereffects = [];
 		this.mutations = [];
 		this.cmutations = [];
+		this.states = {};
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
 
@@ -707,6 +708,8 @@ class Card {
 				this.resetSickness();
 		}
 		this.gameboard.notify("transform", this, {data:this.data});
+		if (glaze)
+			this.setState("glazed", true);
 	}
 
 	resetSickness () {

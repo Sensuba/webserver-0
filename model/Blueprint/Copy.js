@@ -5,12 +5,18 @@ class Copy extends Bloc {
 
 	constructor (src, ctx) {
 
-		super("copy", src, ctx, true);
+		super("newcopy", src, ctx, true);
+		var Card = require('../Card');
 		this.f = (src, ins) => {
-			ins[0].copy(ins[1]);
-			return [];
+			var gen;
+			var n = ins[1] === null ? 1 : ins[1];
+			for (var i = 0; i < n; i++) {
+				gen = new Card(ins[0].model, src.gameboard, ins[2]);
+				gen.copy(ins[0], ins[3])
+			}
+			return [gen];
 		};
-		this.types = [Types.card, Types.card];
+		this.types = [Types.card, Types.int, Types.location, Types.bool];
 	}
 }
 
