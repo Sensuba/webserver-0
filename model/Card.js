@@ -459,10 +459,10 @@ class Card {
 		this.gameboard.notify("charattack", this, target);
 		this.oncontact = target;
 		var dmg1 = target.damage(this.eff.atk, this, true);
-		var dmg2 = () => {};
+		var dmg2;
 		if (!this.eff.states.initiative)
 			dmg2 = target.ripost(this);
-		dmg2(); dmg1();
+		if (dmg2) dmg2(); if (dmg1) dmg1();
 		this.oncontact = null;
 		if (!target.isType("artifact"))
 			this.gameboard.notify("charcontact", this, target);
@@ -781,10 +781,10 @@ class Card {
 		if (this.computing)
 			return;
 		this.computing = true;
-		var res;
-		res = Object.assign({}, this);
+		var res = this; //
+		//res = Object.assign({}, this);
 		res.isEff = true;
-		res.states = Object.assign({}, this.states);
+		//res.states = Object.assign({}, this.states);
 		let updatephp = () => {
 			if (this.isType("character")) {
 				this.php = this.php || { hp: this.hp, chp: this.chp };
@@ -796,17 +796,18 @@ class Card {
 		}
 		this.gameboard.auras.forEach(aura => {
 			if (aura.applicable(this)) {
-				res = aura.apply(res);
+				aura.apply(this);
 			}
 		});
 		if (!this.mutatedState)
-			this.mutatedState = res;
+			this.mutatedState = Object.assign({}, this)//res;
 		this.mutatedState.states = Object.assign({}, this.states);
 		res = this.mutations.reduce((card, mut) => mut.apply(card), res);
 		updatephp();
 		this.computing = false;
+		res.isEff = false; //
 
-		this.mutatedState = res;
+		this.mutatedState = Object.assign({}, this)//res;
 	}
 
 	/*get eff () {
