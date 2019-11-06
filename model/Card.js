@@ -253,9 +253,9 @@ class Card {
 		else this.location = null;
 	}
 
-	damage (dmg, src) {
+	damage (dmg, src, discret) {
 
-		if (!this.chp || dmg <= 0)
+		if (!this.chp || dmg <= 0 || this.isGhost)
 			return;
 		if (this.hasState("immune"))
 			return;
@@ -266,16 +266,19 @@ class Card {
 		}
 
 		this.chp -= dmg;
-		this.gameboard.notify("damagecard", this, dmg, src);
+		if (!discret)
+			this.gameboard.notify("damagecard", this, dmg, src);
 		if (this.chp <= 0 || (!this.isType("hero") && src.hasState("lethal")))
 			new Update(() => this.destroy(), this.gameboard);
+		if (discret)
+			return () => this.gameboard.notify("damagecard", this, dmg, src);
 	}
 
 	heal (amt, src) {
 
 		if (amt === null || amt === undefined)
 			amt = this.eff.hp;
-		if (!this.chp || amt <= 0)
+		if (!this.chp || amt <= 0 || this.isGhost)
 			return;
 
 		if (!this.isType("artifact") && src.hasState("corruption")) {
@@ -298,7 +301,7 @@ class Card {
 
 		if (this.range >= MAX_RANGE && range > 0)
 			range = null;
-		if (!atk && !hp && !range)
+		if (!atk && !hp && !range || this.isGhost)
 			return;
 
 		this.atk += atk;
@@ -455,9 +458,11 @@ class Card {
 		this.motionPt = 0;
 		this.gameboard.notify("charattack", this, target);
 		this.oncontact = target;
-		target.damage(this.eff.atk, this);
+		var dmg1 = target.damage(this.eff.atk, this, true);
+		var dmg2 = () => {};
 		if (!this.eff.states.initiative)
-			target.ripost(this);
+			dmg2 = target.ripost(this);
+		dmg2(); dmg1();
 		this.oncontact = null;
 		if (!target.isType("artifact"))
 			this.gameboard.notify("charcontact", this, target);
@@ -466,10 +471,12 @@ class Card {
 
 	ripost (other) {
 
+		var res = () => {};
 		other.oncontact = this;
 		if (this.isType("figure") && this.eff.atk > 0)
-			other.damage(this.eff.atk, this);
+			res = other.damage(this.eff.atk, this, true);
 		other.oncontact = null;
+		return res;
 	}
 
 	get area () {
