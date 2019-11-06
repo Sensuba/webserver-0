@@ -86,7 +86,7 @@ class Card {
 		delete copy.php;
 		delete copy.dying;
 		delete copy.variables;
-		copy.model = this.model.idCardmodel;
+		copy.model = this.model.idCardmodel;console.log(copy);
 		return copy;
 	}
 
@@ -140,7 +140,7 @@ class Card {
 		var model = this.model;
 		for (var k in model) {
 			this[k] = model[k];
-			if (!isNaN(this[k]))
+			if (typeof this[k] === 'string' && !isNaN(this[k]))
 				this[k] = parseInt(this[k], 10);
 		}
 		delete this.supercode;
@@ -286,10 +286,10 @@ class Card {
 		if (this.isType("artifact"))
 			this.chp += amt;
 		else {
-			amt = Math.min(this.eff.hp, this.chp + amt);
+			amt = Math.min(amt, this.eff.hp - amt);
 			if (amt <= 0)
 				return;
-			this.chp = amt;
+			this.chp += amt;
 		}
 		this.gameboard.notify("healcard", this, amt, src);
 	}
@@ -788,8 +788,9 @@ class Card {
 			}
 		}
 		this.gameboard.auras.forEach(aura => {
-			if (aura.applicable(this))
+			if (aura.applicable(this)) {
 				res = aura.apply(res);
+			}
 		});
 		if (!this.mutatedState)
 			this.mutatedState = res;

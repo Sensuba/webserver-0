@@ -61,9 +61,11 @@ class Analyse extends Bloc {
 
 	countAllGame (event, props) {
 
-		let nprops = Object.assign({}, props);
-		nprops.data = { src:log.src, data:log.data };
-		return event.gameboard.log.logs.filter(log => event.check(log.type, log.src, log.data) && this.in[2](nprops)).length;
+		return event.gameboard.log.logs.filter(log => {
+			let nprops = Object.assign({}, props);
+			nprops.data = { src:log.src, data:log.data };
+			return event.check(log.type, log.src, log.data) && this.in[2](nprops)
+		}).length;
 	}
 }
 
