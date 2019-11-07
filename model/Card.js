@@ -240,7 +240,7 @@ class Card {
 
 	destroy () {
 
-		if (this.destroyed)
+		if (this.destroyed || this.dying)
 			return;
 		this.dying = true;
 		let onboard = this.onBoard;
