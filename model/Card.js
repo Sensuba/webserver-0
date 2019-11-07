@@ -143,6 +143,10 @@ class Card {
 			if (typeof this[k] === 'string' && !isNaN(this[k]))
 				this[k] = parseInt(this[k], 10);
 		}
+		this.originalMana = this.mana;
+		this.originalAtk = this.atk;
+		this.originalHp = this.hp;
+		this.originalRange = this.range;
 		delete this.supercode;
 		this.ol = 0;
 		this.events = [];
@@ -327,16 +331,23 @@ class Card {
 
 	set (cost, atk, hp, range) {
 
-		if (cost || cost === 0)
+		if (cost || cost === 0) {
 			this.mana = cost;
-		if (atk || atk === 0)
+			this.originalMana = this.mana;
+		}
+		if (atk || atk === 0) {
 			this.atk = atk;
+			this.originalAtk = this.atk;
+		}
 		if (hp || hp === 0) {
 			this.hp = hp;
 			this.chp = hp;
+			this.originalHp = this.hp;
 		}
-		if (range || range === 0)
+		if (range || range === 0) {
 			this.range = range;
+			this.originalRange = this.range;
+		}
 		this.gameboard.notify("setcard", this, cost, atk, hp, range);
 		if (this.chp <= 0)
 			new Update(() => this.destroy(), this.gameboard);
