@@ -13,8 +13,10 @@ const MAX_RANGE = 3;
 
 class Card {
 
-	constructor (model, board, location) {
+	constructor (model, board, location, nullify) {
 
+		if (nullify)
+			return;
 		this.id = { type: "card", no: board ? board.registerCard(this) : -1 };
 		this.model = model;
 		this.gameboard = board;
