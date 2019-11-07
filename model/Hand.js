@@ -28,7 +28,7 @@ class Hand {
 		return this.cards.length;
 	}
 
-	get idMaxed () {
+	get isMaxed () {
 
 		return this.count >= MAX_CARDS;
 	}

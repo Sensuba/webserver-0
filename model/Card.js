@@ -529,6 +529,18 @@ class Card {
 		});
 	}
 
+	reveal () {
+
+		if (this.identified[0] && this.identified[1])
+			return;
+		[0, 1].forEach(id => {
+			if (this.identified[id])
+				return;
+			this.gameboard.whisper("identify", id, this.id, this.data);
+			this.identified[id] = true;
+		});
+	}
+
 	get canBePaid () {
 
 		return (this.mana || this.eff.mana === 0) && this.area && this.eff.mana <= this.area.manapool.usableMana;
