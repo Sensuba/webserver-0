@@ -23,6 +23,7 @@ class GameBoard {
 		this.subscriptions = {};
 		this.indexSubscription = 0;
 		this.log = new Log();
+		this.notify("init", this, {type: "int", no: d1.hero}, {type: "int", no: d2.hero});
 
 		this.areas = [
 			new Area(0, this),
