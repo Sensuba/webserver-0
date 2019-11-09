@@ -12,7 +12,7 @@ class Token extends Bloc {
 			if (ins[0] === null)
 				ins[0] = 0;
 			if (ins[0] < 0) {
-				noModel = this.src.parent.model || this.parent.idCardmodel;
+				noModel = this.src.parent.model || this.src.parent.idCardmodel;
 			}
 			else {
 				noModel = { parent: this.genParent(this.src), token: ins[0] };
