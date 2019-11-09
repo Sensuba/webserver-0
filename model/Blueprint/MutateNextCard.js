@@ -17,9 +17,21 @@ class MutateNextCard extends Bloc {
 			});
 			unsub2 = src.gameboard.subscribe("playcard", (t,s,d) => {
 				if (aspect.targets(s)) {
-					aspect.deactivate();
-					unsub1();
-					unsub2();
+					if (s.isType("spell")) {
+						var unsubSpell;
+						unsubSpell = src.gameboard.subscribe("destroycard", (t2,s2,d2) => {
+							if (s === s2) {
+								aspect.deactivate();
+								unsub1();
+								unsub2();
+								unsubSpell();
+							}
+						});
+					} else {
+						aspect.deactivate();
+						unsub1();
+						unsub2();
+					}
 				}
 			});
 			src.gameboard.notify("nextcard", ins[2], src, {type: "int", value: this.mutno});
