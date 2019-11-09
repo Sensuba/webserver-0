@@ -113,6 +113,10 @@ class Card {
 		delete this.dying;
 		var former = this.location;
 		this.location = loc;
+		if (former instanceof Tile && !(loc instanceof Tile) && this.activated)
+			this.deactivate();
+		if (loc instanceof Tile && !(former instanceof Tile) && this.activated)
+			this.activate();
 		if (former && former.hasCard (this))
 			former.removeCard (this);
 		if (former && (loc === null || former.locationOrder > loc.locationOrder || loc.locationOrder === 0))
