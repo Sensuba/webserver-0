@@ -384,6 +384,7 @@ class Card {
 		this.atk = parseInt(this.model.atk, 10);
 		this.hp = parseInt(this.model.hp, 10);
 		this.chp = Math.min(this.eff.hp, this.chp);
+		this.activate();
 		this.gameboard.notify("silence", this);
 	}
 
