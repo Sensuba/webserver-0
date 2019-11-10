@@ -4,6 +4,7 @@ var Field = require("./Field");
 var Hand = require("./Hand");
 var Court = require("./Court");
 var Cemetery = require("./Cemetery");
+var Discard = require("./Discard");
 var ManaPool = require("./ManaPool");
 var Bank = require('../Bank');
 
@@ -20,6 +21,7 @@ class Area {
 		this.manapool = new ManaPool(this);
 		this.court = new Court(this);
 		this.cemetery = new Cemetery(this);
+		this.discard = new Discard(this);
 	}
 
 	init (decklist) {
@@ -41,7 +43,7 @@ class Area {
 			if (this.hand.isMaxed) {
 				d.reveal();
 				this.gameboard.notify("burncard", this, d);
-				d.destroy();
+				d.discard();
 			} else {
 				d.goto(this.hand);
 				this.gameboard.notify("draw", this, d);

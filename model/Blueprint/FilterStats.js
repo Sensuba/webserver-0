@@ -13,7 +13,7 @@ class FilterStats extends Bloc {
 			var checkatk = target => (ins[2] === null || (target.atk && parsing(target.atk) >= ins[2])) && (ins[3] === null || (target.atk && parsing(target.atk) <= ins[3]));
 			var checkhp = target => (ins[4] === null || (target.hp && parsing(target.hp) >= ins[4])) && (ins[5] === null || (target.hp && parsing(target.hp) <= ins[5]));
 			var checkrange = target => (ins[6] === null || (target.range && parsing(target.range) >= ins[6])) && (ins[7] === null || (target.range && parsing(target.range) <= ins[7]));
-			var cardfilter = target => checkmana(target) && checkatk(target) && checkhp(target) && checkrange(target);
+			var cardfilter = target => checkmana(target.eff) && checkatk(target.eff) && checkhp(target.eff) && checkrange(target.eff);
 			
 			return [cardfilter, cardfilter];
 		};

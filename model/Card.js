@@ -3,6 +3,7 @@ var Hand = require("./Hand");
 var Deck = require("./Deck");
 var Tile = require("./Tile");
 var Cemetery = require("./Cemetery");
+var Discard = require("./Discard");
 var Update = require("./Update");
 var Action = require("./Action");
 var ArtifactSkill = require("./ArtifactSkill");
@@ -56,7 +57,7 @@ class Card {
 
 	get destroyed() {
 
-		return this.location instanceof Cemetery;
+		return this.location instanceof Cemetery || this.location instanceof Discard;
 	}
 
 	get isGhost() {
@@ -261,8 +262,13 @@ class Card {
 		if (!this.dying)
 			return;
 		if (this.area)
-			this.goto(this.area.cemetery);
+			this.goto(onboard ? this.area.cemetery : this.area.discard);
 		else this.location = null;
+	}
+
+	discard () {
+
+		this.destroy();
 	}
 
 	damage (dmg, src, discret) {

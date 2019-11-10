@@ -75,7 +75,7 @@ class Hand {
 
 	discard (card) {
 		
-		card.destroy();
+		card.discard();
 	}
 }
 

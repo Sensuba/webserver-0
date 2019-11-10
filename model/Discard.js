@@ -1,9 +1,9 @@
 
-class Cemetery {
+class Discard {
 
 	constructor (area) {
 
-		this.id = { type: "cemetery", no: area.id.no };
+		this.id = { type: "discard", no: area.id.no };
 
 		this.locationOrder = 0;
 
@@ -29,7 +29,7 @@ class Cemetery {
 
 	get opposite () {
 
-		return this.area.opposite.cemetery;
+		return this.area.opposite.discard;
 	}
 
 	addCard (card) {
@@ -55,4 +55,4 @@ class Cemetery {
 	}
 }
 
-module.exports = Cemetery;
+module.exports = Discard;
