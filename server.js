@@ -50,7 +50,6 @@ var start = () => io.sockets.on('connection', function (socket) {
 
 	socket.on('join', function(room){
 
-		console.log("join " + room);
 		socket.join(room);
 		socket.room = room;
 		if (!(room in rooms))
@@ -58,8 +57,10 @@ var start = () => io.sockets.on('connection', function (socket) {
 		if (!rooms[room].started && rooms[room].players.length < 2) {
 			socket.emit('joined', {as: 'player', no: rooms[room].players.length});
 			rooms[room].players.push({ socket: socket });
+			console.log("Client joined " + socket.room + " as player");
 		} else {
 			socket.emit('joined', {as: 'spectator'});
+			console.log("Client joined " + socket.room + " as spectator");
 		}
 	});
 
@@ -84,10 +85,14 @@ var start = () => io.sockets.on('connection', function (socket) {
 			gb.end = (winner) => {
 				players[winner].socket.emit("endgame", {state: 1}); // State 1 : win
 				players[1-winner].socket.emit("endgame", {state: 2}); // State 2 : lose
+				console.log("Game " + socket.room + " ended normally");
+				console.log("Room count: " + (rooms.length-1));
 				delete rooms[socket.room];
 			}
 			gb.init(players[0].deck, players[1].deck);
 			gb.start();
+			console.log("Started game " + socket.room);
+			console.log("Room count: " + rooms.length);
 			room.started = true;
 			room.private = true;
 		}
@@ -106,7 +111,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 	socket.on('leave', function(){
 
 		let room = socket.room;
-		console.log("leave " + room);
+		console.log("Client leaved " + socket.room);
 		socket.leave(room);
 		rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
 	});
@@ -119,8 +124,11 @@ var start = () => io.sockets.on('connection', function (socket) {
 			return;
 		if (room && rooms[room]) {
 			rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
-			if (rooms[room].started && rooms[room].players.length <= 1)
+			if (rooms[room].started && rooms[room].players.length <= 1) {
 				io.sockets.in(socket.room).emit("endgame", {state: 3}); // State 3 : connection lost
+				console.log("Game " + socket.room + " ended by connection lost");
+				console.log("Room count: " + (rooms.length-1));
+			}
 		}
 		if (room && rooms[room] && rooms[room].players.length == 0)
 			delete rooms[room];

@@ -18,6 +18,8 @@ class AddEffect extends Bloc {
 			ins[1].setup(ins[0], ctx.image);
 			if (ins[1] instanceof PassiveMutation)
 				src.gameboard.notify("addmut", ins[0], src, {type: "int", value: ins[1].mutno});
+			else
+				src.gameboard.notify("addeffect", ins[0], src);
 			return [];
 		};
 		this.types = [Types.card, Types.effect];
