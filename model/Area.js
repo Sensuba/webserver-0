@@ -82,6 +82,7 @@ class Area {
 	extraTurn () {
 
 		this.extraTurns = (this.extraTurns || 0) + 1;
+		this.gameboard.notify("extraturn", this);
 	}
 }
 
