@@ -120,10 +120,8 @@ class Card {
 			this.activate();
 		if (former && former.hasCard (this))
 			former.removeCard (this);
-		if (former && (loc === null || former.locationOrder > loc.locationOrder || loc.locationOrder === 0)) {
-			this.identified = [];
+		if (former && (loc === null || former.locationOrder > loc.locationOrder || loc.locationOrder === 0))
 			this.resetBody ();
-		}
 		if (loc && !loc.hasCard (this))
 			loc.addCard (this);
 		this.identify();
@@ -388,9 +386,10 @@ class Card {
 		this.states = {};
 		this.breakShield();
 		delete this.blueprint;
-		this.mana = parseInt(this.model.mana, 10);
-		this.atk = parseInt(this.model.atk, 10);
-		this.hp = parseInt(this.model.hp, 10);
+		this.mana = this.originalMana;
+		this.atk = this.originalAtk;
+		this.hp = this.originalHp;
+		this.range = this.originalRange;
 		this.chp = Math.min(this.eff.hp, this.chp);
 		this.activate();
 		this.gameboard.notify("silence", this);
@@ -598,11 +597,16 @@ class Card {
 		return targets;
 	}
 
-	cover (other, flying = false) {
+	tryToCover (other, flying = false) {
 
 		if (!this.isType("character") || !this.onBoard || !other.onBoard || this.concealed)
 			return false;
 		return (other.location.isBehind(this.location) || (this.hasState("cover neighbors") && other.location.isNeighborTo(this.location))) && flying === this.hasState("flying");
+	}
+
+	cover (other, flying = false) {
+
+		return this.tryToCover(other, flying) && !other.tryToCover(this, flying);
 	}
 
 	get covered () {
@@ -737,6 +741,7 @@ class Card {
 		this.mutations = [];
 		this.cmutations = [];
 		this.states = {};
+		this.identified = [false, false];
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
 
