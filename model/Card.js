@@ -120,7 +120,7 @@ class Card {
 			this.activate();
 		if (former && former.hasCard (this))
 			former.removeCard (this);
-		if (former && (loc === null || former.locationOrder > loc.locationOrder || loc.locationOrder === 0))
+		if (former && (loc === null || former.locationOrder > loc.locationOrder || former.locationOrder === 0))
 			this.resetBody ();
 		if (loc && !loc.hasCard (this))
 			loc.addCard (this);

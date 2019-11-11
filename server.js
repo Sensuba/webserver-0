@@ -92,7 +92,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 			gb.init(players[0].deck, players[1].deck);
 			gb.start();
 			console.log("Started game " + socket.room);
-			console.log("Room count: " + rooms.length);
+			console.log("Room count: " + Object.keys(rooms).length);
 			room.started = true;
 			room.private = true;
 		}
@@ -127,7 +127,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 			if (rooms[room].started && rooms[room].players.length <= 1) {
 				io.sockets.in(socket.room).emit("endgame", {state: 3}); // State 3 : connection lost
 				console.log("Game " + socket.room + " ended by connection lost");
-				console.log("Room count: " + (rooms.length-1));
+				console.log("Room count: " + (Object.keys(rooms).length-1));
 			}
 		}
 		if (room && rooms[room] && rooms[room].players.length == 0)
