@@ -132,7 +132,8 @@ var start = () => io.sockets.on('connection', function (socket) {
 			return;
 		if (room && rooms[room]) {
 			rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
-			rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
+			if (rooms[room].spectators)
+				rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
 			if (rooms[room].started && rooms[room].players.length <= 1) {
 				io.sockets.in(socket.room).emit("endgame", {state: 5}); // State 5 : connection lost
 				console.log("Game " + socket.room + " ended by connection lost");
