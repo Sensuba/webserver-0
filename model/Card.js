@@ -692,6 +692,12 @@ class Card {
 
 		this.variables = this.variables || {};
 		this.variables[name] = value;
+		let data = null;
+		if (value && typeof value === 'object')
+			data = value.id;
+		else if (value !== null && value !== undefined)
+			data = { type: "int", value: value };
+		this.gameboard.notify("storevar", this, { type: "string", value: name }, data);
 	}
 
 	getVariable (name) {
