@@ -38,7 +38,7 @@ class Deck {
 	fatigue() {
 
 		this.area.gameboard.notify("fatigue", this);
-		this.area.hero.damage(FATIGUE_DAMAGE, this.area.hero);
+		this.area.hero.damage(FATIGUE_DAMAGE, null);
 	}
 
 	shuffle() {

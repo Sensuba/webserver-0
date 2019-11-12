@@ -284,7 +284,7 @@ class Card {
 		this.chp -= dmg;
 		if (!discret)
 			this.gameboard.notify("damagecard", this, dmg, src);
-		if (this.chp <= 0 || (!this.isType("hero") && src.hasState("lethal"))) {
+		if (this.chp <= 0 || (!this.isType("hero") && src && src.hasState("lethal"))) {
 			new Update(() => this.destroy(), this.gameboard);
 		}
 		if (discret)
