@@ -5,6 +5,7 @@ var Hand = require("./Hand");
 var Court = require("./Court");
 var Cemetery = require("./Cemetery");
 var Discard = require("./Discard");
+var Capsule = require("./Capsule");
 var ManaPool = require("./ManaPool");
 var Bank = require('../Bank');
 
@@ -22,6 +23,7 @@ class Area {
 		this.court = new Court(this);
 		this.cemetery = new Cemetery(this);
 		this.discard = new Discard(this);
+		this.capsule = new Capsule(this);
 	}
 
 	init (decklist) {

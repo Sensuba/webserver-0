@@ -30,10 +30,13 @@ class Types {
 		case 'this': return src.location;
 		case 'hand': return src.area.hand;
 		case 'deck': return src.area.deck;
-		case 'cemetery': return src.location;
+		case 'cemetery': return src.area.cemetery;
+		case 'discard': return src.area.discard;
 		case 'opponent\'s hand': return src.area.opposite.hand;
 		case 'opponent\'s deck': return src.area.opposite.deck;
-		case 'opponent\'s cemetery': return src.location;
+		case 'opponent\'s cemetery': return src.area.opposite.cemetery;
+		case 'opponent\'s discard': return src.area.opposite.discard;
+		case 'capsule': return src.area.capsule;
 		default: src.location;
 		}
 	}
@@ -50,12 +53,15 @@ class Types {
 		case 'hand': return [src.area.hand];
 		case 'deck': return [src.area.deck];
 		case 'cemetery': return [src.area.cemetery];
+		case 'discard': return [src.area.discard];
 		case 'opponent\'s field': return src.area.opposite.field.tiles;
 		case 'opponent\'s front': return src.area.opposite.field.front;
 		case 'opponent\'s back': return src.area.opposite.field.back;
 		case 'opponent\'s hand': return [src.area.opposite.hand];
 		case 'opponent\'s deck': return [src.area.opposite.deck];
 		case 'opponent\'s cemetery': return [src.area.opposite.cemetery];
+		case 'opponent\'s discard': return [src.area.opposite.discard];
+		case 'capsule': return [src.area.capsule];
 		default: [src.location];
 		}
 	}
