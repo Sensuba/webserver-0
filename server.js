@@ -44,7 +44,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 		for (var i = 0; i < 10; i++)
 			room += batch.charAt(Math.floor(Math.random() * batch.length));
 		if (!(room in rooms))
-			rooms[room] = { players: [], game: new GameBoard(), private: prv };
+			rooms[room] = { players: [], spectators: [], game: new GameBoard(), private: prv };
 		socket.emit('assign', {to: room});
 	});
 
@@ -60,7 +60,12 @@ var start = () => io.sockets.on('connection', function (socket) {
 			console.log("Client joined " + socket.room + " as player");
 		} else {
 			socket.emit('joined', {as: 'spectator'});
+			rooms[room].spectators.push({ socket: socket });
 			console.log("Client joined " + socket.room + " as spectator");
+			rooms[room].game.log.logs.forEach(log => {
+				var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
+				socket.emit('notification', {type: log.type, src: log.src.id, data: datamap});
+			})
 		}
 	});
 
@@ -82,6 +87,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 			var gb = rooms[socket.room].game;
 			gb.send = (type, src, data) => io.sockets.in(socket.room).emit("notification", {type, src, data});
 			gb.whisper = (type, player, src, ...data) => players[player] ? players[player].socket.emit("notification", {type, src, data}) : {};
+			gb.explain = (type, src, data) => room.spectators.forEach(spec => spec.socket.emit("notification", {type, src, data}));//io.sockets.clients(socket.room).filter(cli => !players.some(p => p.socket === cli)).forEach(spec => spec.socket.emit("notification", {type, src, data}));
 			gb.end = (winner) => {
 				players[winner].socket.emit("endgame", {state: 1}); // State 1 : win
 				players[1-winner].socket.emit("endgame", {state: 2}); // State 2 : lose
@@ -114,6 +120,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 		console.log("Client leaved " + socket.room);
 		socket.leave(room);
 		rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
+		rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
 	});
 
 	var quit = () => {
@@ -124,6 +131,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 			return;
 		if (room && rooms[room]) {
 			rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
+			rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
 			if (rooms[room].started && rooms[room].players.length <= 1) {
 				io.sockets.in(socket.room).emit("endgame", {state: 3}); // State 3 : connection lost
 				console.log("Game " + socket.room + " ended by connection lost");

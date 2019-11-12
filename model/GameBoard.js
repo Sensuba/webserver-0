@@ -9,6 +9,7 @@ class GameBoard {
 
 		this.send = () => {};
 		this.whisper = () => {};
+		this.explain = () => {};
 		this.end = () => {};
 	}
 
@@ -43,6 +44,16 @@ class GameBoard {
 		if (!this.subscriptions[type])
 			return;
 		this.subscriptions[type].slice().forEach(sub => sub.notify(type, src, data));
+	}
+
+	notifySpectators (type, src, ...data) {
+
+		//var datamap = data.map(d => d ? d.id || d : d);
+		this.log.add({ type, src, data });
+		this.explain(type, src.id, data);
+		//if (!this.subscriptions[type])
+		//	return;
+		//this.subscriptions[type].slice().forEach(sub => sub.notify(type, src, data));
 	}
 
 	subscribe (type, notify) {

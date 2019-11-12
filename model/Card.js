@@ -542,6 +542,10 @@ class Card {
 				this.identified[id] = true;
 			}
 		});
+		if (this.identified[0] && this.identified[1] && !this.identified[2]) {
+			this.gameboard.notifySpectators("identify", this, this.data);
+			this.identified[2] = true;
+		}
 	}
 
 	reveal () {
@@ -554,6 +558,10 @@ class Card {
 			this.gameboard.whisper("identify", id, this.id, this.data);
 			this.identified[id] = true;
 		});
+		if (this.identified[0] && this.identified[1] && !this.identified[2]) {
+			this.gameboard.notifySpectators("identify", this, this.data);
+			this.identified[2] = true;
+		}
 	}
 
 	get canBePaid () {
