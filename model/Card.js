@@ -98,8 +98,9 @@ class Card {
 		if (this.dying)
 			this.resetBody();
 		this.skillPt = 1;
-		this.chp = this.eff.hp;
+		let chp = this.eff.hp;
 		this.goto(tile, true);
+		this.chp = chp;
 		if (this.isType("character"))
 			this.resetSickness();
 		this.activate();
@@ -849,7 +850,7 @@ class Card {
 		res.isEff = true;
 		res.states = Object.assign({}, this.states);
 		let updatephp = () => {
-			if (this.isType("character")) {
+			if (this.isType("character") && this.onBoard) {
 				this.php = this.php || { hp: this.hp, chp: this.chp };
 				var plushp = Math.max (0, res.hp - this.php.hp);
 				this.chp = Math.min(res.hp, this.chp + plushp);

@@ -87,7 +87,10 @@ var start = () => io.sockets.on('connection', function (socket) {
 			var gb = rooms[socket.room].game;
 			gb.send = (type, src, data) => io.sockets.in(socket.room).emit("notification", {type, src, data});
 			gb.whisper = (type, player, src, ...data) => players[player] ? players[player].socket.emit("notification", {type, src, data}) : {};
-			gb.explain = (type, src, data) => room.spectators.forEach(spec => spec.socket.emit("notification", {type, src, data}));//io.sockets.clients(socket.room).filter(cli => !players.some(p => p.socket === cli)).forEach(spec => spec.socket.emit("notification", {type, src, data}));
+			gb.explain = (type, src, data) => {
+				if (room.spectators)
+					room.spectators.forEach(spec => spec.socket.emit("notification", {type, src, data}));
+			}//io.sockets.clients(socket.room).filter(cli => !players.some(p => p.socket === cli)).forEach(spec => spec.socket.emit("notification", {type, src, data}));
 			gb.end = (winner) => {
 				players[winner].socket.emit("endgame", {state: 2}); // State 2 : win
 				players[1-winner].socket.emit("endgame", {state: 3}); // State 3 : lose
