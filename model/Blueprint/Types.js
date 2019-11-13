@@ -99,9 +99,9 @@ class Types {
 		case 'entity':
 		case 'spell':
 		case 'artifact':
-			return target => target.isType(value);
-		case 'damaged': return target => target.damaged;
-		default: return target => true;
+			return target => target && target.isType(value);
+		case 'damaged': return target => target && target.damaged;
+		default: return target => target !== null;
 		}
 	}
 
