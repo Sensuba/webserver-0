@@ -723,7 +723,9 @@ class Card {
 	transform (model) {
 
 		this.model = model;
+		var variables = Object.assign({}, this.variables);
 		this.resetBody();
+		this.variables = variables;
 
 		if (this.onBoard) {
 			this.skillPt = 1;
