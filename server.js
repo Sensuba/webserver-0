@@ -60,12 +60,14 @@ var start = () => io.sockets.on('connection', function (socket) {
 			console.log("Client joined " + socket.room + " as player");
 		} else {
 			socket.emit('joined', {as: 'spectator'});
-			rooms[room].spectators.push({ socket: socket });
-			console.log("Client joined " + socket.room + " as spectator");
-			rooms[room].game.log.logs.forEach(log => {
-				var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
-				socket.emit('notification', {type: log.type, src: log.src.id, data: datamap});
-			})
+			if (rooms[room].spectators) {
+				rooms[room].spectators.push({ socket: socket });
+				console.log("Client joined " + socket.room + " as spectator");
+				rooms[room].game.log.logs.forEach(log => {
+					var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
+					socket.emit('notification', {type: log.type, src: log.src.id, data: datamap});
+				})
+			}
 		}
 	});
 
@@ -138,7 +140,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 			if (rooms[room].spectators)
 				rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
 			if (rooms[room].started && rooms[room].players.length <= 1) {
-				io.sockets.in(socket.room).emit("endgame", {state: 5}); // State 5 : connection lost
+				io.sockets.in(socket.room).emit("endgame", {state: 4}); // State 4 : connection lost
 				console.log("Game " + socket.room + " ended by connection lost");
 				console.log("Room count: " + (Object.keys(rooms).length-1));
 			}
