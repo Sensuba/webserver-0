@@ -27,6 +27,11 @@ class Court {
 		return true;
 	}
 
+	get cards () {
+
+		return this.card ? [this.card] : [];
+	}
+
 	place (card) {
 
 		if (this.card !== null)

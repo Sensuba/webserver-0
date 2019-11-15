@@ -50,14 +50,14 @@ class Types {
 		case 'field': return src.area.field.tiles;
 		case 'front': return src.area.field.front;
 		case 'back': return src.area.field.back;
-		case 'hand': return [src.area.hand];
+		case 'hand': return [src.area.hand, src.area.court];
 		case 'deck': return [src.area.deck];
 		case 'cemetery': return [src.area.cemetery];
 		case 'discard': return [src.area.discard];
 		case 'opponent\'s field': return src.area.opposite.field.tiles;
 		case 'opponent\'s front': return src.area.opposite.field.front;
 		case 'opponent\'s back': return src.area.opposite.field.back;
-		case 'opponent\'s hand': return [src.area.opposite.hand];
+		case 'opponent\'s hand': return [src.area.opposite.hand, src.area.opposite.court];
 		case 'opponent\'s deck': return [src.area.opposite.deck];
 		case 'opponent\'s cemetery': return [src.area.opposite.cemetery];
 		case 'opponent\'s discard': return [src.area.opposite.discard];

@@ -8,7 +8,7 @@ class MutateNextCard extends Bloc {
 
 		super("mutnext", src, ctx, true);
 		this.f = (src, ins) => {
-			var aspect = new Aspect(ins[2], x => this.in[1]({src: src, data: x})(x), [ins[2].hand], ins[0]);
+			var aspect = new Aspect(ins[2], x => this.in[1]({src: src, data: x})(x), [ins[2].hand, ins[2].court], ins[0]);
 			var unsub1, unsub2;
 			unsub1 = ins[3].subscribe((t,s,d) => {
 				aspect.deactivate();
