@@ -13,7 +13,7 @@ class GameBoard {
 		this.end = () => {};
 	}
 
-	init (d1, d2) {
+	init (p1, p2) {
 
 		this.data = {
 			cards: []
@@ -24,15 +24,15 @@ class GameBoard {
 		this.subscriptions = {};
 		this.indexSubscription = 0;
 		this.log = new Log();
-		this.notify("init", this, {type: "int", no: d1.hero}, {type: "int", no: d2.hero});
+		this.notify("init", this, {type: "string", value: p1.name}, {type: "int", no: p1.deck.hero}, {type: "string", value: p2.name}, {type: "int", no: p2.deck.hero});
 
 		this.areas = [
 			new Area(0, this),
 			new Area(1, this)
 		];
 
-		this.areas[0].init(d1);
-		this.areas[1].init(d2);
+		this.areas[0].init(p1.deck);
+		this.areas[1].init(p2.deck);
 		this.started = true;
 	}
 

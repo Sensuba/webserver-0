@@ -48,7 +48,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 		socket.emit('assign', {to: room});
 	});
 
-	socket.on('join', function(room){
+	socket.on('join', function(name, room){
 
 		socket.join(room);
 		socket.room = room;
@@ -56,12 +56,12 @@ var start = () => io.sockets.on('connection', function (socket) {
 			rooms[room] = { players: [], game: new GameBoard(), private: true };
 		if (!rooms[room].started && rooms[room].players.length < 2) {
 			socket.emit('joined', {as: 'player', no: rooms[room].players.length});
-			rooms[room].players.push({ socket: socket });
+			rooms[room].players.push({ name, socket });
 			console.log("Client joined " + socket.room + " as player");
 		} else {
 			socket.emit('joined', {as: 'spectator'});
 			if (rooms[room].spectators) {
-				rooms[room].spectators.push({ socket: socket });
+				rooms[room].spectators.push({ name, socket });
 				console.log("Client joined " + socket.room + " as spectator");
 				rooms[room].game.log.logs.forEach(log => {
 					var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
@@ -101,7 +101,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 				console.log("Room count: " + (rooms.length-1));
 				delete rooms[socket.room];
 			}
-			gb.init(players[0].deck, players[1].deck);
+			gb.init(players[0], players[1]);
 			gb.start();
 			console.log("Started game " + socket.room);
 			console.log("Room count: " + Object.keys(rooms).length);
