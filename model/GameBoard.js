@@ -74,6 +74,7 @@ class GameBoard {
 		this.currentArea.opposite.draw (5);
 		this.currentArea.opposite.manapool.createGem ();
 		this.currentArea.newTurn ();
+		this.resetTimer();
 		//console.log(this.currentArea.hand.cards);
 	}
 
@@ -84,13 +85,23 @@ class GameBoard {
 
 	newTurn () {
 
-
 		this.notify("endturn", this.currentArea);
 		if (this.currentArea.extraTurns)
 			this.currentArea.extraTurns--;
 		else
 			this.currentArea = this.currentArea.opposite;
 		this.currentArea.newTurn();
+		this.resetTimer();
+	}
+
+	resetTimer () {
+
+		if (this.timer)
+			clearTimeout(this.timer);
+		this.timer = setTimeout(() => {
+			if (!this.ended)
+				this.newTurn();
+		}, 253000);
 	}
 
 	command (cmd, player) {
@@ -155,6 +166,8 @@ class GameBoard {
 
 	heroDies (player) {
 
+		if (this.timer)
+			clearTimeout(this.timer);
 		this.end(1-player);
 	}
 }

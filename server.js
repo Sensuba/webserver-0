@@ -94,6 +94,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 					room.spectators.forEach(spec => spec.socket.emit("notification", {type, src, data}));
 			}//io.sockets.clients(socket.room).filter(cli => !players.some(p => p.socket === cli)).forEach(spec => spec.socket.emit("notification", {type, src, data}));
 			gb.end = (winner) => {
+				gb.ended = true;
 				players[winner].socket.emit("endgame", {state: 2}); // State 2 : win
 				players[1-winner].socket.emit("endgame", {state: 3}); // State 3 : lose
 				room.spectators.forEach(spec => spec.socket.emit("endgame", {state: 1})); // State 1 : end
@@ -140,6 +141,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 			if (rooms[room].spectators)
 				rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
 			if (rooms[room].started && rooms[room].players.length <= 1) {
+				rooms[room].game.ended = true;
 				io.sockets.in(socket.room).emit("endgame", {state: 4}); // State 4 : connection lost
 				console.log("Game " + socket.room + " ended by connection lost");
 				console.log("Room count: " + (Object.keys(rooms).length-1));
