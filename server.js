@@ -104,7 +104,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 					players[winner].socket.emit("endgame", {state: 3}); // State 3 : win
 				if (players[1-winner])
 					players[1-winner].socket.emit("endgame", {state: 4}); // State 4 : lose
-				if (rooms[room].spectators)
+				if (rooms[socket.room].spectators)
 					room.spectators.forEach(spec => spec.socket.emit("endgame", {state: 1})); // State 1 : end
 				console.log("Game " + socket.room + " ended normally");
 				console.log("Room count: " + (rooms.length-1));
