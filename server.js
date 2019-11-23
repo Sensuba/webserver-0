@@ -71,6 +71,11 @@ var start = () => io.sockets.on('connection', function (socket) {
 		}
 	});
 
+	socket.on('mission', function(name, mission){
+
+		socket.type = "mission";
+	});
+
 	socket.on('prepare', function(token, deck){
 
 		if (!checkDeck(token, deck)) {
@@ -95,9 +100,12 @@ var start = () => io.sockets.on('connection', function (socket) {
 			}//io.sockets.clients(socket.room).filter(cli => !players.some(p => p.socket === cli)).forEach(spec => spec.socket.emit("notification", {type, src, data}));
 			gb.end = (winner) => {
 				gb.ended = true;
-				players[winner].socket.emit("endgame", {state: 2}); // State 2 : win
-				players[1-winner].socket.emit("endgame", {state: 3}); // State 3 : lose
-				room.spectators.forEach(spec => spec.socket.emit("endgame", {state: 1})); // State 1 : end
+				if (players[winner])
+					players[winner].socket.emit("endgame", {state: 3}); // State 3 : win
+				if (players[1-winner])
+					players[1-winner].socket.emit("endgame", {state: 4}); // State 4 : lose
+				if (rooms[room].spectators)
+					room.spectators.forEach(spec => spec.socket.emit("endgame", {state: 1})); // State 1 : end
 				console.log("Game " + socket.room + " ended normally");
 				console.log("Room count: " + (rooms.length-1));
 				delete rooms[socket.room];
@@ -127,7 +135,8 @@ var start = () => io.sockets.on('connection', function (socket) {
 		console.log("Client leaved " + socket.room);
 		socket.leave(room);
 		rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
-		rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
+		if (rooms[room].spectators)
+			rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
 	});
 
 	var quit = () => {
@@ -142,7 +151,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 				rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
 			if (rooms[room].started && rooms[room].players.length <= 1) {
 				rooms[room].game.ended = true;
-				io.sockets.in(socket.room).emit("endgame", {state: 4}); // State 4 : connection lost
+				io.sockets.in(socket.room).emit("endgame", {state: 5}); // State 5 : connection lost
 				console.log("Game " + socket.room + " ended by connection lost");
 				console.log("Room count: " + (Object.keys(rooms).length-1));
 			}
