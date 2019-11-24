@@ -62,7 +62,7 @@ class Card {
 
 	get isGhost() {
 
-		return this.onBoard && this.chp <= 0;
+		return this.onBoard && (this.chp <= 0 || this.dying);
 	}
 
 	get damaged() {
