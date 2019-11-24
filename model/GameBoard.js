@@ -101,7 +101,7 @@ class GameBoard {
 		this.timer = setTimeout(() => {
 			if (!this.ended)
 				this.newTurn();
-		}, 253000);
+		}, 153000);
 	}
 
 	command (cmd, player) {
