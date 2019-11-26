@@ -190,6 +190,7 @@ class Types {
 		if (!(typeof value === 'string'))
 			return value;
 		switch (value) {
+		case 'play': return target => target.type === "play";
 		case 'last will': return target => target.type === "lw";
 		default: return target => true;
 		}

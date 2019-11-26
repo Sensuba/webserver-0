@@ -8,6 +8,10 @@ class TriggerEffect extends Bloc {
 		super("trigger", src, ctx, true);
 		this.f = (src, ins) => {
 			switch (ins[0].type) {
+			case "play":
+				ins[0].chosen = ins[1];
+				ins[0].trigger(ins[2]);
+				break;
 			case "lw":
 				ins[0].trigger(ins[2]);
 				break;

@@ -11,6 +11,7 @@ class Play extends Bloc {
 		this.types = [Types.tilefilter];
 		this.target = target;
 		this.out = [this, null, null];
+		this.trigger = (src, image) => this.execute({src, image});
 	}
 
 	setup (owner, image) {
@@ -20,8 +21,9 @@ class Play extends Bloc {
 		owner.events.push(new Event((src, target) => {
 			if (target)
 				this.chosen = target;
-			this.execute({src: owner, image: image});
+			this.trigger(owner, image);
 		}, tar));
+		owner.innereffects.push(this);
 	}
 }
 

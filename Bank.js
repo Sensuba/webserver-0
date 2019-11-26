@@ -22,6 +22,9 @@ var Bank = (() => {
 
 		if (typeof model === "object") {
 
+			if (model.idCardmodel)
+				return model;
+
 			var parent = get(model.parent);
 			parent.tokens[model.token].parent = parent;
 			return Object.assign({}, parent.tokens[model.token], {notoken: model.token});
