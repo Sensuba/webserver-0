@@ -101,6 +101,7 @@ class Card {
 		let chp = this.eff.hp;
 		this.goto(tile, true);
 		this.chp = chp;
+		this.php = { hp: this.hp, chp: this.chp }
 		if (this.isType("character"))
 			this.resetSickness();
 		this.activate();
