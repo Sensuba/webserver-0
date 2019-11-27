@@ -25,7 +25,7 @@ class Token extends Bloc {
 	genParent (src) {
 
 		if (src.idCardmodel)
-			return src.idCardmodel;
+			return src.idCardmodel > 10000 ? src : src.idCardmodel;
 		return { parent: this.genParent(src.parent), token: src.parent.tokens.findIndex((token, i) => i === src.notoken) };
 	}
 }
