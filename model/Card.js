@@ -30,7 +30,7 @@ class Card {
 		if (location) {
 			this.gameboard.notify("newcard", this, location);
 			this.goto(location);
-			if (this.onBoard) {
+			if (this.isType("hero") && this.onBoard) {
 				this.skillPt = 1;
 				this.chp = this.hp;
 				this.activate();
@@ -810,12 +810,16 @@ class Card {
 
 	activate () {
 
+		if (this.activated)
+			return;
 		this.activated = true;
 		this.passives.forEach(passive => passive.activate());
 	}
 
 	deactivate () {
 
+		if (!this.activated)
+			return;
 		this.activated = false;
 		this.passives.forEach(passive => passive.deactivate());
 	}
