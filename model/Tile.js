@@ -105,7 +105,7 @@ class Tile {
 		var line = this.inFront ? this.field.front : this.field.back;
 		for (var i = 0; i < line.length-1; i++)
 			if (line[i] === this)
-				n.push(line[i+1]);
+				return line[i+1];
 		return null;
 	}
 
