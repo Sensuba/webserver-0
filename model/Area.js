@@ -64,7 +64,13 @@ class Area {
 
 	newTurn () {
 
+		this.field.entities.forEach(e => {
+			if (e.poisoned)
+				e.triggerPoison();
+		})
 		this.field.opposite.entities.forEach(e => {
+			if (e.poisoned)
+				e.triggerPoison();
 			if (e.frozen && e.frozenTimer)
 				e.setState("frozen", false);
 		})

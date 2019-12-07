@@ -293,6 +293,40 @@ class Card {
 			return () => this.gameboard.notify("damagecard", this, dmg, src);
 	}
 
+	poison (psn) {
+
+
+		if (!this.chp || psn <= 0 || this.isGhost)
+			return;
+		if (this.hasState("immune"))
+			return;
+
+		this.poisondmg = (this.poisondmg || 0) + psn;
+		this.gameboard.notify("poisoncard", this, psn);
+	}
+
+	get poisoned () {
+
+		return this.poisondmg && this.poisondmg > 0;
+	}
+
+	curePoison (value) {
+
+		if (value < 0)
+			return;
+		if (value === null || value === undefined || value > this.poisondmg)
+			value = this.poisondmg;
+
+		this.poisondmg -= value;
+		this.gameboard.notify("curepoison", this, value);
+	}
+
+	triggerPoison () {
+
+		this.gameboard.notify("poisontrigger", this);
+		this.damage(this.poisondmg, null);
+	}
+
 	heal (amt, src) {
 
 		if (amt === null || amt === undefined)

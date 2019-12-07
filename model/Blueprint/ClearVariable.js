@@ -7,10 +7,10 @@ class ClearVariable extends Bloc {
 
 		super("clearvar", src, ctx, true);
 		this.f = (src, ins) => {
-			src.clearVariable(ins[0]);
+			(ins[1] || src).clearVariable(ins[0]);
 			return [];
 		};
-		this.types = [Types.string];
+		this.types = [Types.string, Types.card];
 	}
 }
 

@@ -27,6 +27,7 @@ var AddShield = require('./AddShield');
 var BreakShield = require('./BreakShield');
 var AddPoints = require('./AddPoints');
 var Freeze = require('./Freeze');
+var Poison = require('./Poison');
 var Silence = require('./Silence');
 var SetCard = require('./Set');
 var Boost = require('./Boost');
@@ -77,6 +78,7 @@ var CountTiles = require('./CountTiles');
 var CardToTileFilter = require('./CardToTileFilter');
 var DoesCover = require('./DoesCover');
 var IsCovered = require('./IsCovered');
+var Poisoned = require('./Poisoned');
 var MergeMutations = require('./MergeMutations');
 var ConditionalMutation = require('./ConditionalMutation');
 
@@ -109,6 +111,7 @@ var Loop = require('./Loop');
 var AreaOfEffect = require('./AreaOfEffect');
 var ForEachTile = require('./ForEachTile');
 var ForEachEffect = require('./ForEachEffect');
+var ForEachEvent = require('./ForEachEvent');
 var Timer = require('./Timer');
 
 var ExtraTurn = require('./ExtraTurn');
@@ -168,6 +171,7 @@ class Reader {
 			case "overload": bloc = new Overload(card, ctx); break;
 			case "silence": bloc = new Silence(card, ctx); break;
 			case "freeze": bloc = new Freeze(card, ctx); break;
+			case "poison": bloc = new Poison(card, ctx); break;
 			case "destroy": bloc = new Destroy(card, ctx); break;
 			case "levelup": bloc = new LevelUp(card, ctx); break;
 			case "addeffect": bloc = new AddEffect(card, ctx); break;
@@ -213,6 +217,7 @@ class Reader {
 			case "counttiles": bloc = new CountTiles(card, ctx); break;
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
 			case "cover": bloc = new DoesCover(card, ctx); break;
+			case "poisoned": bloc = new Poisoned(card, ctx); break;
 			case "covered": bloc = new IsCovered(card, ctx); break;
 			case "mergemut": bloc = new MergeMutations(card, ctx); break;
 			case "conditionmut": bloc = new ConditionalMutation(card, ctx); break;
@@ -243,6 +248,7 @@ class Reader {
 			case "aoe": bloc = new AreaOfEffect(card, ctx); break;
 			case "fortile": bloc = new ForEachTile(card, ctx); break;
 			case "foreffect": bloc = new ForEachEffect(card, ctx); break;
+			case "forevent": bloc = new ForEachEvent(card, ctx); break;
 			case "extraturn": bloc = new ExtraTurn(card, ctx); break;
 			case "opplus": bloc = new Plus(card, ctx); break;
 			case "opminus": bloc = new Minus(card, ctx); break;
