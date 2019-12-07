@@ -18,6 +18,7 @@ var Aura = require('./Aura');
 
 var Draw = require('./Draw');
 var Move = require('./Move');
+var Attack = require('./Attack');
 var Damage = require('./Damage');
 var Heal = require('./Heal');
 var PushBack = require('./PushBack');
@@ -154,6 +155,7 @@ class Reader {
 			case "aura": bloc = new Aura(card, ctx); break;
 			case "draw": bloc = new Draw(card, ctx); break;
 			case "move": bloc = new Move(card, ctx); break;
+			case "attack": bloc = new Attack(card, ctx); break;
 			case "damage": bloc = new Damage(card, ctx); break;
 			case "heal": bloc = new Heal(card, ctx); break;
 			case "pushback": bloc = new PushBack(card, ctx); break;

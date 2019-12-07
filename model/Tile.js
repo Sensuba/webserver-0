@@ -111,7 +111,10 @@ class Tile {
 
 	get mirror () {
 
-		return this.field.opposite.tiles[this.id.no % 9];
+		for (var i = 0; i < this.field.tiles.length-1; i++)
+			if (this.field.tiles[i] === this)
+				return this.field.opposite.tiles[i];
+		return null;
 	}
 
 	get neighbors () {

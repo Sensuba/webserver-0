@@ -6,7 +6,7 @@ class CountCards extends Bloc {
 	constructor (src, ctx) {
 
 		super("countcards", src, ctx);
-		this.f = (src, ins) => [ins[0].filter(card => ins[1](src, card)).length];
+		this.f = (src, ins) => [ins[0].reduce((count, loc) => count + loc.cards.filter(card => ins[1](src, card)).length, 0)];
 		this.types = [Types.locations, Types.cardfilter];
 	}
 }
