@@ -91,6 +91,29 @@ class Tile {
 		return this.occupied ? [this.card] : [];
 	}
 
+	get left () {
+
+		var line = this.inFront ? this.field.front : this.field.back;
+		for (var i = 1; i < line.length; i++)
+			if (line[i] === this)
+				return line[i-1];
+		return null;
+	}
+
+	get right () {
+
+		var line = this.inFront ? this.field.front : this.field.back;
+		for (var i = 0; i < line.length-1; i++)
+			if (line[i] === this)
+				n.push(line[i+1]);
+		return null;
+	}
+
+	get mirror () {
+
+		return this.field.opposite.tiles[this.id.no % 9];
+	}
+
 	get neighbors () {
 
 		var n = [];

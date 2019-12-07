@@ -93,6 +93,7 @@ var Timestamp = require('./Timestamp');
 var LimitBreak = require('./LimitBreak');
 var ManaPool = require('./ManaPool');
 var FindRandomCard = require('./FindRandomCard');
+var FindRandomTile = require('./FindRandomTile');
 var FindRandomModel = require('./FindRandomModel');
 var RandomInt = require('./RandomInt');
 var RandomBool = require('./RandomBool');
@@ -225,6 +226,7 @@ class Reader {
 			case "modelvar": bloc = new ModelVariable(card, ctx); break;
 			case "locvar": bloc = new LocationVariable(card, ctx); break;
 			case "findcard": bloc = new FindRandomCard(card, ctx); break;
+			case "findtile": bloc = new FindRandomTile(card, ctx); break;
 			case "findmodel": bloc = new FindRandomModel(card, ctx); break;
 			case "randint": bloc = new RandomInt(card, ctx); break;
 			case "randbool": bloc = new RandomBool(card, ctx); break;
