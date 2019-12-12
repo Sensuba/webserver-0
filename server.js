@@ -110,8 +110,16 @@ var start = () => io.sockets.on('connection', function (socket) {
 				console.log("Room count: " + (rooms.length-1));
 				delete rooms[socket.room];
 			}
-			gb.init(players[0], players[1]);
-			gb.start();
+
+			try {
+				gb.init(players[0], players[1]);
+				gb.start();
+			} catch (e) {
+				room.game.ended = true;
+				io.sockets.in(socket.room).emit("endgame", {state: 6}); // State 6 : internal error
+				console.log("Game " + socket.room + " ended by internal error");
+				console.log("Room count: " + (Object.keys(rooms).length-1));
+			}
 			console.log("Started game " + socket.room);
 			console.log("Room count: " + Object.keys(rooms).length);
 			room.started = true;
@@ -125,8 +133,16 @@ var start = () => io.sockets.on('connection', function (socket) {
 		if (!room)
 			return;
 		var no = room.players.findIndex(p => p.socket === socket);
-		if (no >= 0)
-			room.game.command(cmd, no);
+		if (no >= 0) {
+			try {
+				room.game.command(cmd, no);
+			} catch (e) {
+				room.game.ended = true;
+				io.sockets.in(socket.room).emit("endgame", {state: 6}); // State 6 : internal error
+				console.log("Game " + socket.room + " ended by internal error");
+				console.log("Room count: " + (Object.keys(rooms).length-1));
+			}
+		}
 	});
 
 	socket.on('leave', function(){
