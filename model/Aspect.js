@@ -29,7 +29,7 @@ class Aspect {
 
 	applicable (target) {
 
-		return this.targets(target) && this.area.includes(target.location);
+		return (!this.targets || this.targets(target)) && this.area.includes(target.location);
 	}
 
 	apply (target) {

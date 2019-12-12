@@ -28,6 +28,7 @@ var BreakShield = require('./BreakShield');
 var AddPoints = require('./AddPoints');
 var Freeze = require('./Freeze');
 var Poison = require('./Poison');
+var CurePoison = require('./CurePoison');
 var Silence = require('./Silence');
 var SetCard = require('./Set');
 var Boost = require('./Boost');
@@ -172,6 +173,7 @@ class Reader {
 			case "silence": bloc = new Silence(card, ctx); break;
 			case "freeze": bloc = new Freeze(card, ctx); break;
 			case "poison": bloc = new Poison(card, ctx); break;
+			case "curepoison": bloc = new CurePoison(card, ctx); break;
 			case "destroy": bloc = new Destroy(card, ctx); break;
 			case "levelup": bloc = new LevelUp(card, ctx); break;
 			case "addeffect": bloc = new AddEffect(card, ctx); break;

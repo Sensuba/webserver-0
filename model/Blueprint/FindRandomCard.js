@@ -7,7 +7,7 @@ class FindRandomCard extends Bloc {
 
 		super("findcard", src, ctx);
 		this.f = (src, ins) => {
-			var items = ins[0].map(loc => loc.cards).reduce((acc, el) => acc.concat(el)).filter(card => ins[1](card));
+			var items = ins[0].map(loc => loc.cards).reduce((acc, el) => acc.concat(el)).filter(card => !ins[1] || ins[1](card));
 			var item = items.length > 0 ? items[Math.floor(Math.random()*items.length)] : null;
 			return [item, item !== null];
 		};

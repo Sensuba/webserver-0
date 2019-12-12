@@ -312,7 +312,7 @@ class Card {
 
 	curePoison (value) {
 
-		if (value < 0)
+		if (value < 0 || !this.poisoned)
 			return;
 		if (value === null || value === undefined || value > this.poisondmg)
 			value = this.poisondmg;
