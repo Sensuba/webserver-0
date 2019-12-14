@@ -247,13 +247,13 @@ class Card {
 		return !this.exalted && !this.concealed;
 	}
 
-	destroy () {
+	destroy (discard) {
 
 		if (this.destroyed || this.dying)
 			return;
 		this.dying = true;
 		let onboard = this.onBoard;
-		this.gameboard.notify("destroycard", this, { type: "boolean", value: onboard });
+		this.gameboard.notify(discard ? "discardcard" : "destroycard", this, { type: "boolean", value: onboard });
 		if (!this.dying)
 			return;
 		this.clearBoardInstance();
@@ -262,13 +262,13 @@ class Card {
 		if (!this.dying)
 			return;
 		if (this.area)
-			this.goto(onboard ? this.area.cemetery : this.area.discard);
+			this.goto(discard ? this.area.discard : this.area.cemetery);
 		else this.location = null;
 	}
 
 	discard () {
 
-		this.destroy();
+		this.destroy(true);
 	}
 
 	damage (dmg, src, discret) {

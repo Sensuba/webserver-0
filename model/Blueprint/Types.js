@@ -91,7 +91,7 @@ class Types {
 	static cardfilter (value, src) {
 
 		if (value === null)
-			return target => target !== null;
+			return null;
 		if (!(typeof value === 'string'))
 			return value;
 		switch (value) {
