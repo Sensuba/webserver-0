@@ -752,7 +752,7 @@ class Card {
 
 	clearVariable (name) {
 
-		this.setVariable(name, null);
+		delete this.variables[name];
 	}
 
 	transform (model) {
