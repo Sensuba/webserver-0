@@ -9,7 +9,7 @@ class Cast extends Bloc {
 		this.f = (src, ins) => {
 			var card = ins[0];
 			card.goto(card.area.court);
-			card.gameboard.notify("trap", owner);
+			card.gameboard.notify("trap", card);
 			card.events.forEach(event => event.execute(card.gameboard, card, ins[1]));
 			card.destroy();
 			card.gameboard.update();

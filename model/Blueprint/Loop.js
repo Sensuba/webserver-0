@@ -13,7 +13,7 @@ class Loop extends Bloc {
 					this.completed.execute(props);
 				return [0];
 			}
-			var index = ins[0] - this.times;
+			var index = ins[0] - this.times - 1;
 			this.out = [index];
 			if (this.loop)
 				this.loop.execute(props);
