@@ -36,6 +36,7 @@ var ChangeCost = require('./ChangeCost');
 var Overload = require('./Overload');
 var Destroy = require('./Destroy');
 var Discard = require('./Discard');
+var Cast = require('./Cast');
 var AddEffect = require('./AddEffect');
 var LevelUp = require('./LevelUp');
 var SetState = require('./SetState');
@@ -179,6 +180,7 @@ class Reader {
 			case "curepoison": bloc = new CurePoison(card, ctx); break;
 			case "destroy": bloc = new Destroy(card, ctx); break;
 			case "discard": bloc = new Discard(card, ctx); break;
+			case "cast": bloc = new Cast(card, ctx); break;
 			case "levelup": bloc = new LevelUp(card, ctx); break;
 			case "addeffect": bloc = new AddEffect(card, ctx); break;
 			case "addmut": bloc = new AddMutation(card, ctx); break;
