@@ -36,6 +36,7 @@ class Types {
 		case 'opponent\'s deck': return src.area.opposite.deck;
 		case 'opponent\'s cemetery': return src.area.opposite.cemetery;
 		case 'opponent\'s discard': return src.area.opposite.discard;
+		case 'choosebox': return src.area.choosebox;
 		case 'capsule': return src.area.capsule;
 		default: src.location;
 		}
@@ -61,7 +62,9 @@ class Types {
 		case 'opponent\'s deck': return [src.area.opposite.deck];
 		case 'opponent\'s cemetery': return [src.area.opposite.cemetery];
 		case 'opponent\'s discard': return [src.area.opposite.discard];
+		case 'choosebox': return [src.area.choosebox];
 		case 'capsule': return [src.area.capsule];
+		case 'everywhere': return src.area.gameboard.tiles.concat([src.area.hand, src.area.court, src.area.deck, src.area.opposite.hand, src.area.opposite.court, src.area.opposite.deck]);
 		default: [src.location];
 		}
 	}

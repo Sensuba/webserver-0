@@ -85,6 +85,8 @@ class GameBoard {
 
 	newTurn () {
 
+		if (this.currentArea.choosebox.opened)
+			this.currentArea.choosebox.chooseAtRandom();
 		this.notify("endturn", this.currentArea);
 		if (this.currentArea.extraTurns)
 			this.currentArea.extraTurns--;
@@ -132,6 +134,10 @@ class GameBoard {
 				target = cmd.target ? this.tiles.find(t => t.id.no === cmd.target.no) : undefined;
 			if (card.faculties && card.faculties.length > cmd.faculty && card.canUse(card.faculties[cmd.faculty], target))
 				card.use(cmd.faculty, target);
+			break; }
+		case "choose": {
+			let card = this.data.cards[cmd.id.no];
+			this.currentArea.choosebox.choose(card);
 			break; }
 		case "endturn":
 			if (p.isPlaying)

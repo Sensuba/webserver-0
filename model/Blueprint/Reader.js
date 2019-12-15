@@ -52,6 +52,7 @@ var DestroyGem = require('./DestroyGem');
 var RefillMana = require('./RefillMana');
 var ExtraMana = require('./ExtraMana');
 var UseMana = require('./UseMana');
+var OpenChoosebox = require('./OpenChoosebox');
 var StoreInteger = require('./StoreInteger');
 var StoreCard = require('./StoreCard');
 var StoreModel = require('./StoreModel');
@@ -200,6 +201,7 @@ class Reader {
 			case "writemodelvar": bloc = new StoreModel(card, ctx); break;
 			case "writelocvar": bloc = new StoreLocation(card, ctx); break;
 			case "trigger": bloc = new TriggerEffect(card, ctx); break;
+			case "choosebox": bloc = new OpenChoosebox(card, ctx); break;
 			case "clearvar": bloc = new ClearVariable(card, ctx); break;
 			case "canpay": bloc = new CanPay(card, ctx); break;
 			case "checkcard": bloc = new CheckCard(card, ctx); break;

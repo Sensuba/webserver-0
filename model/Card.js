@@ -617,7 +617,7 @@ class Card {
 
 	canBePlayedOn (targets) {
 
-		if (!this.canBePaid || !this.area.isPlaying)
+		if (!this.inHand || !this.canBePaid || !this.area.isPlaying)
 			return false;
 		if (this.targets.length === 0)
 			return true;
