@@ -9,6 +9,7 @@ class Loop extends Bloc {
 		this.f = (src, ins, props) => {
 			this.times = this.times === 0 ? this.times - 1 : (this.times || ins[0] || 256) - 1;
 			if (!this.in[1]() || this.times < 0) {
+				delete this.times;
 				if (this.completed)
 					this.completed.execute(props);
 				return [0];
