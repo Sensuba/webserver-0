@@ -190,6 +190,21 @@ class Types {
 		}
 	}
 
+	static color (value, src) {
+
+		if (!(typeof value === 'string'))
+			return value;
+		switch (value) {
+		case 'neutral': return 0;
+		case 'white': return 1;
+		case 'red': return 2;
+		case 'blue': return 3;
+		case 'green': return 4;
+		case 'black': return 5;
+		default: return 0;
+		}
+	}
+
 	static effecttype (value, src) {
 
 		if (!(typeof value === 'string'))

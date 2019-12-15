@@ -93,6 +93,7 @@ var BreakLocation = require('./BreakLocation');
 var BreakPlayer = require('./BreakPlayer');
 
 var Archetype = require('./Archetype');
+var Color = require('./Color');
 var Analyse = require('./Analyse');
 var InnerData = require('./InnerData');
 var Token = require('./Token');
@@ -231,6 +232,7 @@ class Reader {
 			case "mergemut": bloc = new MergeMutations(card, ctx); break;
 			case "conditionmut": bloc = new ConditionalMutation(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;
+			case "color": bloc = new Color(card, ctx); break;
 			case "analyse": bloc = new Analyse(card, ctx); break;
 			case "innerdata": bloc = new InnerData(card, ctx); break;
 			case "token": bloc = new Token(card, ctx); break;
