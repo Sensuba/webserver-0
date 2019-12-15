@@ -24,8 +24,10 @@ class ManaPool {
 
 	destroyReceptacle () {
 
-		if (this.maxMana > 0)
+		if (this.maxMana > 0) {
 			this.receptacles.pop();
+			this.area.gameboard.notify("destroymana", this);
+		}
 	}
 
 	createGem () {

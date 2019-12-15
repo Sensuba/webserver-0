@@ -48,6 +48,7 @@ var Copy = require('./Copy');
 var AddMutation = require('./AddMutation');
 var MutateNextCard = require('./MutateNextCard');
 var CreateReceptacle = require('./CreateReceptacle');
+var DestroyReceptacle = require('./DestroyReceptacle');
 var CreateGem = require('./CreateGem');
 var DestroyGem = require('./DestroyGem');
 var RefillMana = require('./RefillMana');
@@ -196,6 +197,7 @@ class Reader {
 			case "copy": bloc = new Copycat(card, ctx); break;
 			case "newcopy": bloc = new Copy(card, ctx); break;
 			case "createreceptacle": bloc = new CreateReceptacle(card, ctx); break;
+			case "destroyreceptacle": bloc = new DestroyReceptacle(card, ctx); break;
 			case "creategem": bloc = new CreateGem(card, ctx); break;
 			case "destroygem": bloc = new DestroyGem(card, ctx); break;
 			case "createmana": bloc = new RefillMana(card, ctx); break;
