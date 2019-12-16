@@ -4,6 +4,7 @@ var Data = require('./Data');
 
 var State = require('./State');
 var Variation = require('./Variation');
+var LockStats = require('./LockStats');
 var Play = require('./Play');
 var Action = require('./Action');
 var Skill = require('./Skill');
@@ -55,6 +56,7 @@ var RefillMana = require('./RefillMana');
 var ExtraMana = require('./ExtraMana');
 var UseMana = require('./UseMana');
 var OpenChoosebox = require('./OpenChoosebox');
+var SetVisibility = require('./SetVisibility');
 var StoreInteger = require('./StoreInteger');
 var StoreCard = require('./StoreCard');
 var StoreModel = require('./StoreModel');
@@ -62,7 +64,9 @@ var StoreLocation = require('./StoreLocation');
 var ClearVariable = require('./ClearVariable');
 
 var CanPay = require('./CanPay');
+var FilterCard = require('./FilterCard');
 var FilterStats = require('./FilterStats');
+var FilterVariable = require('./FilterVariable');
 var CheckCard = require('./CheckCard');
 var CheckTile = require('./CheckTile');
 var CheckLocation = require('./CheckLocation');
@@ -97,6 +101,7 @@ var BreakPlayer = require('./BreakPlayer');
 
 var Archetype = require('./Archetype');
 var Color = require('./Color');
+var Extremum = require('./Extremum');
 var Analyse = require('./Analyse');
 var InnerData = require('./InnerData');
 var Token = require('./Token');
@@ -154,6 +159,7 @@ class Reader {
 			switch(el.type) {
 			case "state": bloc = new State(card, ctx); break;
 			case "variation": bloc = new Variation(card, ctx); break;
+			case "lockstats": bloc = new LockStats(card, ctx); break;
 			case "play": bloc = new Play(card, ctx, el.target); break;
 			case "action": bloc = new Action(card, ctx, el.target); break;
 			case "skill": bloc = new Skill(card, ctx, el.target); break;
@@ -209,6 +215,7 @@ class Reader {
 			case "writelocvar": bloc = new StoreLocation(card, ctx); break;
 			case "trigger": bloc = new TriggerEffect(card, ctx); break;
 			case "choosebox": bloc = new OpenChoosebox(card, ctx); break;
+			case "setvisibility": bloc = new SetVisibility(card, ctx); break;
 			case "clearvar": bloc = new ClearVariable(card, ctx); break;
 			case "canpay": bloc = new CanPay(card, ctx); break;
 			case "checkcard": bloc = new CheckCard(card, ctx); break;
@@ -228,7 +235,9 @@ class Reader {
 			case "editloc": bloc = new EditLocations(card, ctx); break;
 			case "cmpplayers": bloc = new ComparePlayers(card, ctx); break;
 			case "tiletotiles": bloc = new TileToTiles(card, ctx); break;
+			case "filtercard": bloc = new FilterCard(card, ctx); break;
 			case "filterstats": bloc = new FilterStats(card, ctx); break;
+			case "filtervar": bloc = new FilterVariable(card, ctx); break;
 			case "countcards": bloc = new CountCards(card, ctx); break;
 			case "counttiles": bloc = new CountTiles(card, ctx); break;
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
@@ -237,6 +246,7 @@ class Reader {
 			case "covered": bloc = new IsCovered(card, ctx); break;
 			case "mergemut": bloc = new MergeMutations(card, ctx); break;
 			case "conditionmut": bloc = new ConditionalMutation(card, ctx); break;
+			case "Extremum": bloc = new Extremum(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;
 			case "color": bloc = new Color(card, ctx); break;
 			case "analyse": bloc = new Analyse(card, ctx); break;

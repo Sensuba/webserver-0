@@ -136,7 +136,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 		if (no >= 0) {
 			try {
 				room.game.command(cmd, no);
-			} catch (e) {
+			} catch (e) {console.log(e)
 				room.game.ended = true;
 				io.sockets.in(socket.room).emit("endgame", {state: 6}); // State 6 : internal error
 				console.log("Game " + socket.room + " ended by internal error");
