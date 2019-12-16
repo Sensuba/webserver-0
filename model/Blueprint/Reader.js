@@ -246,7 +246,7 @@ class Reader {
 			case "covered": bloc = new IsCovered(card, ctx); break;
 			case "mergemut": bloc = new MergeMutations(card, ctx); break;
 			case "conditionmut": bloc = new ConditionalMutation(card, ctx); break;
-			case "Extremum": bloc = new Extremum(card, ctx); break;
+			case "extremum": bloc = new Extremum(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;
 			case "color": bloc = new Color(card, ctx); break;
 			case "analyse": bloc = new Analyse(card, ctx); break;

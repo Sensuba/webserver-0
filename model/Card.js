@@ -909,6 +909,8 @@ class Card {
 		this.mutatedState.states = Object.assign({}, res.states);
 		res = this.mutations.reduce((card, mut) => mut.apply(card), res);
 		updatephp();
+		if (this.states && this.states.frozen && !this.frozen)
+			this.states.frozen = false;
 		this.computing = false;
 
 		this.mutatedState = res;
