@@ -323,7 +323,7 @@ class Card {
 
 	triggerPoison () {
 
-		this.gameboard.notify("poisontrigger", this);
+		this.gameboard.notify("poisontrigger", this, this.poisondmg);
 		this.damage(this.poisondmg, null);
 	}
 
