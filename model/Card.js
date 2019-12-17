@@ -2,6 +2,7 @@ var Event = require("./Event");
 var Hand = require("./Hand");
 var Deck = require("./Deck");
 var Tile = require("./Tile");
+var Court = require("./Court");
 var Cemetery = require("./Cemetery");
 var Discard = require("./Discard");
 var Update = require("./Update");
@@ -19,6 +20,7 @@ class Card {
 		if (nullify)
 			return;
 		this.id = { type: "card", no: board ? board.registerCard(this) : -1 };
+		this.equals = other => other.id && this.id.type === other.id.type && this.id.no === other.id.no;
 		this.model = model;
 		this.gameboard = board;
 
@@ -114,6 +116,9 @@ class Card {
 			return;
 
 		delete this.dying;
+		if (loc instanceof Court && this.overload)
+			this.lb = this.eff.overload && this.eff.ol && this.eff.ol > this.eff.overload ? Math.floor(this.eff.ol/this.eff.overload) : 0;
+
 		var former = this.location;
 		this.location = loc;
 		if (former instanceof Tile && !(loc instanceof Tile) && this.activated)
@@ -126,6 +131,11 @@ class Card {
 			this.resetBody ();
 		if (loc && !loc.hasCard (this))
 			loc.addCard (this);
+		if (this.onBoard && former && former.area === this.area.opposite) {
+			this.skillPt = 1;
+			if (this.isType("character"))
+				this.resetSickness();
+		}
 		this.identify();
 		if (this.area && loc.hasCard(this))
 			this.gameboard.notify("cardmove", this, loc, former);
