@@ -51,7 +51,7 @@ class Types {
 		case 'field': return src.area.field.tiles;
 		case 'front': return src.area.field.front;
 		case 'back': return src.area.field.back;
-		case 'hand': return [src.area.hand, src.area.court];
+		case 'hand': return [src.area.hand];
 		case 'deck': return [src.area.deck];
 		case 'cemetery': return [src.area.cemetery];
 		case 'discard': return [src.area.discard];
