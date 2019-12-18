@@ -292,6 +292,11 @@ class Card {
 			this.breakShield();
 			return;
 		}
+		if (this.hasState("will to live") && dmg >= this.chp) {
+			dmg = this.chp - 1;
+			if (dmg <= 0)
+				return;
+		}
 
 		this.chp -= dmg;
 		if (!discret)
