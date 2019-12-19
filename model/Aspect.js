@@ -5,7 +5,7 @@ class Aspect {
 		this.mutation = mutation;
 		this.player = player;
 		this.area = area;
-		this.targets = targets;
+		this.targets = x => !targets || targets(x);
 		this.activate();
 	}
 

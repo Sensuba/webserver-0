@@ -176,6 +176,7 @@ class Card {
 		this.cmutations = [];
 		this.states = {};
 		this.shield = false;
+		this.poisondmg = 0;
 		this.dying = false;
 		delete this.variables;
 		this.clearBoardInstance();
