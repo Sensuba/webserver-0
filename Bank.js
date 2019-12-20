@@ -2,13 +2,14 @@ var Bank = (() => {
 
 	this.list = {};
 
-	init = (url, callback, error) => {
+	init = (url, auth, callback, error) => {
 
 		var axios = require('axios');
 		this.client = axios.create({
 	    	baseURL: url,
 	      	headers: { 'X-Requested-With': 'XMLHttpRequest' }
 	    });
+	    this.client.defaults.headers.common['Authorization'] = 'Bearer ' + auth;
 	    this.client.get("/vault/cardmodels")
 	  	.then(response => {
 	  		var atob = require('atob');
