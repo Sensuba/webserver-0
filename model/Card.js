@@ -618,7 +618,7 @@ class Card {
 
 	get canBePaid () {
 
-		return (this.mana || this.eff.mana === 0) && this.area && this.eff.mana <= this.area.manapool.usableMana;
+		return (!isNaN(this.mana) || this.eff.mana === 0) && this.area && this.eff.mana <= this.area.manapool.usableMana;
 	}
 
 	get canBePlayed () {
