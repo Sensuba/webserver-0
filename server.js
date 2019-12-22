@@ -10,7 +10,7 @@ var Bank = require("./Bank.js");
 var GameBoard = require('./model/GameBoard');
 
 console.log("Initialization...");
-Bank.init('https://bhtwey7kwc.execute-api.eu-west-3.amazonaws.com/alpha', 'oFfLfHgZDm3XM1WF', () => {
+Bank.init('https://bhtwey7kwc.execute-api.eu-west-3.amazonaws.com/alpha', process.env.token, () => {
 
 	console.log("Initialized !");
 	start();
