@@ -14,8 +14,11 @@ class Copy extends Bloc {
 				gen = new Card(ins[0].model, src.gameboard, ins[2]);
 				if (ins[0].location && gen.location && ins[0].location.locationOrder <= gen.location.locationOrder)
 					gen.copy(ins[0], ins[3]);
-				else
+				else {
 					gen.transform(ins[0].model);
+					if (ins[3])
+						gen.setState("glazed", true);
+				}
 			}
 			return [gen];
 		};
