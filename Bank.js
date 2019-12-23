@@ -2,15 +2,9 @@ var Bank = (() => {
 
 	this.list = {};
 
-	init = (url, auth, callback, error) => {
+	init = (api, callback, error) => {
 
-		var axios = require('axios');
-		this.client = axios.create({
-	    	baseURL: url,
-	      	headers: { 'X-Requested-With': 'XMLHttpRequest' }
-	    });
-	    this.client.defaults.headers.common['Authorization'] = 'Bearer ' + auth;
-	    this.client.get("/vault/cardmodels")
+	    api.get("/vault/cardmodels")
 	  	.then(response => {
 	  		var atob = require('atob');
 	  		response.data.forEach(el => this.list[el.idCardmodel] = Object.assign(el, JSON.parse(atob(el.supercode))));
