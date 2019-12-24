@@ -8,6 +8,8 @@ class Copy extends Bloc {
 		super("newcopy", src, ctx, true);
 		var Card = require('../Card');
 		this.f = (src, ins) => {
+			if (ins[0] && ins[0].hasState("glazed") && ins[2] && ins[2].id.locationOrder <= 2)
+				return [null];
 			var gen;
 			var n = ins[1] === null ? 1 : ins[1];
 			for (var i = 0; i < n; i++) {
