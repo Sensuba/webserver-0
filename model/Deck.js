@@ -71,11 +71,9 @@ class Deck {
 
 	addCard (card) {
 
-		this.cards.push(card);
+		this.cards.splice(Math.floor(Math.random() * (this.count+1)), 0, card);
 		if (card.location !== this)
 			card.goto(this);
-		if (this.area.gameboard.started)
-			this.shuffle();
 	}
 
 	removeCard (card) {
