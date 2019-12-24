@@ -24,7 +24,14 @@ class GameBoard {
 		this.subscriptions = {};
 		this.indexSubscription = 0;
 		this.log = new Log();
-		this.notify("init", this, {type: "string", value: p1.name}, {type: "int", no: p1.deck.hero}, {type: "string", value: p2.name}, {type: "int", no: p2.deck.hero});
+		this.notify("init", this,
+			{type: "string", value: p1.name},
+			{type: "string", value: p1.avatar},
+			{type: "int", no: p1.deck.hero},
+			{type: "string", value: p2.name},
+			{type: "string", value: p2.avatar},
+			{type: "int", no: p2.deck.hero}
+		);
 
 		this.areas = [
 			new Area(0, this),
@@ -111,6 +118,10 @@ class GameBoard {
 		var p = this.areas[player];
 
 		switch (cmd.type) {
+		case "concede": {
+			if (!this.ended)
+				p.hero.destroy();
+			break; }
 		case "play": {
 			let card = this.data.cards[cmd.id.no],
 				targets = cmd.targets ? cmd.targets.map(id => this.tiles.find(t => t.id.no === id.no)) : undefined;

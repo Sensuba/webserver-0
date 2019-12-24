@@ -55,7 +55,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 		socket.emit('assign', {to: room});
 	});
 
-	socket.on('join', function(name, room){
+	socket.on('join', function(name, avatar, room){
 
 		socket.join(room);
 		socket.room = room;
@@ -63,13 +63,13 @@ var start = () => io.sockets.on('connection', function (socket) {
 			rooms[room] = { players: [], game: new GameBoard(), private: true };
 		if (!rooms[room].started && rooms[room].players.length < 2) {
 			socket.emit('joined', {as: 'player', no: rooms[room].players.length});
-			rooms[room].players.push({ name, socket });
-			console.log("Client joined " + socket.room + " as player");
+			rooms[room].players.push({ name, avatar, socket });
+			console.log((name || "Anonymous") + " joined " + socket.room + " as player");
 		} else {
 			socket.emit('joined', {as: 'spectator'});
 			if (rooms[room].spectators) {
 				rooms[room].spectators.push({ name, socket });
-				console.log("Client joined " + socket.room + " as spectator");
+				console.log((name || "Anonymous") + " joined " + socket.room + " as spectator");
 				rooms[room].game.log.logs.forEach(log => {
 					var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
 					socket.emit('notification', {type: log.type, src: log.src.id, data: datamap});
