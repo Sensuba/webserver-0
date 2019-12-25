@@ -388,7 +388,7 @@ class Card {
 		if (!value || (value < 0 && this.mana <= 0))
 			return;
 
-		this.mana = Math.max(0, this.mana - value);
+		this.mana = Math.max(0, this.mana + value);
 		this.gameboard.notify("changecost", this, value);
 	}
 
