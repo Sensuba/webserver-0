@@ -213,7 +213,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 				rooms[room].game.ended = true;
 				var c = creditsFor(Date.now() - rooms[room].date, rooms[room].game.log.logs.length);
 				creditPlayer(rooms[room].players[0].name, c);
-				io.sockets.in(socket.room).emit("endgame", {state: 5}); // State 5 : connection lost
+				io.sockets.in(socket.room).emit("endgame", {state: 5, credit: c}); // State 5 : connection lost
 				console.log("Game " + socket.room + " ended by connection lost");
 				console.log("Generated " + c + " credits");
 				console.log("Room count: " + (Object.keys(rooms).length-1));
