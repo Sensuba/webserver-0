@@ -32,6 +32,20 @@ var checkDeck = (token, deck) => {
 	return true;
 }
 
+var creditsFor = (time, log, floor = true) => {
+
+	var t = (time)/1000;
+	var a = Math.max(0, log-150);
+	var c = Math.max(0, (2.145+(-2.145-0.027)/(1+Math.pow(t/278, 1.93))) * (a/(a+100)) * 10);
+	return floor ? Math.floor(c) : c;
+}
+
+var creditPlayer = (name, credit) => {
+
+	if (credit > 0)
+		api.post("/admin/credits", { username: name, credit: credit, mode: "+" });
+}
+
 var start = () => io.sockets.on('connection', function (socket) {
 
 	socket.emit('connected');
@@ -110,15 +124,11 @@ var start = () => io.sockets.on('connection', function (socket) {
 
 				var creditsW = 0, creditsL = 0;
 				if (players[winner].name !== players[1-winner].name) {
-					var t = (Date.now() - rooms[socket.room].date)/1000;
-					var a = Math.max(0, gb.log.logs.length-150);
-					var c = Math.max(0, (2.145+(-2.145-0.027)/(1+Math.pow(t/278, 1.93))) * (a/(a+100)) * 10);
+					var c = creditsFor(Date.now() - rooms[socket.room].date, gb.log.logs.length, false)
 					if (players[winner].name) creditsW = Math.floor(c * 3);
 					if (players[1-winner].name) creditsL = Math.floor(c);
-					if (creditsW > 0)
-						api.post("/admin/credits", { username: players[winner].name, credit: creditsW, mode: "+" });
-					if (creditsL > 0)
-						api.post("/admin/credits", { username: players[1-winner].name, credit: creditsL, mode: "+" });
+					creditPlayer(players[winner].name, creditsW);
+					creditPlayer(players[1-winner].name, creditsL);
 				}
 
 				if (players[winner])
@@ -141,8 +151,12 @@ var start = () => io.sockets.on('connection', function (socket) {
 			} catch (e) {
 				console.log(e);
 				room.game.ended = true;
-				io.sockets.in(socket.room).emit("endgame", {state: 6}); // State 6 : internal error
+				var c = creditsFor(Date.now() - rooms[socket.room].date, gb.log.logs.length);
+				creditPlayer(players[0].name, c);
+				creditPlayer(players[1].name, c);
+				io.sockets.in(socket.room).emit("endgame", {state: 6, credit: c}); // State 6 : internal error
 				console.log("Game " + socket.room + " ended by internal error");
+				console.log("Generated " + (c * 2) + " credits");
 				console.log("Room count: " + (Object.keys(rooms).length-1));
 			}
 			console.log("Started game " + socket.room);
@@ -164,8 +178,12 @@ var start = () => io.sockets.on('connection', function (socket) {
 			} catch (e) {
 				console.log(e);
 				room.game.ended = true;
-				io.sockets.in(socket.room).emit("endgame", {state: 6}); // State 6 : internal error
+				var c = creditsFor(Date.now() - room.date, room.game.log.logs.length);
+				creditPlayer(room.players[0].name, c);
+				creditPlayer(room.players[1].name, c);
+				io.sockets.in(socket.room).emit("endgame", {state: 6, credit: c}); // State 6 : internal error
 				console.log("Game " + socket.room + " ended by internal error");
+				console.log("Generated " + (c * 2) + " credits");
 				console.log("Room count: " + (Object.keys(rooms).length-1));
 			}
 		}
@@ -193,8 +211,11 @@ var start = () => io.sockets.on('connection', function (socket) {
 				rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
 			if (rooms[room].started && rooms[room].players.length <= 1) {
 				rooms[room].game.ended = true;
+				var c = creditsFor(Date.now() - rooms[room].date, rooms[room].game.log.logs.length);
+				creditPlayer(rooms[room].players[0].name, c);
 				io.sockets.in(socket.room).emit("endgame", {state: 5}); // State 5 : connection lost
 				console.log("Game " + socket.room + " ended by connection lost");
+				console.log("Generated " + c + " credits");
 				console.log("Room count: " + (Object.keys(rooms).length-1));
 			}
 		}
