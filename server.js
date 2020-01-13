@@ -8,7 +8,9 @@ var io = require('socket.io').listen(server);
 var rooms = {};
 
 var Bank = require("./Bank.js");
-var GameBoard = require('./model/GameBoard');
+var RoomManager = require("./RoomManager");
+var MissionManager = require("./MissionManager");
+var CreditManager = require("./CreditManager");
 
 console.log("Initialization...");
 var axios = require('axios');
@@ -16,7 +18,7 @@ var api = axios.create({
 	baseURL: 'https://bhtwey7kwc.execute-api.eu-west-3.amazonaws.com/alpha',
   	headers: { 'X-Requested-With': 'XMLHttpRequest' }
 });
-api.defaults.headers.common['Authorization'] = 'Bearer ' + process.env.token;
+//api.defaults.headers.common['Authorization'] = 'Bearer ' + process.env.token;
 Bank.init(api, () => {
 
 	console.log("Initialized !");
@@ -26,11 +28,7 @@ Bank.init(api, () => {
 	console.log(`Error code: ${err.code}`);
 	console.log(`Unable to load data from ${err.hostname}`);
 });
-
-var checkDeck = (token, deck) => {
-
-	return true;
-}
+CreditManager.init(api);
 
 var creditsFor = (time, log, floor = true) => {
 
@@ -61,166 +59,81 @@ var start = () => io.sockets.on('connection', function (socket) {
 			}
 		}
 		var batch = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		var room = "";
+		var roomname = "";
 		for (var i = 0; i < 10; i++)
-			room += batch.charAt(Math.floor(Math.random() * batch.length));
-		if (!(room in rooms))
-			rooms[room] = { players: [], spectators: [], game: new GameBoard(), private: prv };
-		socket.emit('assign', {to: room});
+			roomname += batch.charAt(Math.floor(Math.random() * batch.length));
+		if (!(roomname in rooms))
+			rooms[roomname] = new RoomManager(roomname, prv);
+		socket.emit('assign', {to: roomname});
 	});
 
-	socket.on('join', function(name, avatar, room){
+	socket.on('join', function(name, avatar, roomname){
 
-		socket.join(room);
-		socket.room = room;
-		if (!(room in rooms))
-			rooms[room] = { players: [], game: new GameBoard(), private: true };
-		if (!rooms[room].started && rooms[room].players.length < 2) {
-			socket.emit('joined', {as: 'player', no: rooms[room].players.length});
-			rooms[room].players.push({ name, avatar, socket });
-			console.log((name || "Anonymous") + " joined " + socket.room + " as player");
-		} else {
-			socket.emit('joined', {as: 'spectator'});
-			if (rooms[room].spectators) {
-				rooms[room].spectators.push({ name, socket });
-				console.log((name || "Anonymous") + " joined " + socket.room + " as spectator");
-				rooms[room].game.log.logs.forEach(log => {
-					var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
-					socket.emit('notification', {type: log.type, src: log.src.id, data: datamap});
-				})
-			}
-		}
+		socket.join(roomname);
+		socket.room = roomname;
+		if (!(roomname in rooms))
+			rooms[roomname] = new RoomManager(roomname);
+		var manager = rooms[roomname];
+		socket.manager = manager;
+		manager.join(socket, name, avatar);
 	});
 
-	socket.on('mission', function(name, mission){
+	socket.on('mission', function(name, avatar, mission){
 
-		socket.type = "mission";
+		socket.mission = mission;
+		socket.manager = new MissionManager(mission);
+		var manager = socket.manager;
+		manager.init(socket, name, avatar);
 	});
 
 	socket.on('prepare', function(token, deck){
 
-		if (!checkDeck(token, deck)) {
+		if (!socket.manager)
 			return;
-		}
 
-		var players = rooms[socket.room].players;
-		var room = rooms[socket.room];
-		var p = players.find(player => player.socket === socket);
-		p.token = token;
-		p.deck = deck;
-		p.ready = true;
-
-		if (!room.started && players.length === 2 && players.every(player => player.ready)) {
-
-			var gb = rooms[socket.room].game;
-			gb.send = (type, src, data) => io.sockets.in(socket.room).emit("notification", {type, src, data});
-			gb.whisper = (type, player, src, ...data) => players[player] ? players[player].socket.emit("notification", {type, src, data}) : {};
-			gb.explain = (type, src, data) => {
-				if (room.spectators)
-					room.spectators.forEach(spec => spec.socket.emit("notification", {type, src, data}));
-			}//io.sockets.clients(socket.room).filter(cli => !players.some(p => p.socket === cli)).forEach(spec => spec.socket.emit("notification", {type, src, data}));
-			gb.end = (winner) => {
-				gb.ended = true;
-
-				var creditsW = 0, creditsL = 0;
-				if (players[winner].name !== players[1-winner].name) {
-					var c = creditsFor(Date.now() - rooms[socket.room].date, gb.log.logs.length, false)
-					if (players[winner].name) creditsW = Math.floor(c * 3);
-					if (players[1-winner].name) creditsL = Math.floor(c);
-					creditPlayer(players[winner].name, creditsW);
-					creditPlayer(players[1-winner].name, creditsL);
-				}
-
-				if (players[winner])
-					players[winner].socket.emit("endgame", {state: 3, credit: creditsW}); // State 3 : win
-				if (players[1-winner])
-					players[1-winner].socket.emit("endgame", {state: 4, credit: creditsL}); // State 4 : lose
-				if (rooms[socket.room].spectators)
-					room.spectators.forEach(spec => spec.socket.emit("endgame", {state: 1})); // State 1 : end
-				console.log("Game " + socket.room + " ended normally");
-				console.log("Generated " + (creditsW + creditsL) + " credits");
-
-				console.log("Room count: " + (rooms.length-1));
-				delete rooms[socket.room];
-			}
-
-			try {
-				gb.init(players[0], players[1]);
-				gb.start();
-				rooms[socket.room].date = Date.now();
-			} catch (e) {
-				console.log(e);
-				room.game.ended = true;
-				var c = creditsFor(Date.now() - rooms[socket.room].date, gb.log.logs.length);
-				creditPlayer(players[0].name, c);
-				creditPlayer(players[1].name, c);
-				io.sockets.in(socket.room).emit("endgame", {state: 6, credit: c}); // State 6 : internal error
-				console.log("Game " + socket.room + " ended by internal error");
-				console.log("Generated " + (c * 2) + " credits");
-				console.log("Room count: " + (Object.keys(rooms).length-1));
-			}
-			console.log("Started game " + socket.room);
+		var manager = socket.manager;
+		manager.prepare(socket, deck, token);
+		if (manager.finished) {
+			delete rooms[manager.room];
 			console.log("Room count: " + Object.keys(rooms).length);
-			room.started = true;
-			room.private = true;
 		}
 	})
 
 	socket.on('command', function(cmd){
 
-		var room = rooms[socket.room];
-		if (!room)
+		var manager = socket.manager;
+		if (!manager)
 			return;
-		var no = room.players.findIndex(p => p.socket === socket);
-		if (no >= 0) {
-			try {
-				room.game.command(cmd, no);
-			} catch (e) {
-				console.log(e);
-				room.game.ended = true;
-				var c = creditsFor(Date.now() - room.date, room.game.log.logs.length);
-				creditPlayer(room.players[0].name, c);
-				creditPlayer(room.players[1].name, c);
-				io.sockets.in(socket.room).emit("endgame", {state: 6, credit: c}); // State 6 : internal error
-				console.log("Game " + socket.room + " ended by internal error");
-				console.log("Generated " + (c * 2) + " credits");
-				console.log("Room count: " + (Object.keys(rooms).length-1));
-			}
+		manager.command(socket, cmd);
+		if (manager.finished) {
+			delete rooms[manager.room];
+			console.log("Room count: " + Object.keys(rooms).length);
 		}
 	});
 
 	socket.on('leave', function(){
 
-		let room = socket.room;
 		console.log("Client leaved " + socket.room);
-		socket.leave(room);
-		rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
-		if (rooms[room].spectators)
-			rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
+		var manager = socket.manager;
+		if (!manager)
+			return;
+		manager.kick(socket);
 	});
 
 	var quit = () => {
 
-		let room = socket.room;
-		socket.leave(room);
-		if (room && rooms[rooms] && rooms[room].players.every(p => p.socket !== socket))
-			return;
-		if (room && rooms[room]) {
-			rooms[room].players = rooms[room].players.filter(p => p.socket !== socket);
-			if (rooms[room].spectators)
-				rooms[room].spectators = rooms[room].spectators.filter(p => p.socket !== socket);
-			if (rooms[room].started && rooms[room].players.length <= 1) {
-				rooms[room].game.ended = true;
-				var c = creditsFor(Date.now() - rooms[room].date, rooms[room].game.log.logs.length);
-				creditPlayer(rooms[room].players[0].name, c);
-				io.sockets.in(socket.room).emit("endgame", {state: 5, credit: c}); // State 5 : connection lost
-				console.log("Game " + socket.room + " ended by connection lost");
-				console.log("Generated " + c + " credits");
-				console.log("Room count: " + (Object.keys(rooms).length-1));
+		if (socket.room) {
+			var roomname = socket.room;
+			socket.leave(roomname);
+			var manager = rooms[roomname];
+			if (!manager)
+				return;
+			manager.kick(socket);
+			if (manager.finished) {
+				delete rooms[manager.room];
+				console.log("Room count: " + Object.keys(rooms).length);
 			}
 		}
-		if (room && rooms[room] && rooms[room].players.length == 0)
-			delete rooms[room];
 	}
 
 	socket.on('quit', quit);

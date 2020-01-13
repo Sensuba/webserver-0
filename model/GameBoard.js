@@ -38,8 +38,8 @@ class GameBoard {
 			new Area(1, this)
 		];
 
-		this.areas[0].init(p1.deck);
-		this.areas[1].init(p2.deck);
+		this.areas[0].init(p1.deck, p1.props);
+		this.areas[1].init(p2.deck, p2.props);
 		this.started = true;
 	}
 
@@ -77,9 +77,12 @@ class GameBoard {
 		this.notify("start", this);
 		area = area || this.areas[Math.floor(Math.random()*2)];
 		this.currentArea = area;
-		this.currentArea.draw (4);
-		this.currentArea.opposite.draw (5);
-		this.currentArea.opposite.manapool.createGem ();
+		this.currentArea.draw (this.currentArea.startingHand === undefined ? 4 : this.currentArea.startingHand);
+		this.currentArea.opposite.draw (this.currentArea.opposite.startingHand === undefined ? 5 : this.currentArea.opposite.startingHand);
+		if (this.currentArea.startingGem)
+			this.currentArea.manapool.createGem ();
+		if (this.currentArea.opposite.startingGem !== false)
+			this.currentArea.opposite.manapool.createGem ();
 		this.currentArea.newTurn ();
 		this.resetTimer();
 		//console.log(this.currentArea.hand.cards);
@@ -105,6 +108,8 @@ class GameBoard {
 
 	resetTimer () {
 
+		if (!this.timed)
+			return;
 		if (this.timer)
 			clearTimeout(this.timer);
 		this.timer = setTimeout(() => {
@@ -190,3 +195,42 @@ class GameBoard {
 }
 
 module.exports = GameBoard;
+
+/*
+
+<div class="sensuba-dialog" style="
+    top: 20vw;
+    left: calc(50% - 20em - 8vw);
+    position: absolute;
+    height: 6em;
+    width: 20em;
+"><div class="sensuba-dialog-icon" style="
+    position: absolute;
+    height: 3em;
+    width: 3em;
+    top: -1.6em;
+    left: -1.6em;
+    border-radius: 50%;
+    border: solid 2px black;
+    overflow: hidden;
+"><img src="https://i.ibb.co/qNwWzzR/freezer.jpg" style="
+    height: 6vw;
+    width: 4.5vw;
+    margin-top: calc(-0.5vw - 3px);
+    margin-left: calc(-0.825vw - 3px);
+    -o-object-fit: cover;
+    object-fit: cover;
+"></div>
+    <div class="sensuba-dialog-box" style="
+    background: #FFFFFF80;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    font-weight: 500;
+    text-align: left;
+    padding: 0.5em 1em;
+    border: #000000a0 dashed 2px;
+"><p>A namek dare to oppose me? How funny these miserable insects can be.</p></div>
+</div>
+
+*/

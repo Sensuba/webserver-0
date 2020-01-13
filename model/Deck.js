@@ -15,11 +15,13 @@ class Deck {
 		this.cards = [];
 	}
 
-	init (list) {
+	init (list, shuffle = true) {
 
 		this.cards = [];
+		if (!shuffle)
+			this.shufflelock = true;
 		list.forEach(el => new Card(Bank.get(el), this.area.gameboard, this));
-		this.shuffle();
+		delete this.shufflelock;
 	}
 
 	draw(filter) {
@@ -69,9 +71,9 @@ class Deck {
 		return false;
 	}
 
-	addCard (card) {
+	addCard (card, index) {
 
-		this.cards.splice(Math.floor(Math.random() * (this.count+1)), 0, card);
+		this.cards.splice(index || (this.shufflelock ? this.count : Math.floor(Math.random() * (this.count+1))), 0, card);
 		if (card.location !== this)
 			card.goto(this);
 	}

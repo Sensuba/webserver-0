@@ -28,10 +28,14 @@ class Area {
 		this.choosebox = new Choosebox(this);
 	}
 
-	init (decklist) {
+	init (decklist, props) {
 
-		this.deck.init(decklist.body);
+		this.deck.init(decklist.body, props ? props.shuffle : true);
 		this.hero = new Card(Bank.get(decklist.hero), this.gameboard, this.field.tiles[6]);
+		if (props) {
+			this.startingHand = props.startingHand;
+			this.startingGem = props.startingGem;
+		}
 	}
 
 	get opposite () {

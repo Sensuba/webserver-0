@@ -17,7 +17,7 @@ var Bank = (() => {
 
 		if (typeof model === "object") {
 
-			if (model.idCardmodel)
+			if (model.idCardmodel || model.nameCard)
 				return model;
 
 			var parent = get(model.parent);
