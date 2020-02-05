@@ -16,7 +16,7 @@ var compute = (time, log, floor = true) => {
 var creditPlayer = (name, credit) => {
 
 	if (credit > 0)
-		api.post("/admin/credits", { username: name, credit: credit, mode: "+" });
+		this.api.post("/admin/credits", { username: name, credit: credit, mode: "+" });
 }
 
 return {

@@ -104,9 +104,9 @@ class RoomManager extends Manager {
 			} catch (e) {
 				console.log(e);
 				this.finish();
-				var c = CreditManager.compute(Date.now() - room.date, room.game.log.logs.length);
-				CreditManager.creditPlayer(room.players[0].name, c);
-				CreditManager.creditPlayer(room.players[1].name, c);
+				var c = CreditManager.compute(Date.now() - this.room.date, this.room.game.log.logs.length);
+				CreditManager.creditPlayer(this.room.players[0].name, c);
+				CreditManager.creditPlayer(this.room.players[1].name, c);
 				this.players.forEach(p => p.socket.emit("endgame", {state: 6, credit: c})); // State 6 : internal error
 				this.spectators.forEach(s => s.socket.emit("endgame", {state: 6}));
 				console.log("Game " + this.room + " ended by internal error");
