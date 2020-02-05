@@ -18,7 +18,7 @@ var api = axios.create({
 	baseURL: 'https://bhtwey7kwc.execute-api.eu-west-3.amazonaws.com/alpha',
   	headers: { 'X-Requested-With': 'XMLHttpRequest' }
 });
-//api.defaults.headers.common['Authorization'] = 'Bearer ' + process.env.token;
+api.defaults.headers.common['Authorization'] = 'Bearer ' + process.env.token;
 Bank.init(api, () => {
 
 	console.log("Initialized !");
