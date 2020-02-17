@@ -5,7 +5,7 @@ class ForEachEvent extends Bloc {
 
 	constructor (src, ctx) {
 
-		super("forevent", src, ctx);
+		super("forevent", src, ctx, true);
 		this.f = (src, ins, props) => {
 			var logs = [];
 			switch (ins[1]) {
@@ -17,7 +17,8 @@ class ForEachEvent extends Bloc {
 				default: break;
 			}
 
-			logs.forEach (logs => {
+			logs.forEach (log => {
+				this.out = [log];
 				if (this["for each"])
 					this["for each"].execute(props);
 			})
@@ -27,6 +28,8 @@ class ForEachEvent extends Bloc {
 			return;
 		}
 		this.types = [Types.event, Types.period, Types.bool];
+		this.toPrepare.push("for each");
+		this.toPrepare.push("completed");
 	}
 
 	execute (props) {
@@ -35,8 +38,6 @@ class ForEachEvent extends Bloc {
 		let src = props.src || this.src;
 		var f = this.f || (() => []);
 		this.out = f(src, [this.in[0](props), this.in[1](props)], props);
-		if (this.to)
-			this.to.execute(props);
 	}
 
 	logsThisTurn (event, props) {
