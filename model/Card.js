@@ -99,6 +99,7 @@ class Card {
 
 		if (this.dying)
 			this.resetBody();
+		this.lb = this.eff.overload && this.eff.ol && this.eff.ol > this.eff.overload ? Math.floor(this.eff.ol/this.eff.overload) : 0;
 		this.skillPt = 1;
 		let chp = this.eff.hp;
 		this.goto(tile, true);
@@ -235,6 +236,7 @@ class Card {
 
 		this.states.frozen = true;
 		this.frozenTimer = false;
+		this.update();
 		this.gameboard.notify("charfreeze", this);
 	}
 
@@ -659,6 +661,8 @@ class Card {
 
 	tryToCover (other, flying = false) {
 
+		if (other.isEff)
+			other = other.original;
 		if (!this.isType("character") || !this.onBoard || !other.onBoard || this.concealed)
 			return false;
 		return (other.location.isBehind(this.location) || (this.hasState("cover neighbors") && other.location.isNeighborTo(this.location))) && flying === this.hasState("flying");
@@ -666,6 +670,8 @@ class Card {
 
 	cover (other, flying = false) {
 
+		if (other.isEff)
+			other = other.original;
 		return this.tryToCover(other, flying) && !other.tryToCover(this, flying);
 	}
 
@@ -856,6 +862,7 @@ class Card {
 				mut.detach();
 				unsub();
 			});
+		this.update();
 	}
 
 	activate () {
@@ -905,6 +912,7 @@ class Card {
 		var res;
 		res = Object.assign({}, this);
 		res.isEff = true;
+		res.original = this;
 		res.states = Object.assign({}, this.states);
 		let updatephp = () => {
 			if (this.isType("character") && this.onBoard) {

@@ -14,8 +14,9 @@ class FilterStats extends Bloc {
 			var checkhp = target => (ins[4] === null || (!isNaN(target.hp) && parsing(target.hp) >= ins[4])) && (ins[5] === null || (!isNaN(target.hp) && parsing(target.hp) <= ins[5]));
 			var checkrange = target => (ins[6] === null || (!isNaN(target.range) && parsing(target.range) >= ins[6])) && (ins[7] === null || (!isNaN(target.range) && parsing(target.range) <= ins[7]));
 			var cardfilter = target => checkmana(target.eff) && checkatk(target.eff) && checkhp(target.eff) && checkrange(target.eff);
+			var modelfilter = target => checkmana(target) && checkatk(target) && checkhp(target) && checkrange(target);
 			
-			return [cardfilter, cardfilter];
+			return [cardfilter, modelfilter];
 		};
 		this.types = [Types.int, Types.int, Types.int, Types.int, Types.int, Types.int, Types.int, Types.int];
 	}

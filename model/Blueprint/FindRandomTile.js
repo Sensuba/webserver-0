@@ -7,7 +7,7 @@ class FindRandomTile extends Bloc {
 
 		super("findtile", src, ctx);
 		this.f = (src, ins) => {
-			var items = ins[0].filter(tile => !ins[1] || ins[1](tile));
+			var items = ins[0].filter(tile => !ins[1] || ins[1](src, tile));
 			var item = items.length > 0 ? items[Math.floor(Math.random()*items.length)] : null;
 			return [item, item !== null];
 		};
