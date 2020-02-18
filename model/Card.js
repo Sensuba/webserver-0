@@ -796,6 +796,9 @@ class Card {
 
 	copy (other, glaze) {
 
+		let wasActivated = this.activated;
+		if (this.activated)
+			this.deactivate();
 		var data = other.data;
 		for (var k in data) {
 			if (k === "id")
@@ -817,12 +820,13 @@ class Card {
 		this.cmutations = [];
 		this.states = {};
 		this.identified = [false, false];
+		if (wasActivated)
+			this.activate();
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
 
 		if (this.onBoard) {
 			this.skillPt = 1;
-			this.activate();
 			if (this.isType("character"))
 				this.resetSickness();
 		}
@@ -918,7 +922,7 @@ class Card {
 			if (this.isType("character") && this.onBoard) {
 				this.php = this.php || { hp: this.hp, chp: this.chp };
 				var plushp = Math.max (0, res.hp - this.php.hp);
-				this.chp = Math.min(res.hp, this.chp + plushp);
+				this.chp = Math.min(res.hp, (this.chp || this.hp) + plushp);
 				res.chp = this.chp;
 				this.php = { hp: res.hp, chp: res.chp };
 			}
