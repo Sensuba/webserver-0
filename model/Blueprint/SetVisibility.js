@@ -9,6 +9,8 @@ class SetVisibility extends Bloc {
 		this.f = (src, ins) => {
 			ins[0].public = ins[1];
 			ins[0].area.gameboard.notify("visibilityloc", ins[0], {type: "bool", value: ins[1]});
+			if (ins[1])
+				ins[0].cards.forEach(card => card.reveal());
 			return [];
 		};
 		this.types = [Types.location, Types.bool];

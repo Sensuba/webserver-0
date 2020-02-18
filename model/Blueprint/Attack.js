@@ -6,7 +6,7 @@ class Attack extends Bloc {
 	constructor (src, ctx) {
 
 		super("attack", src, ctx, true);
-		this.f = (src, ins) => [ins[0].attack(ins[1])];
+		this.f = (src, ins) => [ins[0].attack(ins[1], true)];
 		this.types = [Types.card, Types.card];
 	}
 }

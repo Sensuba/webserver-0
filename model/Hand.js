@@ -9,6 +9,7 @@ class Hand {
 		this.id = { type: "hand", no: area.id.no };
 
 		this.locationOrder = 2;
+		this.public = false;
 
 		this.area = area;
 
@@ -41,11 +42,6 @@ class Hand {
 	get opposite () {
 
 		return this.area.opposite.hand;
-	}
-
-	get public () {
-
-		return false;
 	}
 
 	addCard (card) {

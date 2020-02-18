@@ -173,7 +173,10 @@ class GameBoard {
 
 		while (this.updates.length > 0)
 			this.updates[0].trigger();
-		this.data.cards.forEach(card => card.update());
+		[3, 2, 1, 0].forEach(prio => this.data.cards.forEach(card => {
+			if (card.location && card.location.locationOrder === prio)
+				card.update();
+		}));
 	}
 
 	addAura (aura) {

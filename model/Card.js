@@ -519,6 +519,16 @@ class Card {
 		if (!eff.actionPt && (!this.hasState("fury") || eff.strikes !== 1))
 			return false;
 
+		return this.canReach(target);
+	}
+
+	canReach (target) {
+
+		var eff = this.eff;
+
+		if (!this.isType("character") || !this.onBoard || !target || !target.onBoard || this.area === target.area || eff.range <= 0 || target.concealed)
+			return false;
+
 		var needed = 1;
 		if (this.location.inBack)
 			needed++;
@@ -530,13 +540,15 @@ class Card {
 		return eff.range >= needed;
 	}
 
-	attack (target) {
+	attack (target, auto = false) {
 
-		if (!this.hasState("fury") || this.strikes !== 1)
+		if (!auto && (!this.hasState("fury") || this.strikes !== 1))
 			this.actionPt--;
-		this.strikes++;
-		this.motionPt = 0;
-		this.gameboard.notify("charattack", this, target);
+		if (!auto) {
+			this.strikes = (this.strikes+1)%2;
+			this.motionPt = 0;
+		}
+		this.gameboard.notify("charattack", this, target, {type:"bool", value: auto});
 		this.oncontact = target;
 		var dmg1 = target.damage(this.eff.atk, this, true);
 		var dmg2;
@@ -866,7 +878,7 @@ class Card {
 				mut.detach();
 				unsub();
 			});
-		this.update();
+		this.gameboard.update();
 	}
 
 	activate () {

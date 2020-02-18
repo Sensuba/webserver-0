@@ -65,6 +65,7 @@ var StoreLocation = require('./StoreLocation');
 var ClearVariable = require('./ClearVariable');
 
 var CanPay = require('./CanPay');
+var CanReach = require('./CanReach');
 var HasShield = require('./HasShield');
 var FilterCard = require('./FilterCard');
 var FilterStats = require('./FilterStats');
@@ -222,6 +223,7 @@ class Reader {
 			case "setvisibility": bloc = new SetVisibility(card, ctx); break;
 			case "clearvar": bloc = new ClearVariable(card, ctx); break;
 			case "canpay": bloc = new CanPay(card, ctx); break;
+			case "canreach": bloc = new CanReach(card, ctx); break;
 			case "hasshield": bloc = new HasShield(card, ctx); break;
 			case "checkcard": bloc = new CheckCard(card, ctx); break;
 			case "checktile": bloc = new CheckTile(card, ctx); break;
