@@ -1,16 +1,18 @@
 var AI = require("./AI");
-var Script = require("../mission/Script");
+var Reader = require("./script/Reader");
 
 class ScriptedAI extends AI {
 
-	constructor (gameboard, no) {
+	constructor (gameboard, no, behaviour) {
 
 		super(gameboard, no);
+		this.reader = new Reader(gameboard, no, behaviour);
+		this.reader.init();
 	}
 
 	act () {
 
-		return { type: "endturn" };
+		return this.reader.next() || { type: "endturn" };
 	}
 }
 

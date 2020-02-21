@@ -14,17 +14,18 @@ class Extremum extends Bloc {
 				loc.cards.forEach(card => {
 					if (ins[1] && !ins[1](card))
 						return;
-					if (!lcost || card.mana < lcost.mana)
+					var eff = card.eff || card;
+					if (!lcost || eff.mana < lcost.eff.mana)
 						lcost = card;
-					if (!hcost || card.mana > hcost.mana)
+					if (!hcost || eff.mana > hcost.eff.mana)
 						hcost = card;
-					if (!latk || card.atk < latk.atk)
+					if (!latk || eff.atk < latk.eff.atk)
 						latk = card;
-					if (!hatk || card.atk > hatk.atk)
+					if (!hatk || eff.atk > hatk.eff.atk)
 						hatk = card;
-					if (!lhp || (card.chp || card.hp) < (lhp.chp || lhp.hp))
+					if (!lhp || (eff.chp || eff.hp) < (lhp.eff.chp || lhp.eff.hp))
 						lhp = card;
-					if (!hhp || (card.chp || card.hp) > (hhp.chp || hhp.hp))
+					if (!hhp || (eff.chp || eff.hp) > (hhp.eff.chp || hhp.eff.hp))
 						hhp = card;
 				});
 			});

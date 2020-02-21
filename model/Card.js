@@ -652,6 +652,8 @@ class Card {
 			return true;
 		if (!targets || targets.length === 0)
 			return false;
+		if (targets.length > 1 && targets.some((t, i) => targets.indexOf(t) !== i))
+			return false;
 		return targets.every((t, i) => this.targets[i] && this.targets[i](this, t));
 	}
 

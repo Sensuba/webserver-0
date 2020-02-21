@@ -16,7 +16,7 @@ class MissionManager extends Manager {
 
 		this.socket = socket;
 		this.script = new Script(this.mission);
-		this.ai = new ScriptedAI(this.game, 1);
+		this.ai = new ScriptedAI(this.game, 1, this.script.data.ai.behaviour);
 
 		this.game.send = (type, src, data) => {
 			socket.emit("notification", {type, src, data});
@@ -37,7 +37,7 @@ class MissionManager extends Manager {
 			console.log("Mission ended by internal error");
 		}
 
-		console.log((name || "Anonymous") + " started mission " + this.mission);
+		console.log((name || "Anonymous") + " started mission " + this.mission.mission + " - " + this.mission.chapter);
 	}
 
 	callAI () {
