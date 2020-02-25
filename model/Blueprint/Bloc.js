@@ -42,7 +42,7 @@ class Bloc {
 	compute (props) {
 
 		props = props || {};
-		if (props.image && this.images[props.image])
+		if (this.static && props.image && this.images[props.image])
 			return this.images[props.image];
 		if (this.static && this.out !== null && this.out !== undefined)
 			return this.out;
