@@ -30,6 +30,7 @@ class MissionManager extends Manager {
 				{ name, avatar, socket, deck: this.script.data.player.deck, props: this.script.data.player.props },
 				{ name: this.script.data.ai.name, deck: this.script.data.ai.deck, props: this.script.data.ai.props }
 			);
+			this.script.rule(this.game);
 			this.game.start(this.game.areas[this.script.data.first]);
 		} catch (e) {
 			console.log(e);

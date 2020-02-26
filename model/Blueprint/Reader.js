@@ -134,6 +134,9 @@ var Timer = require('./Timer');
 
 var ExtraTurn = require('./ExtraTurn');
 
+var Message = require('./Message');
+var Highlight = require('./Highlight');
+
 var Plus = require('./Plus');
 var Minus = require('./Minus');
 var Times = require('./Times');
@@ -286,6 +289,8 @@ class Reader {
 			case "foreffect": bloc = new ForEachEffect(card, ctx); break;
 			case "forevent": bloc = new ForEachEvent(card, ctx); break;
 			case "extraturn": bloc = new ExtraTurn(card, ctx); break;
+			case "message": bloc = new Message(card, ctx); break;
+			case "highlight": bloc = new Highlight(card, ctx); break;
 			case "opplus": bloc = new Plus(card, ctx); break;
 			case "opminus": bloc = new Minus(card, ctx); break;
 			case "optimes": bloc = new Times(card, ctx); break;
@@ -335,6 +340,8 @@ class Reader {
 			case "breakshield-data": bloc = new Data(el.type, card, ctx, d => [d.src]); break;
 			case "destroygem-trigger": bloc = new Trigger(el.type, card, ctx, "usegem"); break;
 			case "destroygem-data": bloc = new Data(el.type, card, ctx, d => [d.src.area]); break;
+			case "createreceptacle-trigger": bloc = new Trigger(el.type, card, ctx, "createmana"); break;
+			case "createreceptacle-data": bloc = new Data(el.type, card, ctx, d => [d.src.area]); break;
 			default: bloc = new Bloc(el.type, card, ctx); break;
 			}
 			ctx[key].push(bloc);
