@@ -99,7 +99,7 @@ class Card {
 
 		if (this.dying)
 			this.resetBody();
-		this.lb = this.eff.overload && this.eff.ol && this.eff.ol > this.eff.overload ? Math.floor(this.eff.ol/this.eff.overload) : 0;
+		this.lb = this.eff.overload && this.eff.ol && this.eff.ol >= this.eff.overload ? Math.floor(this.eff.ol/this.eff.overload) : 0;
 		this.skillPt = 1;
 		let chp = this.eff.hp;
 		this.goto(tile, true);
@@ -118,7 +118,7 @@ class Card {
 
 		delete this.dying;
 		if (loc instanceof Court && this.overload)
-			this.lb = this.eff.overload && this.eff.ol && this.eff.ol > this.eff.overload ? Math.floor(this.eff.ol/this.eff.overload) : 0;
+			this.lb = this.eff.overload && this.eff.ol && this.eff.ol >= this.eff.overload ? Math.floor(this.eff.ol/this.eff.overload) : 0;
 
 		var former = this.location;
 		this.location = loc;
