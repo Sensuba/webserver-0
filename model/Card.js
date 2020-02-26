@@ -931,6 +931,7 @@ class Card {
 		if (this.computing)
 			return;
 		this.computing = true;
+		var wasCovering = this.hasState("cover neighbors");
 		var res;
 		res = Object.assign({}, this);
 		res.isEff = true;
@@ -959,6 +960,9 @@ class Card {
 		this.computing = false;
 
 		this.mutatedState = res;
+
+		if (!wasCovering && res.states["cover neighbors"])
+			this.gameboard.update();
 	}
 
 	/*get eff () {
