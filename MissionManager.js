@@ -24,6 +24,12 @@ class MissionManager extends Manager {
 				this.callAI();
 		}
 		this.game.whisper = (type, no, src, ...data) => no === 0 ? socket.emit("notification", {type, src, data}) : {};
+		this.game.end = (winner) => {
+				
+				this.game.ended = true;
+				this.socket.emit("endgame", {state: winner === 0 ? 3 : 4, credit: 0});
+				console.log("Mission for " + name + " ended normally");
+			}
 		
 		try {
 			this.game.init(
