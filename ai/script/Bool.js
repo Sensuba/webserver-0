@@ -5,13 +5,31 @@ class Bool {
 	constructor (basis) {
 
 		var Types = require("./Types");
-		this.card = Types.card(basis.card);
-		this.check = Types.cardfilter(basis.check);
+		if (basis.and) {
+			this.and = Types.array(Types.bool, basis.and);
+			this.mode = "and";
+		} else if (basis.card && basis.check) {
+			this.card = Types.card(basis.card);
+			this.check = Types.cardfilter(basis.check);
+			this.mode = "checkcard";
+		} else if (basis.card) {
+			this.card = Types.card(basis.card);
+			this.mode = "cardexists";
+		}else if (basis.location) {
+			this.location = Types.location(basis.location);
+			this.mode = "locexists";
+		}
 	}
 
 	compute (ctx) {
 
-		return this.check(ctx)(this.card(ctx));
+		switch (this.mode) {
+		case "and": return this.and.every(bool => bool(ctx));
+		case "cardexists": return this.card(ctx) !== null;
+		case "checkcard": return this.check(ctx)(this.card(ctx));
+		case "locexists": return this.location(ctx) !== null;
+		default: return true;
+		}
 	}
 }
 

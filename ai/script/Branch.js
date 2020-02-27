@@ -12,18 +12,22 @@ class Branch {
 
 	compute (ctx) {
 
-		if (this.reader) {
+		var next = () => {
+
 			var res = this.reader.next();
 			if (!res)
 				delete this.reader;
 			return res;
 		}
 
+		if (this.reader)
+			return next();
+
 		var Reader = require("./Reader");
 		this.reader = new Reader(ctx.gameboard, ctx.player, this.condition(ctx) ? this.if : this.else);
 		Object.assign(this.reader.variables, ctx.variables);
 		this.reader.init();
-		return this.reader.next();
+		return next();
 	}
 }
 

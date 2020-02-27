@@ -39,7 +39,10 @@ class ForEach {
 		Object.assign(this.reader.variables, ctx.variables);
 		this.reader.variables[this.variable] = this.list[this.index++];
 		this.reader.init();
-		return this.reader.next();
+		var res2 = this.reader.next();
+		if (res2)
+			return res2;
+		return this.compute(ctx);
 	}
 }
 

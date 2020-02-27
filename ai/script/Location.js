@@ -14,7 +14,7 @@ class Location {
 		var filter = this.filter(ctx);
 		var batch = this.area(ctx).filter(loc => filter(loc));
 
-		return batch[Math.floor(Math.random() * batch.length)];
+		return batch.length > 0 ? batch[Math.floor(Math.random() * batch.length)] : null;
 	}
 }
 

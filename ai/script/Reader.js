@@ -4,6 +4,7 @@ var ForEach = require("./ForEach");
 var Play = require("./Play");
 var Faculty = require("./Faculty");
 var Attack = require("./Attack");
+var Move = require("./Move");
 
 class Reader {
 
@@ -27,6 +28,7 @@ class Reader {
 			case "play": el = new Play(next); break;
 			case "faculty": el = new Faculty(next); break;
 			case "attack": el = new Attack(next); break;
+			case "move": el = new Move(next); break;
 			default: break;
 			}
 			this.elements.push(el);

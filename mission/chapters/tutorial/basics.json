@@ -42,7 +42,11 @@
 		"behaviour": [
 			{ "type": "faculty", "src": "hero", "value": 0 },
 			{ "type": "branch", "condition": { "card": { "location": "hand" }, "check": "figure" }, "if": [
-				{ "type": "play", "src": { "location": "hand" }, "value": [{ "area": "front", "filter": "empty" }] }
+				{ "type": "branch", "condition": { "location": { "area": { "ahead": "hero" }, "filter": "empty" } }, "if": [
+					{ "type": "play", "src": { "location": "hand" }, "value": [{ "area": { "ahead": "hero" }, "filter": "empty" }] }
+				], "else": [
+					{ "type": "play", "src": { "location": "hand" }, "value": [{ "area": "front", "filter": "empty" }] }
+				] }
 			], "else": [
 				{ "type": "play", "src": { "location": "hand" }, "value": ["enemy hero"] }
 			] },

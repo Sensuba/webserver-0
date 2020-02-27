@@ -2,6 +2,8 @@ var Bool = require("./Bool");
 var Card = require("./Card");
 var Location = require("./Location");
 var Area = require("./Area");
+var Cardfilter = require("./Cardfilter");
+var Tilefilter = require("./Tilefilter");
 
 class Types {
 
@@ -51,7 +53,7 @@ class Types {
 		case "hero": return ctx => ctx.gameboard.areas[ctx.player].hero.location;
 		case "enemy hero": return ctx => ctx.gameboard.areas[1-ctx.player].hero.location;
 		case "hand": return ctx => ctx.gameboard.areas[ctx.player].hand;
-		default: return ctx => ctx.gameboard.areas[ctx.player].hero.location;
+		default: return ctx => ctx.variables[value].location;
 		}
 	}
 
@@ -76,6 +78,11 @@ class Types {
 	}
 
 	static cardfilter (value) {
+
+		if (typeof value === 'object') {
+			var el = new Cardfilter(value);
+			return el.compute.bind(el);
+		}
 		
 		switch (value) {
 		case "entity":
@@ -89,9 +96,19 @@ class Types {
 	}
 
 	static tilefilter (value) {
+
+		if (typeof value === 'object') {
+			var el = new Tilefilter(value);
+			return el.compute.bind(el);
+		}
 		
 		switch (value) {
 		case "empty": return ctx => tile => tile.isEmpty;
+		case "entity":
+		case "character":
+		case "hero":
+		case "figure":
+		case "artifact": return ctx => tile => tile.occupied && tile.card.isType(value);
 		default: return ctx => tile => true;
 		}
 	}

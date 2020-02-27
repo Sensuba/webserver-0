@@ -1,0 +1,93 @@
+{
+	"first": 0,
+	"player": {
+		"props": {
+			"shuffle": false,
+			"startingHand": 1,
+			"startingGem": false
+		},
+		"deck": {
+			"hero": {"atk":"0","hp":"3000","range":1,"nameCard":"Hinata Shouyou","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/PYdm5qH/hinata.jpg","idColor":1,"cardType":"hero","description":"","fontSize":1.3,"flavourText":"","illustrator":"","overload":0,"idColor2":2,"blueprint":{"basis":[{"type":"parameters","index":0,"out":0}],"triggers":[],"actions":[],"parameters":[{"type":"state","in":["static","true"]}]}},
+			"body": [
+				{"archetypes":[],"mana":"1","atk":"400","hp":"400","range":1,"nameCard":"Ryuunosuke Tanaka","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/y8Dw6XC/tanaka.jpg","idColor":0,"cardType":"figure","description":"","fontSize":1.3,"flavourText":"","illustrator":"","overload":0},
+				{"archetypes":[],"mana":"3","atk":"400","hp":"1200","range":1,"nameCard":"Kei Tsukishima","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/R280CFf/kei.jpg","idColor":0,"cardType":"figure","description":"","fontSize":1.3,"flavourText":"","illustrator":"","overload":0},
+				{"archetypes":[],"mana":"2","atk":"500","hp":"500","range":2,"nameCard":"Yuu Kashima","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/phtZsVS/yu.jpg","idColor":0,"cardType":"figure","description":"","fontSize":1.3,"flavourText":"","illustrator":"","overload":0},
+				{"mana":"2","nameCard":"Court Tactics","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/F6dDyKk/planning.jpg","idColor":0,"cardType":"spell","description":"Draw 2 cards.","fontSize":1.3,"flavourText":"","illustrator":"","overload":0,"blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":[null],"to":0}],"actions":[{"type":"draw","in":["2","self",null]}],"parameters":[]}},
+				{"archetypes":[],"mana":"2","atk":"500","hp":"500","range":1,"nameCard":"Koushi Suguwara","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/6skMry5/koushi.jpg","idColor":0,"cardType":"figure","description":"Your other figures have +200 ATK.","fontSize":1.3,"flavourText":"","illustrator":"","overload":0,"blueprint":{"basis":[{"type":"parameters","index":0,"out":0}],"triggers":[],"actions":[],"parameters":[{"type":"aura","in":[{"type":"parameters","index":3,"out":0},"field",{"type":"parameters","index":1,"out":1}]},{"type":"mergecfilters","in":["figure",{"type":"parameters","index":2,"out":1}]},{"type":"filtercard","in":["this"]},{"type":"variation","in":[null,"200",null,null,null]}]}},
+				{"archetypes":[],"mana":"1","atk":"400","hp":"400","range":1,"nameCard":"Ryuunosuke Tanaka","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/y8Dw6XC/tanaka.jpg","idColor":0,"cardType":"figure","description":"","fontSize":1.3,"flavourText":"","illustrator":"","overload":0},
+				{"mana":"1","nameCard":"King's Presence","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/DQJZ7Zz/king.jpg","idColor":2,"cardType":"spell","description":"Push an enemy figure forward.","fontSize":1.3,"flavourText":"","illustrator":"","overload":0,"blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":["enemy figure"],"to":0,"target":true}],"actions":[{"type":"pushforward","in":[{"type":"triggers","index":0,"out":1}]}],"parameters":[]}},
+				{"archetypes":[],"mana":"3","atk":"700","hp":"600","range":2,"nameCard":"Tobio Kageyama","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/c8zLsGV/tobio.jpg","idColor":0,"cardType":"figure","description":"Initiative.","fontSize":1.3,"flavourText":"","illustrator":"","overload":0,"blueprint":{"basis":[{"type":"parameters","index":0,"out":0}],"triggers":[],"actions":[],"parameters":[{"type":"state","in":["initiative","true"]}]}},
+				{"mana":"2","nameCard":"Court Tactics","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/F6dDyKk/planning.jpg","idColor":0,"cardType":"spell","description":"Draw 2 cards.","fontSize":1.3,"flavourText":"","illustrator":"","overload":0,"blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":[null],"to":0}],"actions":[{"type":"draw","in":["2","self",null]}],"parameters":[]}},
+				{"archetypes":[],"mana":"3","atk":"400","hp":"1200","range":1,"nameCard":"Kei Tsukishima","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/R280CFf/kei.jpg","idColor":0,"cardType":"figure","description":"","fontSize":1.3,"flavourText":"","illustrator":"","overload":0},
+				{"mana":"1","nameCard":"Assist","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/p4Bv4zW/passe-decisive.jpg","idColor":0,"cardType":"spell","description":"Give +300 ATK and +1 range to a figure.","fontSize":1.3,"flavourText":"","illustrator":"","overload":"0","blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":["figure"],"to":0,"target":true}],"actions":[{"type":"boost","in":[{"type":"triggers","index":0,"out":1},"300",null,"1"]}],"parameters":[]}},
+				{"archetypes":[],"mana":"3","atk":"700","hp":"600","range":2,"nameCard":"Tobio Kageyama","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/c8zLsGV/tobio.jpg","idColor":0,"cardType":"figure","description":"Initiative.","fontSize":1.3,"flavourText":"","illustrator":"","overload":0,"blueprint":{"basis":[{"type":"parameters","index":0,"out":0}],"triggers":[],"actions":[],"parameters":[{"type":"state","in":["initiative","true"]}]}},
+				{"archetypes":[],"mana":"2","atk":"500","hp":"500","range":1,"nameCard":"Koushi Suguwara","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/6skMry5/koushi.jpg","idColor":0,"cardType":"figure","description":"Your other figures have +200 ATK.","fontSize":1.3,"flavourText":"","illustrator":"","overload":0,"blueprint":{"basis":[{"type":"parameters","index":0,"out":0}],"triggers":[],"actions":[],"parameters":[{"type":"aura","in":[{"type":"parameters","index":3,"out":0},"field",{"type":"parameters","index":1,"out":1}]},{"type":"mergecfilters","in":["figure",{"type":"parameters","index":2,"out":1}]},{"type":"filtercard","in":["this"]},{"type":"variation","in":[null,"200",null,null,null]}]}}
+			]
+		}
+	},
+	"ai": {
+		"name": "AI",
+		"props": {
+			"shuffle": false,
+			"startingHand": 1,
+			"startingGem": false
+		},
+		"deck": {
+			"hero": {"atk":"0","hp":"2000","range":1,"nameCard":"Kuroo Tetsurou","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/FYSWd04/tetsuo.png","idColor":2,"cardType":"hero","description":"","fontSize":1.3,"flavourText":"","illustrator":"","overload":0,"idColor2":3},
+			"body": [
+				{"nameCard":"Yaku Morisuke","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/rcDZt9y/yaku.png","idColor":0,"cardType":"figure","archetypes":[],"mana":"1","description":"","fontSize":1.3,"flavourText":"","illustrator":"","atk":"300","hp":"500","range":1,"overload":0},
+				{"nameCard":"Taketora Yamamoto","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/nCNnfGg/taketora.jpg","idColor":0,"cardType":"figure","archetypes":[],"mana":"2","description":"Has +600 ATK during your turn.","fontSize":1.3,"flavourText":"","illustrator":"","atk":200,"hp":"800","range":1,"overload":0,"blueprint":{"basis":[{"type":"parameters","index":0,"out":0}],"triggers":[],"actions":[],"parameters":[{"type":"passivemut","in":[{"type":"parameters","index":1,"out":0}]},{"type":"conditionmut","in":[{"type":"parameters","index":3,"out":0},{"type":"parameters","index":2,"out":4}]},{"type":"brkplayer","in":["self"]},{"type":"variation","in":[null,"600",null,null,null]}]}},
+				{"nameCard":"Haiba Lev","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/yFm2Rqr/lev.jpg","idColor":0,"cardType":"figure","archetypes":[],"mana":"2","description":"","fontSize":1.3,"flavourText":"","illustrator":"","atk":"400","hp":"800","range":1,"overload":0},
+				{"nameCard":"Yaku Morisuke","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/rcDZt9y/yaku.png","idColor":0,"cardType":"figure","archetypes":[],"mana":"1","description":"","fontSize":1.3,"flavourText":"","illustrator":"","atk":"300","hp":"500","range":1,"overload":0},
+				{"nameCard":"Kenma Kozume","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/Kxmw40Z/kenma.jpg","idColor":0,"cardType":"figure","archetypes":[],"mana":"3","description":"-> : Draw a card.","fontSize":1.3,"flavourText":"","illustrator":"","atk":"400","hp":"400","range":"2","overload":0,"blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":[null],"to":0}],"actions":[{"type":"draw","in":["1","self",null]}],"parameters":[]}},
+				{"nameCard":"Yaku Morisuke","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/rcDZt9y/yaku.png","idColor":0,"cardType":"figure","archetypes":[],"mana":"1","description":"","fontSize":1.3,"flavourText":"","illustrator":"","atk":"300","hp":"500","range":1,"overload":0},
+				{"mana":"2","nameCard":"Leader's Aura","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/3RhPWwZ/tetsuo3.png","idColor":2,"cardType":"spell","description":"Give +200/+200 to your figures.","fontSize":1.3,"flavourText":"","illustrator":"","overload":"20","blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":[null],"to":0}],"actions":[{"type":"aoe","in":["field","figure"],"for each":1},{"type":"boost","in":[{"type":"actions","index":0,"out":0},{"type":"parameters","index":0,"out":0},{"type":"parameters","index":0,"out":0},null]}],"parameters":[{"type":"opplus","in":["200",{"type":"parameters","index":1,"out":0}]},{"type":"limitbrk","in":[]}]}},
+				{"nameCard":"Kenma Kozume","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/Kxmw40Z/kenma.jpg","idColor":0,"cardType":"figure","archetypes":[],"mana":"3","description":"-> : Draw a card.","fontSize":1.3,"flavourText":"","illustrator":"","atk":"400","hp":"400","range":"2","overload":0,"blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":[null],"to":0}],"actions":[{"type":"draw","in":["1","self",null]}],"parameters":[]}},
+				{"nameCard":"Haiba Lev","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/yFm2Rqr/lev.jpg","idColor":0,"cardType":"figure","archetypes":[],"mana":"2","description":"","fontSize":1.3,"flavourText":"","illustrator":"","atk":"400","hp":"800","range":1,"overload":0},
+				{"nameCard":"Taketora Yamamoto","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/nCNnfGg/taketora.jpg","idColor":0,"cardType":"figure","archetypes":[],"mana":"2","description":"Has +600 ATK during your turn.","fontSize":1.3,"flavourText":"","illustrator":"","atk":200,"hp":"800","range":1,"overload":0,"blueprint":{"basis":[{"type":"parameters","index":0,"out":0}],"triggers":[],"actions":[],"parameters":[{"type":"passivemut","in":[{"type":"parameters","index":1,"out":0}]},{"type":"conditionmut","in":[{"type":"parameters","index":3,"out":0},{"type":"parameters","index":2,"out":4}]},{"type":"brkplayer","in":["self"]},{"type":"variation","in":[null,"600",null,null,null]}]}},
+				{"nameCard":"Yaku Morisuke","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/rcDZt9y/yaku.png","idColor":0,"cardType":"figure","archetypes":[],"mana":"1","description":"","fontSize":1.3,"flavourText":"","illustrator":"","atk":"300","hp":"500","range":1,"overload":0},
+				{"nameCard":"Haiba Lev","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/yFm2Rqr/lev.jpg","idColor":0,"cardType":"figure","archetypes":[],"mana":"2","description":"","fontSize":1.3,"flavourText":"","illustrator":"","atk":"400","hp":"800","range":1,"overload":0},
+				{"nameCard":"Yaku Morisuke","anime":"Haikyuu!!","imgLink":"https://i.ibb.co/rcDZt9y/yaku.png","idColor":0,"cardType":"figure","archetypes":[],"mana":"1","description":"","fontSize":1.3,"flavourText":"","illustrator":"","atk":"300","hp":"500","range":1,"overload":0}
+			]
+		},
+		"behaviour": [
+			{ "type": "faculty", "src": "hero", "value": 0 },
+			{ "type": "foreach", "area": "back", "filter": "figure", "variable": "var", "do": [
+				{ "type": "branch", "condition": { "location": { "area": { "ahead": "var", "filter": "empty" } } }, "if": [
+					{ "type": "move", "src": "var", "to": { "area": { "ahead": "var", "filter": "empty" } } }
+				], "else": [] }
+			] },
+			{ "type": "foreach", "area": "hand", "variable": "var", "do": [
+				{ "type": "branch", "condition": { "card": "var", "check": "figure" }, "if": [
+					{ "type": "branch", "condition": { "card": "var", "check": { "atk": 200 } }, "if": [
+						{ "type": "play", "src": "var", "value": [{ "area": { "behind": { "area": "front", "filter": "figure" } }, "filter": "empty" }] }
+					], "else": [
+						{ "type": "branch", "condition": { "and": [ { "location": { "area": "front", "filter": { "atk": 400 } } }, { "location": { "area": { "behind": { "area": "front", "filter": { "atk": 400 } } }, "filter": "empty" } } ] }, "if": [
+							{ "type": "play", "src": "var", "value": [{ "area": { "behind": { "area": "front", "filter": { "atk": 400 } } }, "filter": "empty" }] }
+						], "else": [
+							{ "type": "branch", "condition": { "location": { "area": { "ahead": "hero" }, "filter": "empty" } }, "if": [
+								{ "type": "play", "src": "var", "value": [{ "area": { "ahead": "hero" }, "filter": "empty" }] }
+							], "else": [
+								{ "type": "play", "src": "var", "value": [{ "area": "front", "filter": "empty" }] }
+							] }
+						] }
+					] }
+				], "else": [
+					{ "type": "play", "src": { "location": "hand" }, "value": [] }
+				] }
+			] },
+			{ "type": "foreach", "area": "front", "filter": "figure", "variable": "atk", "do": [
+				{ "type": "branch", "condition": { "and": [ { "card": "atk", "check": { "atk": 300 } }, { "location": { "area": { "behind": "atk" } }, "filter": { "atk": 200 } } ] }, "if": [], "else": [
+					{ "type": "foreach", "area": "opponent's field", "variable": "def", "do": [
+						{ "type": "attack", "src": "atk", "target": "def" }
+					] }
+				] }
+			] }
+		]
+	},
+	"events": [
+		{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"listener","in":[{"type":"parameters","index":0,"out":0},"true"],"to":0}],"actions":[{"type":"branch","in":[{"type":"parameters","index":5,"out":0}],"true":1},{"type":"writeintvar","in":["tutocover","1","this"],"to":2},{"type":"message","in":["On the field, characters cover the ones right behind them, preventing them to be targetted by attacks.","self"],"to":3},{"type":"message","in":["Play a card in the backrow and cover it with your figure in play.","self"]}],"parameters":[{"type":"draw-trigger","in":[]},{"type":"draw-data","in":[{"type":"triggers","index":0,"out":1}]},{"type":"cmpcards","in":[{"type":"parameters","index":1,"out":0},"this"]},{"type":"intvar","in":["tutocover","this"]},{"type":"opnot","in":[{"type":"parameters","index":3,"out":1}]},{"type":"opand","in":[{"type":"parameters","index":4,"out":0},{"type":"parameters","index":6,"out":0}]},{"type":"opand","in":[{"type":"parameters","index":2,"out":2},{"type":"parameters","index":7,"out":1}]},{"type":"findcard","in":["field","figure"]}]},
+		{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"listener","in":[{"type":"parameters","index":0,"out":0},"true"],"to":0}],"actions":[{"type":"branch","in":[{"type":"parameters","index":5,"out":0}],"true":1},{"type":"writeintvar","in":["tutorange","1","this"],"to":2},{"type":"message","in":["Usually, characters are only able to attack from the front line, and can only attack non-covered targets. You can bypass these rules if you have range.","self"],"to":3},{"type":"message","in":["1 range point is needed to attack. 1 more to attack from the back line, and 1 more to attack a covered character.","self"],"to":4},{"type":"highlight","in":[{"type":"parameters","index":7,"out":0},"self"],"to":5},{"type":"message","in":["This figure has 2 range points, as indicated by the arrows in the bottom-left of the card. Try it out!","self"]}],"parameters":[{"type":"draw-trigger","in":[]},{"type":"draw-data","in":[{"type":"triggers","index":0,"out":1}]},{"type":"cmpcards","in":[{"type":"parameters","index":1,"out":0},"this"]},{"type":"intvar","in":["tutorange","this"]},{"type":"opnot","in":[{"type":"parameters","index":3,"out":1}]},{"type":"opand","in":[{"type":"parameters","index":4,"out":0},{"type":"parameters","index":6,"out":0}]},{"type":"opand","in":[{"type":"parameters","index":2,"out":2},{"type":"parameters","index":7,"out":1}]},{"type":"findcard","in":["field",{"type":"parameters","index":8,"out":0}]},{"type":"filterstats","in":[null,null,null,null,null,null,"2",null]}]},
+		{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"listener","in":[{"type":"parameters","index":0,"out":0},"true"],"to":0}],"actions":[{"type":"branch","in":[{"type":"parameters","index":5,"out":0}],"true":1},{"type":"writeintvar","in":["tutoinitiative","1","this"],"to":2},{"type":"highlight","in":[{"type":"parameters","index":1,"out":0},"self"],"to":3},{"type":"message","in":["This figure has Initiative and thus receives no damage when attacking. It is best to protect this kind of character.","self"]}],"parameters":[{"type":"draw-trigger","in":[]},{"type":"draw-data","in":[{"type":"triggers","index":0,"out":1}]},{"type":"cmpcards","in":[{"type":"parameters","index":1,"out":0},"this"]},{"type":"intvar","in":["tutoinitiative","this"]},{"type":"opnot","in":[{"type":"parameters","index":3,"out":1}]},{"type":"opand","in":[{"type":"parameters","index":4,"out":0},{"type":"parameters","index":6,"out":0}]},{"type":"opand","in":[{"type":"parameters","index":2,"out":2},{"type":"parameters","index":7,"out":0}]},{"type":"checkcard","in":[{"type":"parameters","index":1,"out":0},{"type":"parameters","index":8,"out":2}]},{"type":"state","in":["initiative","true"]}]}
+	]
+}

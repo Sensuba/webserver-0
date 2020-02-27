@@ -120,6 +120,9 @@ class GameBoard {
 
 	command (cmd, player) {
 
+		if (this.ended)
+			return;
+
 		var p = this.areas[player];
 
 		switch (cmd.type) {
