@@ -8,6 +8,9 @@ class Bool {
 		if (basis.and) {
 			this.and = Types.array(Types.bool, basis.and);
 			this.mode = "and";
+		} else if (basis.or) {
+			this.or = Types.array(Types.bool, basis.or);
+			this.mode = "or";
 		} else if (basis.card && basis.check) {
 			this.card = Types.card(basis.card);
 			this.check = Types.cardfilter(basis.check);
@@ -25,6 +28,7 @@ class Bool {
 
 		switch (this.mode) {
 		case "and": return this.and.every(bool => bool(ctx));
+		case "or": return this.or.some(bool => bool(ctx));
 		case "cardexists": return this.card(ctx) !== null;
 		case "checkcard": return this.check(ctx)(this.card(ctx));
 		case "locexists": return this.location(ctx) !== null;

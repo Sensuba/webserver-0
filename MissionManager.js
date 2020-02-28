@@ -50,11 +50,18 @@ class MissionManager extends Manager {
 	callAI () {
 
 		setTimeout(() => {
-			if (this.game.currentArea.id.no === 0)
-				return;
-			this.game.command(this.ai.act(), 1);
-			if (this.game.currentArea.id.no === 1)
-				this.callAI();
+			try {
+				if (this.game.currentArea.id.no === 0)
+					return;
+				this.game.command(this.ai.act(), 1);
+				if (this.game.currentArea.id.no === 1)
+					this.callAI();
+			} catch (e) {
+				console.log(e);
+				this.finish();
+				this.socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
+				console.log("Mission ended by internal error");
+			}
 		}, 500);
 	}
 

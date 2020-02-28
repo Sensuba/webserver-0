@@ -7,6 +7,13 @@ var Tilefilter = require("./Tilefilter");
 
 class Types {
 
+	static string (value) {
+
+		if (typeof value === 'object')
+			return ctx => "";
+		return ctx => value;
+	}
+
 	static int (value) {
 
 		if (typeof value === 'object')
