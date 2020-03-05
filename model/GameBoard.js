@@ -85,7 +85,6 @@ class GameBoard {
 			this.currentArea.opposite.manapool.createGem ();
 		this.currentArea.newTurn ();
 		this.resetTimer();
-		//console.log(this.currentArea.hand.cards);
 	}
 
 	get tiles() {

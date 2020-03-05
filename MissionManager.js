@@ -28,7 +28,7 @@ class MissionManager extends Manager {
 				
 				this.game.ended = true;
 				this.socket.emit("endgame", {state: winner === 0 ? 3 : 4, credit: 0});
-				console.log("Mission for " + name + " ended normally");
+				console.log("Mission for " + (name || "Anonymous") + " ended normally");
 			}
 		
 		try {
@@ -51,7 +51,7 @@ class MissionManager extends Manager {
 
 		setTimeout(() => {
 			try {
-				if (this.game.currentArea.id.no === 0)
+				if (this.game.currentArea.id.no === 0 || this.game.ended)
 					return;
 				this.game.command(this.ai.act(), 1);
 				if (this.game.currentArea.id.no === 1)

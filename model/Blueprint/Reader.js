@@ -342,6 +342,8 @@ class Reader {
 			case "destroygem-data": bloc = new Data(el.type, card, ctx, d => [d.src.area]); break;
 			case "createreceptacle-trigger": bloc = new Trigger(el.type, card, ctx, "createmana"); break;
 			case "createreceptacle-data": bloc = new Data(el.type, card, ctx, d => [d.src.area]); break;
+			case "levelup-trigger": bloc = new Trigger(el.type, card, ctx, "levelup"); break;
+			case "levelup-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.src.level]); break;
 			default: bloc = new Bloc(el.type, card, ctx); break;
 			}
 			ctx[key].push(bloc);

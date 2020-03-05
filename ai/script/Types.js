@@ -1,3 +1,4 @@
+var Int = require("./Int");
 var Bool = require("./Bool");
 var Card = require("./Card");
 var Location = require("./Location");
@@ -16,8 +17,10 @@ class Types {
 
 	static int (value) {
 
-		if (typeof value === 'object')
-			return ctx => 0;
+		if (typeof value === 'object') {
+			var el = new Int(value);
+			return el.compute.bind(el);
+		}
 		return ctx => value;
 	}
 
@@ -28,6 +31,15 @@ class Types {
 			return el.compute.bind(el);
 		}
 		return ctx => value;
+	}
+
+	static player (value) {
+
+		switch (value) {
+		case "this": return ctx => ctx.gameboard.areas[ctx.player];
+		case "enemy": return ctx => ctx.gameboard.areas[1-ctx.player];
+		default: return ctx => ctx.gameboard.areas[ctx.player];
+		}
 	}
 
 	static card (value) {

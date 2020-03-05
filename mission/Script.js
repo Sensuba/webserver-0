@@ -9,7 +9,11 @@ class Script {
 
 	rule (game) {
 
-		this.data.events.forEach(event => Reader.read(event, game.areas[0].hero));
+		game.areas[0].hero.scripts = [];
+		this.data.events.forEach(event => {
+			Reader.read(event, game.areas[0].hero);
+			game.areas[0].hero.scripts.push(event);
+		});
 	}
 }
 

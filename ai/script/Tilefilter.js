@@ -12,6 +12,8 @@ class Tilefilter {
 			this.hp = Types.int(basis.hp);
 		if (basis.range)
 			this.range = Types.int(basis.range);
+		if (basis.coverage !== undefined)
+			this.coverage = Types.bool(basis.coverage);
 	}
 
 	compute (ctx) {
@@ -20,6 +22,7 @@ class Tilefilter {
 		if (this.atk) var atk = this.atk(ctx);
 		if (this.hp) var hp = this.hp(ctx);
 		if (this.range) var range = this.range(ctx);
+		if (this.coverage !== undefined) var coverage = this.coverage(ctx);
 
 		return tile => {
 
@@ -33,6 +36,9 @@ class Tilefilter {
 				return false;
 
 			if (this.range && !(tile.occupied && tile.card && tile.card.range && tile.card.range == range))
+				return false;
+
+			if (this.coverage && !(tile.occupied && tile.card && tile.card.covered === coverage))
 				return false;
 
 			return true;

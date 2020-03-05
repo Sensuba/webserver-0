@@ -16,6 +16,8 @@ class Cardfilter {
 			this.hp = Types.int(basis.hp);
 		if (basis.range)
 			this.range = Types.int(basis.range);
+		if (basis.coverage !== undefined)
+			this.coverage = Types.bool(basis.coverage);
 	}
 
 	compute (ctx) {
@@ -27,6 +29,7 @@ class Cardfilter {
 		if (this.atk) var atk = this.atk(ctx);
 		if (this.hp) var hp = this.hp(ctx);
 		if (this.range) var range = this.range(ctx);
+		if (this.coverage !== undefined) var coverage = this.coverage(ctx);
 
 		return card => {
 
@@ -40,6 +43,9 @@ class Cardfilter {
 				return false;
 
 			if (this.range && !(card && card.range && card.range === range))
+				return false;
+
+			if (this.coverage && !(card && card.covered === coverage))
 				return false;
 
 			return true;

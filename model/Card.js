@@ -224,6 +224,8 @@ class Card {
 		this.states = {};
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
+		if (this.scripts)
+			this.scripts.forEach(event => Reader.read(event, this));
 		if (this.atk && typeof this.atk === 'string')
 			this.atk = parseInt(this.atk, 10);
 		if (this.range && typeof this.range === 'string')
