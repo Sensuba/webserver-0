@@ -10,7 +10,12 @@ class Play {
 
 	compute (ctx) {
 
-		return { type: "play", id: this.src(ctx).id, targets: this.value.map(v => v(ctx).id) }
+		var targets = this.value.map(v => {
+			var vctx = v(ctx);
+			return vctx ? vctx.id : null;
+		}).filter(v => v);
+
+		return { type: "play", id: this.src(ctx).id, targets }
 	}
 }
 

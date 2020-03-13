@@ -81,9 +81,7 @@
 			] },
 			{ "type": "foreach", "area": "front", "filter": "figure", "variable": "atk", "do": [
 				{ "type": "branch", "condition": { "and": [ { "card": "atk", "check": { "atk": 300 } }, { "location": { "area": { "behind": "atk" } }, "filter": { "atk": 200 } } ] }, "if": [], "else": [
-					{ "type": "foreach", "area": "opponent's field", "variable": "def", "do": [
-						{ "type": "attack", "src": "atk", "target": "def" }
-					] }
+					{ "type": "attack", "src": "atk", "target": { "location": { "area": "opponent's field", "filter": { "coverage": false } } } }
 				] }
 			] }
 		]

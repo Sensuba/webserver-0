@@ -10,13 +10,13 @@ class MutateNextCard extends Bloc {
 		this.f = (src, ins) => {
 			var aspect = new Aspect(ins[2], x => this.in[1]({src: src, data: x})(x), [ins[2].hand, ins[2].court], ins[0]);
 			var unsub1, unsub2;
-			unsub1 = ins[3].subscribe((t,s,d) => {
+			unsub1 = ins[3] ? ins[3].subscribe((t,s,d) => {
 				aspect.deactivate();
 				unsub1();
 				unsub2();
-			});
+			}) : () => {};
 			unsub2 = src.gameboard.subscribe("playcard", (t,s,d) => {
-				if (aspect.targets(s)) {
+				if (s.area === ins[2] && aspect.targets(s)) {
 					if (s.isType("spell")) {
 						var unsubSpell;
 						unsubSpell = src.gameboard.subscribe("destroycard", (t2,s2,d2) => {

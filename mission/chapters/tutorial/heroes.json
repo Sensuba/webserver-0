@@ -41,7 +41,7 @@
 				{"nameCard":"Zarbon","anime":"Dragon Ball","imgLink":"https://i.ibb.co/jbfkRR7/zarbon.jpg","idColor":0,"cardType":"figure","archetypes":[],"mana":"3","description":"-> : Restore 500 HP to your hero.","fontSize":1.3,"flavourText":"","illustrator":"","atk":"600","hp":"800","range":1,"overload":0,"blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":[null],"to":0}],"actions":[{"type":"heal","in":["your hero","this","500"]}],"parameters":[]}},
 				{"archetypes":[],"mana":"3","atk":"600","hp":"600","range":"1","nameCard":"Dodoria","anime":"Dragon Ball","imgLink":"https://i.ibb.co/N1y2MRr/dodoria.jpg","idColor":0,"cardType":"figure","description":"-> : Deal 300 damage to an entity.","fontSize":1.3,"flavourText":"","illustrator":"","overload":"","blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":["entity"],"to":0,"target":true}],"actions":[{"type":"damage","in":[{"type":"triggers","index":0,"out":1},"this","300"]}],"parameters":[]}},
 				{"nameCard":"Appule","anime":"Dragon Ball","imgLink":"https://i.ibb.co/qFCkv5f/appule.jpg","idColor":0,"cardType":"figure","archetypes":[],"mana":"1","description":"","fontSize":1.3,"flavourText":"","illustrator":"","atk":"500","hp":"500","range":1,"overload":0},
-				{"mana":"5","nameCard":"Death Ball","anime":"Dragon Ball","imgLink":"https://i.ibb.co/MScdr8t/freezer-attack.jpg","idColor":3,"cardType":"spell","description":"Deal 1500 damage to all characters but your hero.","fontSize":1.3,"flavourText":"","illustrator":"","overload":"10","blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":[null],"to":1}],"actions":[{"type":"damage","in":[{"type":"actions","index":1,"out":0},"this",{"type":"parameters","index":1,"out":0}]},{"type":"aoe","in":["board",{"type":"parameters","index":0,"out":1}],"for each":0}],"parameters":[{"type":"filtercard","in":["your hero"]},{"type":"opplus","in":["1500",{"type":"parameters","index":2,"out":0}]},{"type":"limitbrk","in":[]}]}},
+				{"mana":"5","nameCard":"Death Ball","anime":"Dragon Ball","imgLink":"https://i.ibb.co/MScdr8t/freezer-attack.jpg","idColor":3,"cardType":"spell","description":"Deal 1000 damage to all characters but your hero.","fontSize":1.3,"flavourText":"","illustrator":"","overload":"10","blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":[null],"to":1}],"actions":[{"type":"damage","in":[{"type":"actions","index":1,"out":0},"this",{"type":"parameters","index":1,"out":0}]},{"type":"aoe","in":["board",{"type":"parameters","index":0,"out":1}],"for each":0}],"parameters":[{"type":"filtercard","in":["your hero"]},{"type":"opplus","in":["1000",{"type":"parameters","index":2,"out":0}]},{"type":"limitbrk","in":[]}]}},
 				{"mana":"2","nameCard":"Death Cannon","anime":"Dragon Ball","imgLink":"https://i.ibb.co/BcXwfSs/freezer-ball.jpg","idColor":3,"cardType":"spell","description":"Deal 800 damage to an entity.","fontSize":1.3,"flavourText":"","illustrator":"","overload":"10","blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":["entity"],"to":0,"target":true}],"actions":[{"type":"damage","in":[{"type":"triggers","index":0,"out":1},"this",{"type":"parameters","index":0,"out":0}]}],"parameters":[{"type":"opplus","in":["800",{"type":"parameters","index":1,"out":0}]},{"type":"limitbrk","in":[]}]}},
 				{"nameCard":"Zarbon","anime":"Dragon Ball","imgLink":"https://i.ibb.co/jbfkRR7/zarbon.jpg","idColor":0,"cardType":"figure","archetypes":[],"mana":"3","description":"-> : Restore 500 HP to your hero.","fontSize":1.3,"flavourText":"","illustrator":"","atk":"600","hp":"800","range":1,"overload":0,"blueprint":{"basis":[{"type":"triggers","index":0,"out":0}],"triggers":[{"type":"play","in":[null],"to":0}],"actions":[{"type":"heal","in":["your hero","this","500"]}],"parameters":[]}},
 				{"nameCard":"Appule","anime":"Dragon Ball","imgLink":"https://i.ibb.co/qFCkv5f/appule.jpg","idColor":0,"cardType":"figure","archetypes":[],"mana":"1","description":"","fontSize":1.3,"flavourText":"","illustrator":"","atk":"500","hp":"500","range":1,"overload":0},
@@ -71,50 +71,44 @@
 			] },
 			{ "type": "foreach", "area": "hand", "variable": "var", "do": [
 				{ "type": "branch", "condition": { "card": "var", "check": "figure" }, "if": [
-					{ "type": "branch", "condition": { "card": { "location": "hand" }, "check": "figure" }, "if": [
-						{ "type": "branch", "condition": { "card": "var", "check": { "name": "Dodoria" } }, "if": [
-							{ "type": "branch", "condition": { "location": { "area": "opponent's field", "filter": { "hp": 300 } } }, "if": [
-								{ "type": "branch", "condition": { "location": { "area": { "ahead": "hero" }, "filter": "empty" } }, "if": [
-									{ "type": "play", "src": { "location": "hand" }, "value": [{ "area": { "ahead": "hero" }, "filter": "empty" }, { "area": "opponent's field", "filter": { "hp": 300 } }] }
-								], "else": [
-									{ "type": "play", "src": { "location": "hand" }, "value": [{ "area": "front", "filter": "empty" }, { "area": "opponent's field", "filter": { "hp": 300 } }] }
-								] }
+					{ "type": "branch", "condition": { "card": "var", "check": { "name": "Dodoria" } }, "if": [
+						{ "type": "branch", "condition": { "location": { "area": "opponent's field", "filter": { "hp": 300 } } }, "if": [
+							{ "type": "branch", "condition": { "location": { "area": { "ahead": "hero" }, "filter": "empty" } }, "if": [
+								{ "type": "play", "src": "var", "value": [{ "area": { "ahead": "hero" }, "filter": "empty" }, { "area": "opponent's field", "filter": { "hp": 300 } }] }
 							], "else": [
-								{ "type": "branch", "condition": { "location": { "area": { "ahead": "hero" }, "filter": "empty" } }, "if": [
-									{ "type": "play", "src": { "location": "hand" }, "value": [{ "area": { "ahead": "hero" }, "filter": "empty" }, { "area": "opponent's field", "filter": "character" }] }
-								], "else": [
-									{ "type": "play", "src": { "location": "hand" }, "value": [{ "area": "front", "filter": "empty" }, { "area": "opponent's field", "filter": "character" }] }
-								] }
+								{ "type": "play", "src": "var", "value": [{ "area": "front", "filter": "empty" }, { "area": "opponent's field", "filter": { "hp": 300 } }] }
 							] }
-							
 						], "else": [
 							{ "type": "branch", "condition": { "location": { "area": { "ahead": "hero" }, "filter": "empty" } }, "if": [
-								{ "type": "play", "src": { "location": "hand" }, "value": [{ "area": { "ahead": "hero" }, "filter": "empty" }] }
+								{ "type": "play", "src": "var", "value": [{ "area": { "ahead": "hero" }, "filter": "empty" }, { "area": "opponent's field", "filter": "character" }] }
 							], "else": [
-								{ "type": "play", "src": { "location": "hand" }, "value": [{ "area": "front", "filter": "empty" }] }
+								{ "type": "play", "src": "var", "value": [{ "area": "front", "filter": "empty" }, { "area": "opponent's field", "filter": "character" }] }
 							] }
 						] }
-					], "else": [
 						
+					], "else": [
+						{ "type": "branch", "condition": { "location": { "area": { "ahead": "hero" }, "filter": "empty" } }, "if": [
+							{ "type": "play", "src": "var", "value": [{ "area": { "ahead": "hero" }, "filter": "empty" }] }
+						], "else": [
+							{ "type": "play", "src": "var", "value": [{ "area": "front", "filter": "empty" }] }
+						] }
 					] }
 				], "else": [
 					{ "type": "branch", "condition": { "card": "var", "check": { "name": "Death Cannon" } }, "if": [
-						{ "type": "play", "src": { "location": "hand" }, "value": ["enemy hero"] }
+						{ "type": "play", "src": "var", "value": ["enemy hero"] }
 					], "else": [
-						{ "type": "play", "src": { "location": "hand" }, "value": [] }
+						{ "type": "play", "src": "var", "value": [] }
 					] }
 				] }
 			] },
 			{ "type": "foreach", "area": "front", "filter": "figure", "variable": "atk", "do": [
-				{ "type": "foreach", "area": "opponent's field", "filter": { "coverage": false }, "variable": "def", "do": [
-					{ "type": "attack", "src": "atk", "target": "def" }
-				] }
+				{ "type": "attack", "src": "atk", "target": { "location": { "area": "opponent's field", "filter": { "coverage": false } } } }
 			] },
 			{ "type": "branch", "condition": { "op": "=", "x": 1, "y": { "level": "this" } }, "if": [
 				{ "type": "faculty", "src": "hero", "value": 1 }
 			], "else": [
 				{ "type": "branch", "condition": { "and": [ { "op": "=", "x": 2, "y": { "level": "this" } }, { "op": ">=", "x": { "mana": "this" }, "y": 1 }, { "location": { "area": "opponent's field", "filter": "figure" } } ] }, "if": [
-					{ "type": "faculty", "src": "hero", "value": 1, "target": { "location": { "area": "opponent's field", "filter": "figure" } } }
+					{ "type": "faculty", "src": "hero", "value": 1, "target": { "area": "opponent's field", "filter": "figure" } }
 				], "else": [] }
 			] }
 		]

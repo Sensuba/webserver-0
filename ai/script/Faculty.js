@@ -7,7 +7,7 @@ class Faculty {
 		this.src = Types.card(basis.src);
 		this.index = Types.int(basis.value);
 		if (basis.target)
-			this.target = Types.card(basis.target);
+			this.target = Types.location(basis.target);
 	}
 
 	compute (ctx) {
