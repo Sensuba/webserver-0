@@ -172,6 +172,7 @@ class Card {
 		this.originalHp = this.hp;
 		this.originalRange = this.range;
 		delete this.supercode;
+		delete this.mutatedState;
 		this.ol = 0;
 		this.events = [];
 		this.faculties = [];
@@ -181,7 +182,7 @@ class Card {
 		this.cmutations = [];
 		this.states = {};
 		this.shield = false;
-		this.poisondmg = 0;
+		delete this.poisondmg;
 		this.dying = false;
 		delete this.variables;
 		this.clearBoardInstance();
@@ -444,6 +445,7 @@ class Card {
 		this.cmutations = [];
 		this.events = [];
 		this.states = {};
+		delete this.poisondmg;
 		this.breakShield();
 		delete this.blueprint;
 		this.mana = this.originalMana;
