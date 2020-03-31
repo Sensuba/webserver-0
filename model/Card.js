@@ -124,7 +124,7 @@ class Card {
 		this.location = loc;
 		if (former instanceof Tile && !(loc instanceof Tile) && this.activated)
 			this.deactivate();
-		if (loc instanceof Tile && !(former instanceof Tile) && this.activated)
+		if (loc instanceof Tile && !(former instanceof Tile) && !this.activated)
 			this.activate();
 		if (former instanceof Tile && loc instanceof Tile && this.activated && former.area !== loc.area) {
 			this.deactivate();

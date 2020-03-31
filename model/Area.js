@@ -81,6 +81,7 @@ class Area {
 				e.setState("frozen", false);
 		})
 		this.manapool.reload();
+		this.gameboard.update();
 		this.gameboard.notify("newturn", this);
 		this.field.entities.forEach(e => e.refresh());
 		this.draw();
