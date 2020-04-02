@@ -526,6 +526,8 @@ class Card {
 			return false;
 		if (!eff.actionPt && (!this.hasState("fury") || eff.strikes !== 1))
 			return false;
+		if (target.isType("hero") && this.hasState("cannot attack heroes"))
+			return false;
 
 		return this.canReach(target);
 	}

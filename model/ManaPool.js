@@ -74,20 +74,20 @@ class ManaPool {
 
 	use (value) {
 
-		if (value <= this.usableMana) {
-			this.area.gameboard.notify("usemana", this, { type: "int", value: value });
-			let usedextramana = Math.min(value, this.extramana)
-			value -= usedextramana;
-			this.extramana -= usedextramana;
-			for (var i = this.receptacles.length - 1; i >= 0 && value > 0; i--) {
-				if (this.receptacles[i]) {
-					this.receptacles[i] = false;
-					value--;
-				}
+		if (value > this.usableMana)
+			value = this.usableMana;
+		this.area.gameboard.notify("usemana", this, { type: "int", value: value });
+		let usedextramana = Math.min(value, this.extramana)
+		value -= usedextramana;
+		this.extramana -= usedextramana;
+		for (var i = this.receptacles.length - 1; i >= 0 && value > 0; i--) {
+			if (this.receptacles[i]) {
+				this.receptacles[i] = false;
+				value--;
 			}
-			while (value-- > 0)
-				this.useGem();
 		}
+		while (value-- > 0)
+			this.useGem();
 	}
 
 	refill (nb) {

@@ -115,6 +115,7 @@ var ManaPool = require('./ManaPool');
 var FindRandomCard = require('./FindRandomCard');
 var FindRandomTile = require('./FindRandomTile');
 var FindRandomModel = require('./FindRandomModel');
+var FindRandomEvent = require('./FindRandomEvent');
 var RandomInt = require('./RandomInt');
 var RandomBool = require('./RandomBool');
 var IntVariable = require('./IntVariable');
@@ -273,6 +274,7 @@ class Reader {
 			case "findcard": bloc = new FindRandomCard(card, ctx); break;
 			case "findtile": bloc = new FindRandomTile(card, ctx); break;
 			case "findmodel": bloc = new FindRandomModel(card, ctx); break;
+			case "findevent": bloc = new FindRandomEvent(card, ctx); break;
 			case "randint": bloc = new RandomInt(card, ctx); break;
 			case "randbool": bloc = new RandomBool(card, ctx); break;
 			case "brkcard": bloc = new BreakCard(card, ctx); break;
