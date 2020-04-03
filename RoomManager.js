@@ -62,7 +62,7 @@ class RoomManager extends Manager {
 				var creditsW = 0, creditsL = 0;
 				if (players[winner].name !== players[1-winner].name) {
 					var c = CreditManager.compute(Date.now() - this.date, this.game.log.logs.length, false)
-					if (players[winner].name) creditsW = Math.floor(c * 3);
+					if (players[winner].name) creditsW = Math.floor(c * 2.5);
 					if (players[1-winner].name) creditsL = Math.floor(c);
 					CreditManager.creditPlayer(players[winner].name, creditsW);
 					CreditManager.creditPlayer(players[1-winner].name, creditsL);
