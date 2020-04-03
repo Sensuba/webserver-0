@@ -159,6 +159,8 @@ class Card {
 
 		//var model = this.loadModel();
 		let wasActivated = this.activated;
+		if (this.passives)
+			this.passives.forEach(passive => passive.deactivate());
 		if (this.activated)
 			this.deactivate();
 		var model = this.model;
