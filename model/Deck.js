@@ -1,7 +1,8 @@
 var Card = require("./Card");
 var Bank = require("../Bank");
 
-const FATIGUE_DAMAGE = 500;
+const CURSE_DAMAGE = 500;
+const CURSE_INC = 100;
 
 class Deck {
 
@@ -13,6 +14,7 @@ class Deck {
 
 		this.area = area;
 		this.cards = [];
+		this.curse = CURSE_DAMAGE;
 	}
 
 	init (list, shuffle = true) {
@@ -40,7 +42,8 @@ class Deck {
 	fatigue() {
 
 		this.area.gameboard.notify("fatigue", this);
-		this.area.hero.damage(FATIGUE_DAMAGE, null);
+		this.area.hero.damage(this.curse, null);
+		this.curse += CURSE_INC;
 	}
 
 	shuffle() {

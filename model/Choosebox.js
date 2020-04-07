@@ -5,8 +5,6 @@ class Choosebox {
 
 		this.id = { type: "choosebox", no: area.id.no };
 
-		this.locationOrder = 0;
-
 		this.area = area;
 
 		this.cards = [];

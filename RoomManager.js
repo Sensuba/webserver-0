@@ -104,9 +104,12 @@ class RoomManager extends Manager {
 			} catch (e) {
 				console.log(e);
 				this.finish();
-				var c = CreditManager.compute(Date.now() - this.room.date, this.game.log.logs.length);
-				CreditManager.creditPlayer(this.players[0].name, c);
-				CreditManager.creditPlayer(this.players[1].name, c);
+				var c = 0;
+				if (players[winner].name !== players[1-winner].name) {
+					CreditManager.compute(Date.now() - this.room.date, this.game.log.logs.length);
+					CreditManager.creditPlayer(this.players[0].name, c);
+					CreditManager.creditPlayer(this.players[1].name, c);
+				}
 				this.players.forEach(p => p.socket.emit("endgame", {state: 6, credit: c})); // State 6 : internal error
 				this.spectators.forEach(s => s.socket.emit("endgame", {state: 6}));
 				console.log("Game " + this.room + " ended by internal error");
@@ -123,8 +126,11 @@ class RoomManager extends Manager {
 		this.players = this.players.filter(p => p.socket !== socket);
 		if (this.started && !this.finished && this.players.length <= 1) {
 			this.finish();
-			var c = CreditManager.compute(Date.now() - this.date, this.game.log.logs.length);
-			CreditManager.creditPlayer(this.players[0].name, c);
+			var c = 0;
+			if (players[winner].name !== players[1-winner].name) {
+				c = CreditManager.compute(Date.now() - this.date, this.game.log.logs.length);
+				CreditManager.creditPlayer(this.players[0].name, c);
+			}
 			this.players.forEach(p => p.socket.emit("endgame", {state: 5, credit: c})); // State 5 : connection lost
 			this.spectators.forEach(s => s.socket.emit("endgame", {state: 5}));
 			console.log("Game " + this.room + " ended by connection lost");
