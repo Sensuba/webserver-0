@@ -105,7 +105,7 @@ class RoomManager extends Manager {
 				console.log(e);
 				this.finish();
 				var c = 0;
-				if (players[0].name !== players[1].name) {
+				if (this.players[0].name !== this.players[1].name) {
 					CreditManager.compute(Date.now() - this.room.date, this.game.log.logs.length);
 					CreditManager.creditPlayer(this.players[0].name, c);
 					CreditManager.creditPlayer(this.players[1].name, c);
