@@ -47,7 +47,7 @@ class RoomManager extends Manager {
 		player.deck = deck;
 		player.ready = true;
 
-		if (!this.started && this.players.length === 2 && this.players.every(p => p.ready)) { // Ready to start
+		if (!this.started && players.length === 2 && players.every(p => p.ready)) { // Ready to start
 
 			this.game.send = (type, src, data) => this.broadcast("notification", {type, src, data});
 			this.game.whisper = (type, no, src, ...data) => players[no] ? players[no].socket.emit("notification", {type, src, data}) : {};
@@ -60,7 +60,7 @@ class RoomManager extends Manager {
 				this.game.ended = true;
 
 				var creditsW = 0, creditsL = 0;
-				if (players[winner].name !== players[1-winner].name) {
+				if (players.length > 1 && players[winner].name !== players[1-winner].name) {
 					var c = CreditManager.compute(Date.now() - this.date, this.game.log.logs.length, false)
 					if (players[winner].name) creditsW = Math.floor(c * 2.5);
 					if (players[1-winner].name) creditsL = Math.floor(c);
@@ -105,7 +105,7 @@ class RoomManager extends Manager {
 				console.log(e);
 				this.finish();
 				var c = 0;
-				if (this.players[0].name !== this.players[1].name) {
+				if (this.players.length > 1 && this.players[0].name !== this.players[1].name) {
 					CreditManager.compute(Date.now() - this.room.date, this.game.log.logs.length);
 					CreditManager.creditPlayer(this.players[0].name, c);
 					CreditManager.creditPlayer(this.players[1].name, c);
@@ -127,7 +127,7 @@ class RoomManager extends Manager {
 		if (this.started && !this.finished && this.players.length <= 1) {
 			this.finish();
 			var c = 0;
-			if (this.players[0].name !== this.players[1].name) {
+			if (this.players.length > 1 && this.players[0].name !== this.players[1].name) {
 				c = CreditManager.compute(Date.now() - this.date, this.game.log.logs.length);
 				CreditManager.creditPlayer(this.players[0].name, c);
 			}
