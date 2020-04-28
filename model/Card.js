@@ -109,6 +109,7 @@ class Card {
 			this.resetSickness();
 		this.activate();
 		this.gameboard.notify("summon", this, tile);
+		this.gameboard.update();
 	}
 
 	goto (loc) {
