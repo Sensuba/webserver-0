@@ -106,6 +106,7 @@ class Types {
 		case 'artifact':
 			return target => target && target.isType(value);
 		case 'damaged': return target => target && target.damaged;
+		case 'destroyed': return target => target && (target.destroyed || target.isGhost);
 		default: return null;
 		}
 	}
