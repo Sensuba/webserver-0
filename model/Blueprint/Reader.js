@@ -106,6 +106,7 @@ var BreakPlayer = require('./BreakPlayer');
 var Archetype = require('./Archetype');
 var Color = require('./Color');
 var Extremum = require('./Extremum');
+var CurrentPlayer = require('./CurrentPlayer');
 var Analyse = require('./Analyse');
 var InnerData = require('./InnerData');
 var Token = require('./Token');
@@ -264,6 +265,7 @@ class Reader {
 			case "analyse": bloc = new Analyse(card, ctx); break;
 			case "innerdata": bloc = new InnerData(card, ctx); break;
 			case "token": bloc = new Token(card, ctx); break;
+			case "current": bloc = new CurrentPlayer(card, ctx); break;
 			case "timestamp": bloc = new Timestamp(card, ctx); break;
 			case "limitbrk": bloc = new LimitBreak(card, ctx); break;
 			case "manapool": bloc = new ManaPool(card, ctx); break;
