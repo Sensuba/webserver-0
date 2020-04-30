@@ -59,7 +59,7 @@ class RoomManager extends Manager {
 				
 				this.game.ended = true;
 
-				var custom = players.some(player => typeof player.deck.hero === "object" || player.deck.some(card => typeof card === "object"));
+				var custom = players.some(player => typeof player.deck.hero === "object" || player.deck.body.some(card => typeof card === "object"));
 
 				var creditsW = 0, creditsL = 0;
 				if (players.length > 1 && players[winner].name !== players[1-winner].name) {
