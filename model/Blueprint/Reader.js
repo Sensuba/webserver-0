@@ -98,6 +98,7 @@ var ConditionalMutation = require('./ConditionalMutation');
 var TargetData = require('./TargetData');
 
 var BreakCard = require('./BreakCard');
+var BaseStats = require('./BaseStats');
 var BreakModel = require('./BreakModel');
 var BreakTile = require('./BreakTile');
 var BreakLocation = require('./BreakLocation');
@@ -280,6 +281,7 @@ class Reader {
 			case "randint": bloc = new RandomInt(card, ctx); break;
 			case "randbool": bloc = new RandomBool(card, ctx); break;
 			case "brkcard": bloc = new BreakCard(card, ctx); break;
+			case "basestats": bloc = new BaseStats(card, ctx); break;
 			case "brkmodel": bloc = new BreakModel(card, ctx); break;
 			case "brktile": bloc = new BreakTile(card, ctx); break;
 			case "brklocation": bloc = new BreakLocation(card, ctx); break;
