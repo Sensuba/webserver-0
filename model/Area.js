@@ -6,6 +6,7 @@ var Court = require("./Court");
 var Cemetery = require("./Cemetery");
 var Discard = require("./Discard");
 var Capsule = require("./Capsule");
+var Nether = require("./Nether");
 var Choosebox = require("./Choosebox");
 var ManaPool = require("./ManaPool");
 var Bank = require('../Bank');
@@ -25,6 +26,7 @@ class Area {
 		this.cemetery = new Cemetery(this);
 		this.discard = new Discard(this);
 		this.capsule = new Capsule(this);
+		this.nether = new Nether(this);
 		this.choosebox = new Choosebox(this);
 	}
 

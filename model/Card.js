@@ -294,6 +294,11 @@ class Card {
 		this.destroy(true);
 	}
 
+	anihilate () {
+
+		this.goto(this.area.nether);
+	}
+
 	damage (dmg, src, discret) {
 
 		if (!this.chp || dmg <= 0 || this.isGhost)
@@ -845,7 +850,8 @@ class Card {
 		this.innereffects = [];
 		this.mutations = [];
 		this.cmutations = [];
-		this.states = {};
+		this.states = Object.assign({}, other.states);
+		this.poisondmg = other.poisondmg;
 		this.identified = [false, false];
 		if (wasActivated)
 			this.activate();

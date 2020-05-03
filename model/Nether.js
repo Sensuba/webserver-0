@@ -1,14 +1,14 @@
 
-class Capsule {
+class Nether {
 
 	constructor (area) {
 
-		this.id = { type: "capsule", no: area.id.no };
+		this.id = { type: "nether", no: area.id.no };
 
 		this.area = area;
 
 		this.cards = [];
-	}
+}
 
 	get count () {
 
@@ -53,4 +53,4 @@ class Capsule {
 	}
 }
 
-module.exports = Capsule;
+module.exports = Nether;

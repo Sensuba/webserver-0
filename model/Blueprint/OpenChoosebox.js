@@ -12,7 +12,7 @@ class OpenChoosebox extends Bloc {
 			if (!choosebox.isEmpty)
 				choosebox.open(choice => {
 					if (ins[0])
-						choosebox.cards.forEach(card => card.goto(choosebox.area.capsule));
+						choosebox.cards.forEach(card => card.anihilate());
 					that.out = [choice];
 					if (that.to)
 						that.to.execute(that.toprops);
