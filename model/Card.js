@@ -852,6 +852,7 @@ class Card {
 		this.cmutations = [];
 		this.states = Object.assign({}, other.states);
 		this.poisondmg = other.poisondmg;
+		this.frozenTimer = other.frozenTimer;
 		this.identified = [false, false];
 		if (wasActivated)
 			this.activate();
