@@ -125,18 +125,18 @@ class Card {
 		this.location = loc;
 		if (former instanceof Tile && !(loc instanceof Tile) && this.activated)
 			this.deactivate();
-		if (loc instanceof Tile && !(former instanceof Tile) && !this.activated)
-			this.activate();
-		if (former instanceof Tile && loc instanceof Tile && this.activated && former.area !== loc.area) {
-			this.deactivate();
-			this.activate();
-		}
 		if (former && former.hasCard (this))
 			former.removeCard (this);
 		if (former && (loc === null || former.locationOrder > loc.locationOrder || former.locationOrder === 0))
 			this.resetBody ();
 		if (loc && !loc.hasCard (this))
 			loc.addCard (this);
+		if (loc instanceof Tile && !(former instanceof Tile) && !this.activated)
+			this.activate();
+		if (former instanceof Tile && loc instanceof Tile && this.activated && former.area !== loc.area) {
+			this.deactivate();
+			this.activate();
+		}
 		if (this.onBoard && former && former.area === this.area.opposite) {
 			this.skillPt = 1;
 			if (this.isType("character"))
