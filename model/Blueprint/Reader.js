@@ -66,6 +66,7 @@ var StoreCard = require('./StoreCard');
 var StoreModel = require('./StoreModel');
 var StoreLocation = require('./StoreLocation');
 var ClearVariable = require('./ClearVariable');
+var Counter = require('./Counter');
 
 var CanPay = require('./CanPay');
 var CanReach = require('./CanReach');
@@ -206,6 +207,7 @@ class Reader {
 			case "curepoison": bloc = new CurePoison(card, ctx); break;
 			case "destroy": bloc = new Destroy(card, ctx); break;
 			case "discard": bloc = new Discard(card, ctx); break;
+			case "counter": bloc = new Counter(card, ctx); break;
 			case "cast": bloc = new Cast(card, ctx); break;
 			case "levelup": bloc = new LevelUp(card, ctx); break;
 			case "addeffect": bloc = new AddEffect(card, ctx); break;

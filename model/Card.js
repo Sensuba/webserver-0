@@ -722,6 +722,11 @@ class Card {
 		return this.location.field.entities.some(e => e.cover(this, flying));
 	}
 
+	counter () {
+
+		this.countered = true;
+	}
+
 	play (targets) {
 
 		switch(this.cardType) {
@@ -739,7 +744,8 @@ class Card {
 			this.area.manapool.use(this.eff.mana);
 			this.goto(this.area.court);
 			this.gameboard.notify("playcard", this, targets ? targets[0] : undefined);
-			this.events.forEach(event => event.execute(this.gameboard, this, targets ? targets[0] : undefined));
+			if (!this.countered)
+				this.events.forEach(event => event.execute(this.gameboard, this, targets ? targets[0] : undefined));
 			this.destroy();
 			break;
 		case "secret":
