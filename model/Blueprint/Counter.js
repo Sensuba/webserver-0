@@ -1,5 +1,5 @@
 var Bloc = require('./Bloc');
-var Types = require('./Types');=
+var Types = require('./Types');
 
 class Counter extends Bloc {
 
