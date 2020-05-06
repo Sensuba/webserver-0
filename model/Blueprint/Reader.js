@@ -16,6 +16,7 @@ var Contact = require('./Contact');
 var PassiveMutation = require('./PassiveMutation');
 var ContactMutation = require('./ContactMutation');
 var Aura = require('./Aura');
+var Secret = require('./Secret');
 
 var Draw = require('./Draw');
 var Move = require('./Move');
@@ -56,6 +57,7 @@ var DestroyGem = require('./DestroyGem');
 var RefillMana = require('./RefillMana');
 var ExtraMana = require('./ExtraMana');
 var UseMana = require('./UseMana');
+var TriggerSecret = require('./TriggerSecret');
 var PutFirstLast = require('./PutFirstLast');
 var OpenChoosebox = require('./OpenChoosebox');
 var SetVisibility = require('./SetVisibility');
@@ -179,6 +181,7 @@ class Reader {
 			case "lw": bloc = new LastWill(card, ctx); break;
 			case "trap": bloc = new Trap(card, ctx); break;
 			case "frenzy": bloc = new Frenzy(card, ctx); break;
+			case "secret": bloc = new Secret(card, ctx); break;
 			case "contact": bloc = new Contact(card, ctx); break;
 			case "passivemut": bloc = new PassiveMutation(card, ctx); break;
 			case "contactmut": bloc = new ContactMutation(card, ctx); break;
@@ -213,6 +216,7 @@ class Reader {
 			case "generate": bloc = new Generate(card, ctx); break;
 			case "summon": bloc = new Summon(card, ctx); break;
 			case "transform": bloc = new Transform(card, ctx); break;
+			case "triggersecret": bloc = new TriggerSecret(card, ctx); break;
 			case "copy": bloc = new Copycat(card, ctx); break;
 			case "newcopy": bloc = new Copy(card, ctx); break;
 			case "createreceptacle": bloc = new CreateReceptacle(card, ctx); break;

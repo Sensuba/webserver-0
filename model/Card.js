@@ -197,7 +197,7 @@ class Card {
 		}
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
-		if (this.isType("artifact"))
+		if (this.isType("artifact") || this.isType("secret"))
 			this.faculties.push(new ArtifactSkill(new Event(() => new Update(() => this.destroy(), this.gameboard)), 0));
 	}
 
@@ -620,7 +620,10 @@ class Card {
 		[0, 1].forEach(id => {
 			if (this.identified[id])
 				return;
-			if (this.location.public || this.location.area.id.no === id) {
+			var reveal = this.location.public || this.location.area.id.no === id;
+			if (this.isType("secret") && this.location.area.id.no !== id && this.onBoard)
+				reveal = false;
+			if (reveal) {
 				this.gameboard.whisper("identify", id, this.id, this.data);
 				this.identified[id] = true;
 			}
@@ -654,7 +657,7 @@ class Card {
 
 	get canBePlayed () {
 
-		if (!this.inHand || !this.canBePaid || !this.area.isPlaying)
+		if (!this.inHand || (!this.isType("secret") && !this.canBePaid) || !this.area.isPlaying)
 			return false;
 		if (this.targets.length === 0)
 			return true;
@@ -664,7 +667,7 @@ class Card {
 
 	canBePlayedOn (targets) {
 
-		if (!this.inHand || !this.canBePaid || !this.area.isPlaying)
+		if (!this.inHand || (!this.isType("secret") && !this.canBePaid) || !this.area.isPlaying)
 			return false;
 		if (this.targets.length === 0)
 			return true;
@@ -678,7 +681,7 @@ class Card {
 	get targets () {
 
 		var targets = [];
-		if (this.isType("entity"))
+		if (this.isType("entity") || this.isType("secret"))
 			targets.push(Event.targets.friendlyEmpty);
 		/*if (this.blueprint && this.blueprint.triggers && this.blueprint.triggers.some(trigger => trigger.target)) {
 			var filter = this.blueprint.triggers.find(trigger => trigger.target).in[0];
@@ -721,10 +724,10 @@ class Card {
 
 	play (targets) {
 
-		this.area.manapool.use(this.eff.mana);
 		switch(this.cardType) {
 		case "figure":
 		case "artifact":
+			this.area.manapool.use(this.eff.mana);
 			this.summon(targets[0]);
 			this.gameboard.notify("playcard", this, targets[0], targets[1]);
 			this.events.forEach(event => {
@@ -733,10 +736,15 @@ class Card {
 			});
 			break;
 		case "spell":
+			this.area.manapool.use(this.eff.mana);
 			this.goto(this.area.court);
 			this.gameboard.notify("playcard", this, targets ? targets[0] : undefined);
 			this.events.forEach(event => event.execute(this.gameboard, this, targets ? targets[0] : undefined));
 			this.destroy();
+			break;
+		case "secret":
+			this.goto(targets[0]);
+			this.gameboard.notify("playcard", this, targets[0]);
 			break;
 		default: break;
 		}

@@ -103,6 +103,7 @@ class Types {
 		case 'character':
 		case 'entity':
 		case 'spell':
+		case 'secret':
 		case 'artifact':
 			return target => target && target.isType(value);
 		case 'damaged': return target => target && target.damaged;
@@ -146,6 +147,7 @@ class Types {
 		case 'hero':
 		case 'figure':
 		case 'spell':
+		case 'secret':
 		case 'artifact':
 			return target => target.cardType === value;
 		default: return target => true;
