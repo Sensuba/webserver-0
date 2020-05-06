@@ -865,6 +865,7 @@ class Card {
 		this.mutations = [];
 		this.cmutations = [];
 		this.states = Object.assign({}, other.states);
+		this.shield = other.shield;
 		this.poisondmg = other.poisondmg;
 		this.frozenTimer = other.frozenTimer;
 		this.identified = [false, false];
