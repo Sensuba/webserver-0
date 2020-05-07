@@ -1,9 +1,10 @@
 class Faculty {
 
-	constructor (event, cost) {
+	constructor (event, cost, text) {
 
 		this.event = event;
 		this.cost = cost;
+		this.text = text;
 	}
 
 	execute (gameboard, src, target) {

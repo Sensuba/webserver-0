@@ -16,13 +16,14 @@ class Action extends Bloc {
 
 	setup (owner, image) {
 
-		var req = this.computeIn()[0];
+		var ins = this.computeIn();
+		var req = ins[0];
 		var tar = this.target ? (req ? (src, target) => (req(src, target) && (!target.card || target.card.targetable)) : (src, target) => true) : null;
 		owner.faculties.push(new EAction(new Event((src, target) => {
 			if (target)
 				this.chosen = target;
 			this.execute({src: owner, image: image});
-		}, tar)));
+		}, tar), ins[1]));
 	}
 }
 

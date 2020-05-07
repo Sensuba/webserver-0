@@ -2,9 +2,9 @@ var Faculty = require("./Faculty");
 
 class ArtifactSkill extends Faculty {
 
-	constructor (event, durability) {
+	constructor (event, durability, text) {
 
-		super(event, src => src.skillPt-- & (durability > 0 ? src.heal(durability, src) : src.damage(-durability, src)));
+		super(event, src => src.skillPt-- & (durability > 0 ? src.heal(durability, src) : src.damage(-durability, src)), text);
 		this.durability = durability;
 	}
 

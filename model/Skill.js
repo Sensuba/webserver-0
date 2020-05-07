@@ -2,9 +2,9 @@ var Faculty = require("./Faculty");
 
 class Skill extends Faculty {
 
-	constructor (event, mana) {
+	constructor (event, mana, text) {
 
-		super(event, src => src.skillPt-- & src.area.manapool.use(mana));
+		super(event, src => src.skillPt-- & src.area.manapool.use(mana), text);
 		this.mana = mana;
 	}
 

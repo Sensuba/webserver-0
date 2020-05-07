@@ -2,12 +2,12 @@ var Faculty = require("./Faculty");
 
 class Action extends Faculty {
 
-	constructor (event) {
+	constructor (event, text) {
 
 		super(event, src => {
 			src.actionPt--;
 			src.motionPt = 0;
-		});
+		}, text);
 	}
 
 	canBeUsed (src, target) {

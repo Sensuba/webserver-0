@@ -153,6 +153,15 @@ class GameBoard {
 			if (card.faculties && card.faculties.length > cmd.faculty && card.canUse(card.faculties[cmd.faculty], target))
 				card.use(cmd.faculty, target);
 			break; }
+		case "param": {
+			let card = this.data.cards[cmd.id.no];
+			if (card.isType("secret") && card.onBoard && p.isPlaying) {
+				if (cmd.option === "destroy")
+					card.destroy();
+				if (cmd.option === "setcount" && cmd.count >= 0 && cmd.count <= 5)
+					card.secretcount = cmd.count;
+			}
+			break; }
 		case "choose": {
 			let card = this.data.cards[cmd.id.no];
 			this.currentArea.choosebox.choose(card);
