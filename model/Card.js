@@ -194,6 +194,13 @@ class Card {
 		if (this.isType("hero")) {
 			this.level = 1;
 			this.faculties.push(new Action(new Event(() => this.area.manapool.createReceptacle())));
+			this.lv1 = {
+				blueprint: this.blueprint,
+				description: this.description,
+				atk: this.atk,
+				range: this.range,
+				overload: this.overload
+			}
 		}
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
@@ -205,15 +212,16 @@ class Card {
 
 		if (!this.isType("hero"))
 			return;
+		var originallevel = this.level;
 		if (!level)
 			level = this.level + 1;
 		if (level === this.level)
 			return;
 		var down = level < this.level;
 		this.level = level;
-		var lv = this.level === 1 ? this : (this.level === 2 ? this.lv2 : this.lvmax);
+		var lv = this.level === 1 ? this.lv1 : (this.level === 2 ? this.lv2 : this.lvmax);
 		if (!lv) {
-			this.level--;
+			this.level = originallevel;
 			return;
 		}
 
