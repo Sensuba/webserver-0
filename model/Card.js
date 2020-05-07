@@ -211,7 +211,7 @@ class Card {
 			return;
 		var down = level < this.level;
 		this.level = level;
-		var lv = this.level === 2 ? this.lv2 : this.lvmax;
+		var lv = this.level === 1 ? this : (this.level === 2 ? this.lv2 : this.lvmax);
 		if (!lv) {
 			this.level--;
 			return;
