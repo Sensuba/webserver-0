@@ -42,6 +42,7 @@ var Discard = require('./Discard');
 var Cast = require('./Cast');
 var AddEffect = require('./AddEffect');
 var LevelUp = require('./LevelUp');
+var LevelDown = require('./LevelDown');
 var SetState = require('./SetState');
 var Generate = require('./Generate');
 var Summon = require('./Summon');
@@ -210,6 +211,7 @@ class Reader {
 			case "counter": bloc = new Counter(card, ctx); break;
 			case "cast": bloc = new Cast(card, ctx); break;
 			case "levelup": bloc = new LevelUp(card, ctx); break;
+			case "leveldown": bloc = new LevelDown(card, ctx); break;
 			case "addeffect": bloc = new AddEffect(card, ctx); break;
 			case "addmut": bloc = new AddMutation(card, ctx); break;
 			case "mutnext": bloc = new MutateNextCard(card, ctx); break;

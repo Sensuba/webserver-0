@@ -201,12 +201,16 @@ class Card {
 			this.faculties.push(new ArtifactSkill(new Event(() => new Update(() => this.destroy(), this.gameboard)), 0));
 	}
 
-	levelUp () {
+	levelUp (level) {
 
 		if (!this.isType("hero"))
 			return;
-		
-		this.level++;
+		if (!level)
+			level = this.level + 1;
+		if (level === this.level)
+			return;
+		var down = level < this.level;
+		this.level = level;
 		var lv = this.level === 2 ? this.lv2 : this.lvmax;
 		if (!lv) {
 			this.level--;
@@ -234,12 +238,21 @@ class Card {
 			this.atk = parseInt(this.atk, 10);
 		if (this.range && typeof this.range === 'string')
 			this.range = parseInt(this.range, 10);
-		this.gameboard.notify("levelup", this);
+		this.gameboard.notify("levelup", this, { type: "bool", value: down });
 		this.events.forEach(event => {
 			if (!event.requirement)
 				event.execute(this.gameboard, this)
 		});
 		this.activate();
+	}
+
+	levelDown () {
+
+		if (!this.isType("hero"))
+			return;
+		if (this.level === 0)
+			return;
+		this.levelUp(this.level - 1);
 	}
 
 	freeze () {
