@@ -592,6 +592,12 @@ class Card {
 			this.motionPt = 0;
 		}
 		this.gameboard.notify("charattack", this, target, {type:"bool", value: auto});
+		if (this.retarget) {
+			target = this.retarget;
+			delete this.retarget;
+		}
+		if (this.destroyed || this.isGhost)
+			return;
 		this.oncontact = target;
 		var dmg1 = target.damage(this.eff.atk, this, true);
 		var dmg2;
