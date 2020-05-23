@@ -767,7 +767,7 @@ class Card {
 			this.gameboard.notify("playcard", this, targets[0], targets[1]);
 			this.events.forEach(event => {
 				if (!event.requirement || targets.length > 1)
-					event.execute(this.gameboard, this, targets.length > 1 ? (retarget || targets[1]) : undefined)
+					event.execute(this.gameboard, this, targets.length > 1 ? (this.retarget || targets[1]) : undefined)
 			});
 			break;
 		case "spell":
@@ -775,7 +775,7 @@ class Card {
 			this.goto(this.area.court);
 			this.gameboard.notify("playcard", this, targets ? targets[0] : undefined);
 			if (!this.countered)
-				this.events.forEach(event => event.execute(this.gameboard, this, targets ? (retarget || targets[0]) : undefined));
+				this.events.forEach(event => event.execute(this.gameboard, this, targets ? (this.retarget || targets[0]) : undefined));
 			this.destroy();
 			break;
 		case "secret":
@@ -806,7 +806,7 @@ class Card {
 	use (index, target) {
 
 		this.gameboard.notify("cardfaculty", this, { type: "boolean", value: this.faculties[index] instanceof Action }, target ? target.id : undefined, { type: "string", value: this.faculties[index].text });
-		this.faculties[index].execute(this.gameboard, this, retarget || target);
+		this.faculties[index].execute(this.gameboard, this, this.retarget || target);
 		delete this.retarget;
 	}
 
