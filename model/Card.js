@@ -93,6 +93,8 @@ class Card {
 		delete copy.variables;
 		delete copy.countered;
 		delete copy.retarget;
+		delete copy.secretcount;
+		delete copy.secretparam;
 		copy.model = this.model.idCardmodel;
 		return copy;
 	}
@@ -862,6 +864,11 @@ class Card {
 			delete this.variables[name];
 	}
 
+	parameter (param) {
+
+		this.secretparam = param;
+	}
+
 	transform (model) {
 
 		this.model = model;
@@ -935,15 +942,19 @@ class Card {
 
 	refresh () {
 
-		this.skillPt = 1;
-		if (this.isType("character")) {
-			this.actionPt = 1;
-			this.motionPt = 1;
-			this.firstTurn = false;
-			this.strikes = 0;
-			if (this.frozen)
-				this.frozenTimer = true;
+		if (this.isType("entity")) {
+			this.skillPt = 1;
+			if (this.isType("character")) {
+				this.actionPt = 1;
+				this.motionPt = 1;
+				this.firstTurn = false;
+				this.strikes = 0;
+				if (this.frozen)
+					this.frozenTimer = true;
+			}
 		}
+		if (this.isType("secret"))
+			delete this.secretcount;
 	}
 
 	mutate (effect, end) {

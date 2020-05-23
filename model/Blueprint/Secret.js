@@ -17,6 +17,12 @@ class Secret extends Bloc {
 
 		var that = this;
 		this.activate = data => {
+			owner.secretcount = (owner.secretcount || 0) + 1;
+			var param = 1;
+			if (owner.secretparam !== undefined)
+				param = owner.secretparam;
+			if (param < 1 || owner.secretcount < param)
+				return;
 			that.data = data;
 			owner.location.area.manapool.use(owner.eff.mana);
 			var loc = owner.location;

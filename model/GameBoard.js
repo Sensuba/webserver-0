@@ -159,7 +159,7 @@ class GameBoard {
 				if (cmd.option === "destroy")
 					card.destroy();
 				if (cmd.option === "setcount" && cmd.count >= 0 && cmd.count <= 5)
-					card.secretcount = cmd.count;
+					card.secretparam = cmd.count;
 			}
 			break; }
 		case "choose": {

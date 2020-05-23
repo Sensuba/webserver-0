@@ -27,9 +27,14 @@ class Field {
 		return this.area.opposite.field;
 	}
 
-	get entities () {
+	get cards () {
 
 		return this.tiles.filter(tile => tile.occupied).map(tile => tile.card);
+	}
+
+	get entities () {
+
+		return this.tiles.filter(tile => tile.occupied && tile.card.isType("entity")).map(tile => tile.card);
 	}
 }
 
