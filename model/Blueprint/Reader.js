@@ -68,6 +68,7 @@ var StoreModel = require('./StoreModel');
 var StoreLocation = require('./StoreLocation');
 var ClearVariable = require('./ClearVariable');
 var Counter = require('./Counter');
+var ChangeTarget = require('./ChangeTarget');
 
 var CanPay = require('./CanPay');
 var CanReach = require('./CanReach');
@@ -209,6 +210,7 @@ class Reader {
 			case "destroy": bloc = new Destroy(card, ctx); break;
 			case "discard": bloc = new Discard(card, ctx); break;
 			case "counter": bloc = new Counter(card, ctx); break;
+			case "changetarget": bloc = new ChangeTarget(card, ctx); break;
 			case "cast": bloc = new Cast(card, ctx); break;
 			case "levelup": bloc = new LevelUp(card, ctx); break;
 			case "leveldown": bloc = new LevelDown(card, ctx); break;
@@ -362,6 +364,8 @@ class Reader {
 			case "createreceptacle-data": bloc = new Data(el.type, card, ctx, d => [d.src.area]); break;
 			case "levelup-trigger": bloc = new Trigger(el.type, card, ctx, "levelup"); break;
 			case "levelup-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.src.level]); break;
+			case "secret-trigger": bloc = new Trigger(el.type, card, ctx, "triggersecret"); break;
+			case "secret-data": bloc = new Data(el.type, card, ctx, d => [d.src]); break;
 			default: bloc = new Bloc(el.type, card, ctx); break;
 			}
 			ctx[key].push(bloc);

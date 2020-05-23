@@ -11,6 +11,7 @@ var rooms = {};
 var Bank = require("./Bank.js");
 var RoomManager = require("./RoomManager");
 var MissionManager = require("./MissionManager");
+var TrainingManager = require("./TrainingManager");
 var CreditManager = require("./CreditManager");
 
 console.log("Initialization...");
@@ -83,6 +84,14 @@ var start = () => io.sockets.on('connection', function (socket) {
 
 		socket.mission = mission;
 		socket.manager = new MissionManager(mission);
+		var manager = socket.manager;
+		manager.init(socket, name, avatar);
+	});
+
+	socket.on('training', function(name, avatar){
+
+		socket.training = true;
+		socket.manager = new TrainingManager();
 		var manager = socket.manager;
 		manager.init(socket, name, avatar);
 	});

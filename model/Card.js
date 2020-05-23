@@ -91,6 +91,8 @@ class Card {
 		delete copy.php;
 		delete copy.dying;
 		delete copy.variables;
+		delete copy.countered;
+		delete copy.retarget;
 		copy.model = this.model.idCardmodel;
 		return copy;
 	}
@@ -188,6 +190,8 @@ class Card {
 		delete this.poisondmg;
 		this.dying = false;
 		delete this.variables;
+		delete this.countered;
+		delete this.retarget;
 		this.clearBoardInstance();
 		if (wasActivated)
 			this.activate();
@@ -748,6 +752,11 @@ class Card {
 		this.countered = true;
 	}
 
+	changeTarget (target) {
+
+		this.retarget = target;
+	}
+
 	play (targets) {
 
 		switch(this.cardType) {
@@ -758,7 +767,7 @@ class Card {
 			this.gameboard.notify("playcard", this, targets[0], targets[1]);
 			this.events.forEach(event => {
 				if (!event.requirement || targets.length > 1)
-					event.execute(this.gameboard, this, targets.length > 1 ? targets[1] : undefined)
+					event.execute(this.gameboard, this, targets.length > 1 ? (retarget || targets[1]) : undefined)
 			});
 			break;
 		case "spell":
@@ -766,7 +775,7 @@ class Card {
 			this.goto(this.area.court);
 			this.gameboard.notify("playcard", this, targets ? targets[0] : undefined);
 			if (!this.countered)
-				this.events.forEach(event => event.execute(this.gameboard, this, targets ? targets[0] : undefined));
+				this.events.forEach(event => event.execute(this.gameboard, this, targets ? (retarget || targets[0]) : undefined));
 			this.destroy();
 			break;
 		case "secret":
@@ -886,6 +895,7 @@ class Card {
 		this.mutations = [];
 		this.cmutations = [];
 		this.states = Object.assign({}, other.states);
+		this.variables = Object.assign({}, other.variables);
 		this.shield = other.shield;
 		this.poisondmg = other.poisondmg;
 		this.frozenTimer = other.frozenTimer;
