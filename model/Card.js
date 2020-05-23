@@ -785,6 +785,8 @@ class Card {
 		default: break;
 		}
 		this.gameboard.update();
+		delete this.countered;
+		delete this.retarget;
 	}
 
 	canMoveOn (tile) {
@@ -804,7 +806,8 @@ class Card {
 	use (index, target) {
 
 		this.gameboard.notify("cardfaculty", this, { type: "boolean", value: this.faculties[index] instanceof Action }, target ? target.id : undefined, { type: "string", value: this.faculties[index].text });
-		this.faculties[index].execute(this.gameboard, this, target);
+		this.faculties[index].execute(this.gameboard, this, retarget || target);
+		delete this.retarget;
 	}
 
 	setState (state, value) {
