@@ -8,8 +8,10 @@ class Destroy extends Bloc {
 
 		super("destroy", src, ctx, true);
 		this.f = (src, ins) => {
-			if (ins[0].onBoard)
+			if (ins[0].onBoard) {
+				ins[0].goingtodie = true;
 				new Update(() => ins[0].destroy(), ins[0].gameboard);
+			}
 			else
 				ins[0].destroy();
 			return [];

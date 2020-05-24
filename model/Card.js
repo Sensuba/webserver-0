@@ -64,7 +64,7 @@ class Card {
 
 	get isGhost() {
 
-		return this.onBoard && (this.chp <= 0 || this.dying);
+		return this.onBoard && (this.chp <= 0 || this.dying || this.goingtodie);
 	}
 
 	get damaged() {
@@ -90,6 +90,7 @@ class Card {
 		delete copy.mutdata;
 		delete copy.php;
 		delete copy.dying;
+		delete copy.goingtodie;
 		delete copy.variables;
 		delete copy.countered;
 		delete copy.retarget;
