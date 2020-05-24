@@ -599,8 +599,10 @@ class Card {
 			target = this.retarget;
 			delete this.retarget;
 		}
-		if (this.destroyed || this.isGhost)
+		if (this.destroyed || this.isGhost) {
+			this.gameboard.update();
 			return;
+		}
 		this.oncontact = target;
 		var dmg1 = target.damage(this.eff.atk, this, true);
 		var dmg2;
