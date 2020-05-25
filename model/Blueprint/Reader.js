@@ -340,6 +340,8 @@ class Reader {
 			case "move-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[1], d.data[0]]); break;
 			case "attack-trigger": bloc = new Trigger(el.type, card, ctx, "charattack"); break;
 			case "attack-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0]]); break;
+			case "contact-trigger": bloc = new Trigger(el.type, card, ctx, "charcontact"); break;
+			case "contact-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0]]); break;
 			case "summon-trigger": bloc = new Trigger(el.type, card, ctx, "summon"); break;
 			case "summon-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0]]); break;
 			case "destroy-trigger": bloc = new Trigger(el.type, card, ctx, "destroycard"); break;
