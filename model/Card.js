@@ -148,6 +148,11 @@ class Card {
 			if (this.isType("character"))
 				this.resetSickness();
 		}
+		if (this.onBoard && this.isType("secret")) {
+			var secrets = this.innereffects.filter(e => e.type === "secret");
+			if (secrets.length === 1)
+				this.secreteffect = secrets[0];
+		}
 		this.identify();
 		if (this.area && loc.hasCard(this))
 			this.gameboard.notify("cardmove", this, loc, former);
