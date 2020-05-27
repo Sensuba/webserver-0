@@ -1,22 +1,19 @@
 var Manager = require("./Manager");
 var CreditManager = require("./CreditManager");
 var DeckAnalyst = require("./DeckAnalyst");
-var Script = require("./mission/Script");
-var ScriptedAI = require("./ai/ScriptedAI");
+var TrainingAI = require("./ai/TrainingAI");
 
-class MissionManager extends Manager {
+class TrainingManager extends Manager {
 
-	constructor (mission) {
+	constructor () {
 
-		super("mission");
-		this.mission = mission;
+		super("training");
 	}
 
-	init (socket, name, avatar) {
+	init (socket, name, avatar, deck) {
 
 		this.socket = socket;
-		this.script = new Script(this.mission);
-		this.ai = new ScriptedAI(this.game, 1, this.script.data.ai.behaviour);
+		this.ai = new TrainingAI(this.game, 1);
 
 		this.game.send = (type, src, data) => {
 			socket.emit("notification", {type, src, data});
@@ -28,23 +25,22 @@ class MissionManager extends Manager {
 				
 				this.game.ended = true;
 				this.socket.emit("endgame", {state: winner === 0 ? 3 : 4, credit: 0});
-				console.log("Mission for " + (name || "Anonymous") + " ended normally");
+				console.log("Training for " + (name || "Anonymous") + " ended normally");
 			}
 		
 		try {
 			this.game.init(
-				{ name, avatar, socket, deck: this.script.data.player.deck, props: this.script.data.player.props },
-				{ name: this.script.data.ai.name, deck: this.script.data.ai.deck, props: this.script.data.ai.props }
+				{ name, avatar, socket, deck },
+				{ name: "AI", deck: this.ai.deck }
 			);
-			this.script.rule(this.game);
-			this.game.start(this.game.areas[this.script.data.first]);
+			this.game.start(this.game.areas[Math.floor(Math.random(0, 2))]);
 		} catch (e) {
 			console.log(e);
 			socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
-			console.log("Mission ended by internal error");
+			console.log("Training ended by internal error");
 		}
 
-		console.log((name || "Anonymous") + " started mission " + this.mission.mission + " - " + this.mission.chapter);
+		console.log((name || "Anonymous") + " started training");
 	}
 
 	callAI () {
@@ -60,7 +56,7 @@ class MissionManager extends Manager {
 				console.log(e);
 				this.finish();
 				this.socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
-				console.log("Mission ended by internal error");
+				console.log("Training ended by internal error");
 			}
 		}, 500);
 	}
@@ -73,15 +69,15 @@ class MissionManager extends Manager {
 			console.log(e);
 			this.finish();
 			this.socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
-			console.log("Mission ended by internal error");
+			console.log("Training ended by internal error");
 		}
 	}
 
 	kick () {
 
 		this.finish();
-		console.log("Mission ended by connection lost");
+		console.log("Training ended by connection lost");
 	}
 }
 
-module.exports = MissionManager;
+module.exports = TrainingManager;

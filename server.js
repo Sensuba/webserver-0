@@ -88,12 +88,12 @@ var start = () => io.sockets.on('connection', function (socket) {
 		manager.init(socket, name, avatar);
 	});
 
-	socket.on('training', function(name, avatar){
+	socket.on('training', function(name, avatar, deck){
 
 		socket.training = true;
 		socket.manager = new TrainingManager();
 		var manager = socket.manager;
-		manager.init(socket, name, avatar);
+		manager.init(socket, name, avatar, deck);
 	});
 
 	socket.on('prepare', function(token, deck){

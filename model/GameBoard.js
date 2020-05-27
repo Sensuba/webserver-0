@@ -158,8 +158,8 @@ class GameBoard {
 			if (card.isType("secret") && card.onBoard && p.isPlaying) {
 				if (cmd.option === "destroy")
 					card.destroy();
-				if (cmd.option === "setcount" && cmd.count >= 0 && cmd.count <= 5)
-					card.secretparam = cmd.count;
+				if (cmd.value >= 0 && cmd.value <= 5)
+					card.parameter(cmd.option, cmd.value);
 			}
 			break; }
 		case "choose": {

@@ -19,7 +19,7 @@ class Frenzy extends Bloc {
 			if (s === owner) {
 				that.victim = d[0];
 				that.unsub1 = that.src.gameboard.subscribe("damagecard", (t,s,d) => {
-					if (s === that.victim && d[1] === owner && owner.onBoard && owner.area.isPlaying && s.chp !== undefined && s.chp <= 0) {
+					if (s === that.victim && d[1] === owner && owner.onBoard && s.chp !== undefined && s.chp <= 0) {
 						that.unsub1();
 						that.unsub2 = that.src.gameboard.subscribe("destroycard", (t2,s2,d2) => {
 							if (that.victim === s2 && s2.isType("character")) {

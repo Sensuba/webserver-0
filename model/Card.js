@@ -96,6 +96,7 @@ class Card {
 		delete copy.retarget;
 		delete copy.secretcount;
 		delete copy.secretparam;
+		delete copy.secreteffect;
 		copy.model = this.model.idCardmodel;
 		return copy;
 	}
@@ -195,6 +196,9 @@ class Card {
 		delete this.variables;
 		delete this.countered;
 		delete this.retarget;
+		delete this.secretcount;
+		delete this.secretparam;
+		delete this.secreteffect;
 		this.clearBoardInstance();
 		if (wasActivated)
 			this.activate();
@@ -693,7 +697,7 @@ class Card {
 
 	get canBePlayed () {
 
-		if (!this.inHand || (!this.isType("secret") && !this.canBePaid) || !this.area.isPlaying)
+		if (!this.inHand || !this.canBePaid || !this.area.isPlaying)
 			return false;
 		if (this.targets.length === 0)
 			return true;
@@ -703,7 +707,7 @@ class Card {
 
 	canBePlayedOn (targets) {
 
-		if (!this.inHand || (!this.isType("secret") && !this.canBePaid) || !this.area.isPlaying)
+		if (!this.inHand || !this.canBePaid || !this.area.isPlaying)
 			return false;
 		if (this.targets.length === 0)
 			return true;
@@ -770,10 +774,10 @@ class Card {
 
 	play (targets) {
 
+		this.area.manapool.use(this.eff.mana);
 		switch(this.cardType) {
 		case "figure":
 		case "artifact":
-			this.area.manapool.use(this.eff.mana);
 			this.summon(targets[0]);
 			this.gameboard.notify("playcard", this, targets[0], targets[1]);
 			this.events.forEach(event => {
@@ -782,7 +786,6 @@ class Card {
 			});
 			break;
 		case "spell":
-			this.area.manapool.use(this.eff.mana);
 			this.goto(this.area.court);
 			this.gameboard.notify("playcard", this, targets ? targets[0] : undefined);
 			if (!this.countered)
@@ -867,9 +870,18 @@ class Card {
 			delete this.variables[name];
 	}
 
-	parameter (param) {
+	parameter (option, param) {
 
-		this.secretparam = param;
+		switch (option) {
+		case "setcount": this.secretparam = param; break;
+		case "seteffect": {
+			var secrets = this.innereffects.filter(e => e.type === "secret");
+			if (param < secrets.length)
+				this.secreteffect = secrets[param];
+			break;
+		}
+		default: break;
+		}
 	}
 
 	transform (model) {
