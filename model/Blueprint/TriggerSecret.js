@@ -7,7 +7,7 @@ class TriggerSecret extends Bloc {
 
 		super("triggersecret", src, ctx, true);
 		this.f = (src, ins) => {
-			if (!ins[0].location.area.isPlaying && ins[0].onBoard && ins[0].canBePaid && ins[0].secreteffect)
+			if (!ins[0].location.area.isPlaying && ins[0].onBoard && ins[0].secreteffect && ins[0].cost <= ins[0].location.area.manapool.usableMana)
 				ins[0].secreteffect.activate(ins[1]);
 			return [];
 		};
