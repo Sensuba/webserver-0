@@ -79,7 +79,6 @@ class Card {
 		var copy = Object.assign({}, this);
 		delete copy.location;
 		delete copy.gameboard;
-		delete copy.parent;
 		delete copy.passives;
 		delete copy.innereffects;
 		delete copy.tokens;
@@ -98,6 +97,8 @@ class Card {
 		delete copy.secretparam;
 		delete copy.secreteffect;
 		copy.model = this.model.idCardmodel;
+		if (copy.parent)
+			copy.parent = copy.parent.idCardmodel;
 		return copy;
 	}
 
@@ -204,6 +205,8 @@ class Card {
 		delete this.secretcount;
 		delete this.secretparam;
 		delete this.secreteffect;
+		if (!model.blueprint)
+			delete this.blueprint;
 		this.clearBoardInstance();
 		if (wasActivated)
 			this.activate();

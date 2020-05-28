@@ -6,7 +6,15 @@ class FilterModel extends Bloc {
 	constructor (src, ctx) {
 
 		super("filtermodel", src, ctx);
-		this.f = (src, ins) => [ target => target && ins[0] && (target.idCardmodel === ins[0].idCardmodel || (target.parent && ins[0].parent && target.parent.idCardmodel && ins[0].parent.idCardmodel && target.parent.idCardmodel === ins[0].parent.idCardmodel && target.token === ins[0].token)) ]
+		this.f = (src, ins) => [ target => {
+			if (!target || !ins[0])
+				return false;
+			if (target.idCardmodel || ins[0].idCardmodel)
+				return target.idCardmodel === ins[0].idCardmodel;
+			if (target.parent && ins[0].parent)
+				return target.parent.idCardmodel === ins[0].parent.idCardmodel && target.notoken === ins[0].notoken;
+			return false;
+		} ]
 		this.types = [Types.model];
 	}
 }
