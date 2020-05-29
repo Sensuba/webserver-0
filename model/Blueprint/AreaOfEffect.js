@@ -9,12 +9,10 @@ class AreaOfEffect extends Bloc {
 		this.f = (src, ins, props) => {
 			var area = ins[0], targets = ins[1];
 			area.forEach (loc => {
-				loc.cards.forEach(card => {
-					if (targets === null || targets(card)) {
-						this.out = [card];
-						if (this["for each"])
-							this["for each"].execute(props);
-					}
+				loc.cards.filter(card => (targets === null || targets(card))).forEach(card => {
+					this.out = [card];
+					if (this["for each"])
+						this["for each"].execute(props);
 				});
 			})
 			this.out = null;
