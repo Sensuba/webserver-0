@@ -111,7 +111,7 @@ class Tile {
 
 	get mirror () {
 
-		for (var i = 0; i < this.field.tiles.length-1; i++)
+		for (var i = 0; i < this.field.tiles.length; i++)
 			if (this.field.tiles[i] === this)
 				return this.field.opposite.tiles[i];
 		return null;
