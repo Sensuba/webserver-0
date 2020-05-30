@@ -5,7 +5,7 @@ class FindRandomEvent extends Bloc {
 
 	constructor (src, ctx) {
 
-		super("findevent", src, ctx, true);
+		super("findevent", src, ctx);
 		this.f = (src, ins, props) => {
 			var logs = [];
 			switch (ins[1]) {
