@@ -205,6 +205,7 @@ class Card {
 		delete this.secretcount;
 		delete this.secretparam;
 		delete this.secreteffect;
+		delete this.goingtodie;
 		if (!model.blueprint)
 			delete this.blueprint;
 		this.clearBoardInstance();
