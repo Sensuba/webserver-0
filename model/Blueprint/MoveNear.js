@@ -28,6 +28,8 @@ class MoveNear extends Bloc {
 			}
 			var all = tile.field.tiles.filter(t => t.isEmpty);
 			if (all.length > 0) {
+				var distance = all.reduce((min, t) => Math.min(min, t.distanceTo(tile)), 4);
+				all = all.filter(t => t.distanceTo(tile) === distance);
 				var res = all[Math.floor(Math.random()*all.length)];
 				ins[0].goto(res);
 				return [res];
