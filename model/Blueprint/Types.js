@@ -66,6 +66,7 @@ class Types {
 		case 'choosebox': return [src.area.choosebox];
 		case 'capsule': return [src.area.capsule];
 		case 'nether': return [src.area.nether];
+		case 'area': return src.area.gameboard.tiles.concat([src.area.hand, src.area.court, src.area.deck]);
 		case 'everywhere': return src.area.gameboard.tiles.concat([src.area.hand, src.area.court, src.area.deck, src.area.opposite.hand, src.area.opposite.court, src.area.opposite.deck]);
 		default: [src.location];
 		}

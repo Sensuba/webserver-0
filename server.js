@@ -88,10 +88,10 @@ var start = () => io.sockets.on('connection', function (socket) {
 		manager.init(socket, name, avatar);
 	});
 
-	socket.on('training', function(name, avatar, deck){
+	socket.on('training', function(name, avatar, deck, ai){
 
 		socket.training = true;
-		socket.manager = new TrainingManager();
+		socket.manager = new TrainingManager(ai);
 		var manager = socket.manager;
 		manager.init(socket, name, avatar, deck);
 	});
@@ -143,7 +143,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 				delete rooms[manager.room];
 				console.log("Room count: " + Object.keys(rooms).length);
 			}
-		}
+		} else manager.kick(socket);
 	}
 
 	socket.on('quit', quit);

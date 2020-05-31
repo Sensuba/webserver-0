@@ -5,7 +5,7 @@ var TrainingAI = require("./ai/TrainingAI");
 
 class TrainingManager extends Manager {
 
-	constructor () {
+	constructor (ai) {
 
 		super("training");
 	}
