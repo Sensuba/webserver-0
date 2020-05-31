@@ -143,7 +143,8 @@ var start = () => io.sockets.on('connection', function (socket) {
 				delete rooms[manager.room];
 				console.log("Room count: " + Object.keys(rooms).length);
 			}
-		} else manager.kick(socket);
+		} else if (socket.manager)
+			socket.manager.kick(socket);
 	}
 
 	socket.on('quit', quit);
