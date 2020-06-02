@@ -126,7 +126,8 @@ class RoomManager extends Manager {
 		if (this.players.every(p => p.socket !== socket))
 			return;
 		var same = this.players.length > 1 && this.players[0].name === this.players[1].name;
-		var name = this.players.find(p => p.socket !== socket).name || "Anonymous";
+		var pdis = this.players.find(p => p.socket !== socket);
+		var name = pdis ? pdis.name : "Anonymous";
 		this.players = this.players.filter(p => p.socket !== socket);
 		if (this.started && !this.finished && this.players.length <= 1) {
 			this.finish();
