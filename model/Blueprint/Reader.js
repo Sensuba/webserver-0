@@ -102,6 +102,7 @@ var IsCovered = require('./IsCovered');
 var Poisoned = require('./Poisoned');
 var MergeMutations = require('./MergeMutations');
 var ConditionalMutation = require('./ConditionalMutation');
+var ConditionalTarget = require('./ConditionalTarget');
 var TargetData = require('./TargetData');
 
 var BreakCard = require('./BreakCard');
@@ -274,6 +275,7 @@ class Reader {
 			case "covered": bloc = new IsCovered(card, ctx); break;
 			case "mergemut": bloc = new MergeMutations(card, ctx); break;
 			case "conditionmut": bloc = new ConditionalMutation(card, ctx); break;
+			case "conditiontarget": bloc = new ConditionalTarget(card, ctx); break;
 			case "target": bloc = new TargetData(card, ctx); break;
 			case "extremum": bloc = new Extremum(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;
