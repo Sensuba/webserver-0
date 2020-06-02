@@ -612,7 +612,7 @@ class Card {
 			target = this.retarget;
 			delete this.retarget;
 		}
-		if (this.destroyed || this.isGhost) {
+		if (this.destroyed || this.isGhost || !this.onBoard) {
 			this.gameboard.update();
 			return;
 		}

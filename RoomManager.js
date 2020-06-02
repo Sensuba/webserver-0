@@ -125,17 +125,19 @@ class RoomManager extends Manager {
 		this.spectators = this.spectators.filter(p => p.socket !== socket);
 		if (this.players.every(p => p.socket !== socket))
 			return;
+		var same = this.players.length > 1 && this.players[0].name === this.players[1].name;
+		var name = this.players.find(p => p.socket !== socket).name || "Anonymous";
 		this.players = this.players.filter(p => p.socket !== socket);
 		if (this.started && !this.finished && this.players.length <= 1) {
 			this.finish();
 			var c = 0;
-			if (this.players.length > 1 && this.players[0].name !== this.players[1].name) {
-				c = CreditManager.compute(Date.now() - this.date, this.game.log.logs.length);
+			if (this.players.length > 0 && !same) {
+				c = CreditManager.compute(Date.now() - this.date, this.game.log.logs.length) * 2.5;
 				CreditManager.creditPlayer(this.players[0].name, c);
 			}
 			this.players.forEach(p => p.socket.emit("endgame", {state: 5, credit: c})); // State 5 : connection lost
 			this.spectators.forEach(s => s.socket.emit("endgame", {state: 5}));
-			console.log("Game " + this.room + " ended by connection lost");
+			console.log("Game " + this.room + " ended by connection lost [" + name + "]");
 			console.log("Generated " + c + " credits");
 		}
 	}
