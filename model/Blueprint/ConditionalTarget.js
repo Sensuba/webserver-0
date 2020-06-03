@@ -6,7 +6,7 @@ class ConditionalTarget extends Bloc {
 	constructor (src, ctx) {
 
 		super("conditiontarget", src, ctx);
-		this.f = (src, ins) => [(src, target) => ins[0](src, target) && this.in[1](props)];
+		this.f = (src, ins, props) => [(src, target) => ins[0](src, target) && this.in[1](props)];
 		this.types = [Types.tilefilter, Types.bool];
 	}
 
