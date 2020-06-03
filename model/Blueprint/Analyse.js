@@ -74,7 +74,7 @@ class Analyse extends Bloc {
 			if (!you)
 				return;
 			let nprops = Object.assign({}, props);
-			nprops.data = this.buildEvent(event.gameboard, log);
+			nprops.data = { src:log.src, data:log.data };
 			if (event.check(log.type, log.src, log.data) && this.in[2](nprops))
 				c++;
 		})
