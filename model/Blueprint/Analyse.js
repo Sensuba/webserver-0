@@ -14,7 +14,8 @@ class Analyse extends Bloc {
 				case 2: count = this.countAllGame(ins[0], props); break;
 				case 3: count = this.countSincePreviousTurn(ins[0], props); break;
 				case 4: count = this.countAllGame(ins[0], props); break;
-				case 5: count = this.countSinceYourTurn(ins[0], props); break;
+				case 5: count = this.countYourTurn(ins[0], props); break;
+				case 6: count = this.countSinceYourTurn(ins[0], props); break;
 				default: break;
 			}
 			return [count > 0, count];
@@ -54,6 +55,26 @@ class Analyse extends Bloc {
 				c = 0;
 			let nprops = Object.assign({}, props);
 			nprops.data = { src:log.src, data:log.data };
+			if (event.check(log.type, log.src, log.data) && this.in[2](nprops))
+				c++;
+		})
+		return c;
+	}
+
+	countYourTurn (event, props) {
+
+		let c = 0, you = false;
+		event.gameboard.log.logs.forEach(log => {
+			if (log.type === "newturn") {
+				if (log.src.id.no === this.src.area.id.no) {
+					you = true;
+					c = 0;
+				} else you = false;
+			}
+			if (!you)
+				return;
+			let nprops = Object.assign({}, props);
+			nprops.data = this.buildEvent(event.gameboard, log);
 			if (event.check(log.type, log.src, log.data) && this.in[2](nprops))
 				c++;
 		})

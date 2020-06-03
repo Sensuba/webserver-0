@@ -191,7 +191,8 @@ class Types {
 		case 'opponent\'s turn': return 2;
 		case 'since previous turn': return 3;
 		case 'previous turn': return 4;
-		case 'since your turn': return 5;
+		case 'your turn': return 5;
+		case 'since your turn': return 6;
 		case 'all game': return 0;
 		default: return 0;
 		}
