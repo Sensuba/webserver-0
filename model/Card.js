@@ -437,6 +437,7 @@ class Card {
 			this.chp = Math.min(this.chp, this.eff.hp);
 		this.range = Math.min(this.range + range, MAX_RANGE);
 		this.gameboard.notify("boostcard", this, atk, hp, range);
+		this.update();
 		if (this.chp <= 0)
 			new Update(() => this.destroy(), this.gameboard);
 	}
