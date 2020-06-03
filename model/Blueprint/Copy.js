@@ -14,8 +14,11 @@ class Copy extends Bloc {
 			var n = ins[1] === null ? 1 : ins[1];
 			for (var i = 0; i < n; i++) {
 				gen = new Card(ins[0].model, src.gameboard, ins[2]);
-				if (ins[0].location && gen.location && ins[0].location.locationOrder <= gen.location.locationOrder)
+				if (ins[0].location && gen.location && ins[0].location.locationOrder <= gen.location.locationOrder) {
 					gen.copy(ins[0], ins[3]);
+					if (gen.onBoard)
+						gen.summon(ins[2]);
+				}
 				else {
 					gen.transform(ins[0].model);
 					if (ins[3])
