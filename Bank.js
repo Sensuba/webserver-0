@@ -22,7 +22,7 @@ var Bank = (() => {
 
 			var parent = get(model.parent);
 			parent.tokens[model.token].parent = parent;
-			return Object.assign({}, parent.model.tokens[model.token], {notoken: model.token});
+			return Object.assign({}, parent.tokens[model.token], {notoken: model.token});
 		}
 		return Object.assign({}, this.list[model]);
 	};

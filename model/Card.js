@@ -925,6 +925,7 @@ class Card {
 				this[k] = parseInt(this[k], 10);
 		}
 		this.model = other.model;
+		this.parent = other.parent;
 		if (this.isType("entity")) {
 			this.update();
 			this.chp = other.chp;
