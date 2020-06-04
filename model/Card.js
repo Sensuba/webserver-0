@@ -1013,23 +1013,23 @@ class Card {
 
 	get eff () {
 
-		var computingcontact = false;
+		this.computingcontact = false;
 
 		var contacteffect = (eff) => {
 
 			if (!this.oncontact)
 				return eff;
-			computingcontact = true;
+			this.computingcontact = true;
 			var res = Object.assign({}, eff);
 			this.cmutations.forEach(cmut => {
 				if (!cmut.targets || cmut.targets(this.oncontact))
 					res = cmut.effect(res);
 			});
-			computingcontact = false;
+			this.computingcontact = false;
 			return res;
 		}
 
-		if (computingcontact)
+		if (this.computingcontact)
 			return this.mutatedState || this;
 		if (this.isEff || this.computing)
 			return contacteffect(this.mutatedState || this);
