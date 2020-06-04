@@ -509,7 +509,7 @@ class Card {
 
 	pushBack () {
 
-		if (!this.onBoard)
+		if (!this.onBoard || this.hasState("static"))
 			return;
 		var back = this.location.tilesBehind.filter(t => t.isEmpty);
 		if (back.length <= 0)
@@ -519,7 +519,7 @@ class Card {
 
 	pushForward () {
 
-		if (!this.onBoard)
+		if (!this.onBoard || this.hasState("static"))
 			return;
 		var forward = this.location.tilesAhead.filter(t => t.isEmpty);
 		if (forward.length <= 0)
