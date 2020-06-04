@@ -76,6 +76,7 @@ var HasShield = require('./HasShield');
 var FilterCard = require('./FilterCard');
 var FilterModel = require('./FilterModel');
 var FilterStats = require('./FilterStats');
+var FilterEffect = require('./FilterEffect');
 var FilterVariable = require('./FilterVariable');
 var CheckCard = require('./CheckCard');
 var CheckTile = require('./CheckTile');
@@ -266,6 +267,7 @@ class Reader {
 			case "filtercard": bloc = new FilterCard(card, ctx); break;
 			case "filtermodel": bloc = new FilterModel(card, ctx); break;
 			case "filterstats": bloc = new FilterStats(card, ctx); break;
+			case "filtereffect": bloc = new FilterEffect(card, ctx); break;
 			case "filtervar": bloc = new FilterVariable(card, ctx); break;
 			case "countcards": bloc = new CountCards(card, ctx); break;
 			case "counttiles": bloc = new CountTiles(card, ctx); break;
