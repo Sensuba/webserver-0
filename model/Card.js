@@ -618,12 +618,14 @@ class Card {
 			return;
 		}
 		this.oncontact = target;
+		target.oncontact = this;
 		var dmg1 = target.damage(this.eff.atk, this, true);
 		var dmg2;
 		if (!this.eff.states.initiative)
 			dmg2 = target.ripost(this);
 		if (dmg2) dmg2(); if (dmg1) dmg1();
 		this.oncontact = null;
+		target.oncontact = null;
 		if (!target.isType("artifact"))
 			this.gameboard.notify("charcontact", this, target);
 		this.gameboard.update();
@@ -632,10 +634,8 @@ class Card {
 	ripost (other) {
 
 		var res = () => {};
-		other.oncontact = this;
 		if (this.isType("figure") && this.eff.atk > 0)
 			res = other.damage(this.eff.atk, this, true);
-		other.oncontact = null;
 		return res;
 	}
 
@@ -1013,11 +1013,9 @@ class Card {
 
 	get eff () {
 
-		this.computingcontact = false;
-
 		var contacteffect = (eff) => {
 
-			if (!this.oncontact)
+			if (!this.oncontact || this.computingcontact)
 				return eff;
 			this.computingcontact = true;
 			var res = Object.assign({}, eff);
@@ -1029,8 +1027,6 @@ class Card {
 			return res;
 		}
 
-		if (this.computingcontact)
-			return this.mutatedState || this;
 		if (this.isEff || this.computing)
 			return contacteffect(this.mutatedState || this);
 		if (!this.mutatedState)
