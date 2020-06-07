@@ -151,6 +151,8 @@ class Card {
 		}
 		if (this.onBoard && this.isType("secret")) {
 			var secrets = this.innereffects.filter(e => e.type === "secret");
+			if (!this.area || !this.area.isPlaying)
+				this.secretparam = 0;
 			if (secrets.length === 1)
 				this.secreteffect = secrets[0];
 		}
@@ -306,9 +308,9 @@ class Card {
 		return this.states && this.hasState("concealed") ? true : false;
 	}
 
-	get targetable () {
+	targetableBy (other) {
 
-		return !this.exalted && !this.concealed;
+		return !this.exalted && (this.area && other.area && this.area === other.area || !this.concealed);
 	}
 
 	destroy (discard) {
@@ -498,6 +500,7 @@ class Card {
 		delete this.poisondmg;
 		this.breakShield();
 		delete this.blueprint;
+		delete this.variables;
 		this.mana = this.originalMana;
 		this.atk = this.originalAtk;
 		this.hp = this.originalHp;

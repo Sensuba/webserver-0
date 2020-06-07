@@ -212,9 +212,13 @@ class GameBoard {
 
 	heroDies (player) {
 
+		if (this.ended)
+			return;
 		if (this.timer)
 			clearTimeout(this.timer);
-		this.end(1-player);
+		if (this.areas[1-player].hero.destroyed || this.areas[1-player].hero.isGhost)
+			this.end(1-this.currentArea.id.no)
+		else this.end(1-player);
 	}
 }
 

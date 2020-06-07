@@ -57,6 +57,8 @@ class RoomManager extends Manager {
 			}
 			this.game.end = (winner) => {
 				
+				if (this.game.ended)
+					return;
 				this.game.ended = true;
 
 				var custom = players.some(player => typeof player.deck.hero === "object" || player.deck.body.some(card => typeof card === "object"));
@@ -75,7 +77,9 @@ class RoomManager extends Manager {
 				if (players[1-winner])
 					players[1-winner].socket.emit("endgame", {state: 4, credit: creditsL}); // State 4 : lose
 				this.spectators.forEach(spec => spec.socket.emit("endgame", {state: 1})); // State 1 : end
-				console.log("Game " + this.room + " ended normally");
+				var winnername = players[winner] ? players[winner].name || "Anonymous" : "?";
+				var losername = players[1-winner] ? players[1-winner].name || "Anonymous" : "?";
+				console.log("Game " + this.room + " ended | " + winnername + " won over " + losername);
 				console.log("Generated " + (creditsW + creditsL) + " credits");
 			}
 
@@ -91,7 +95,9 @@ class RoomManager extends Manager {
 				console.log("Game " + this.room + " ended by internal error");
 				console.log("Generated 0 credits");
 			}
-			console.log("Started game " + this.room);
+			var hero1 = this.game.areas[0].hero ? this.game.areas[0].hero.nameCard : "?";
+			var hero2 = this.game.areas[1].hero ? this.game.areas[1].hero.nameCard : "?";
+			console.log("Started game " + this.room + " | " + players[0].name + " (" + hero1 + ") vs " + players[1].name + " (" + hero2 + ")");
 			this.private = true;
 			this.start();
 		}
@@ -126,7 +132,7 @@ class RoomManager extends Manager {
 		if (this.players.every(p => p.socket !== socket))
 			return;
 		var same = this.players.length > 1 && this.players[0].name === this.players[1].name;
-		var pdis = this.players.find(p => p.socket !== socket);
+		var pdis = this.players.find(p => p.socket === socket);
 		var name = pdis ? pdis.name : "Anonymous";
 		this.players = this.players.filter(p => p.socket !== socket);
 		if (this.started && !this.finished && this.players.length <= 1) {
@@ -138,7 +144,7 @@ class RoomManager extends Manager {
 			}
 			this.players.forEach(p => p.socket.emit("endgame", {state: 5, credit: c})); // State 5 : connection lost
 			this.spectators.forEach(s => s.socket.emit("endgame", {state: 5}));
-			console.log("Game " + this.room + " ended by connection lost [" + name + "]");
+			console.log("Game " + this.room + " ended | Connection with " + name + " lost");
 			console.log("Generated " + c + " credits");
 		}
 	}

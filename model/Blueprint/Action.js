@@ -18,7 +18,7 @@ class Action extends Bloc {
 
 		var ins = this.computeIn();
 		var req = ins[0];
-		var tar = this.target ? (req ? (src, target) => (req(src, target) && (!target.card || target.card.targetable)) : (src, target) => true) : null;
+		var tar = this.target ? (req ? (src, target) => (req(src, target) && (!target.card || target.card.targetableBy(owner))) : (src, target) => true) : null;
 		owner.faculties.push(new EAction(new Event((src, target) => {
 			if (target)
 				this.chosen = target;
