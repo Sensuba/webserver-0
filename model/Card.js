@@ -411,7 +411,7 @@ class Card {
 			return;
 
 		if (!this.isType("artifact") && src.hasState("corruption")) {
-			this.damage(amt, src);
+			this.damage(amt, src && this.area === src.area ? null : src);
 			return;
 		}
 
