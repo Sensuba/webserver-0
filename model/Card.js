@@ -608,6 +608,8 @@ class Card {
 		if (!auto && (!this.hasState("fury") || this.strikes !== 1 || this.actionPt > 0)) {
 			this.actionPt--;
 			this.strikes = 1;
+		} else if (!auto) {
+			this.strikes = (this.strikes+1)%2
 		}
 		if (!auto)
 			this.motionPt = 0;
