@@ -605,12 +605,12 @@ class Card {
 
 	attack (target, auto = false) {
 
-		if (!auto && (!this.hasState("fury") || this.strikes !== 1 || this.actionPt > 0))
+		if (!auto && (!this.hasState("fury") || this.strikes !== 1 || this.actionPt > 0)) {
 			this.actionPt--;
-		if (!auto) {
-			this.strikes = (this.strikes+1)%2;
-			this.motionPt = 0;
+			this.strikes = 1;
 		}
+		if (!auto)
+			this.motionPt = 0;
 		this.gameboard.notify("charattack", this, target, {type:"bool", value: auto});
 		if (this.retarget) {
 			target = this.retarget;
