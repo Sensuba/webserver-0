@@ -563,7 +563,7 @@ class Card {
 			return false;
 		if (eff.canMove)
 			return true;
-		if ((eff.actionPt || (this.hasState("fury") && !eff.furyStrike)) && (!eff.firstTurn || this.hasState("rush")))
+		if ((eff.actionPt || (this.hasState("fury") && eff.furyState === 1)) && (!eff.firstTurn || this.hasState("rush")))
 			return true;
 
 		return false;
@@ -577,7 +577,7 @@ class Card {
 			return false;
 		if (eff.firstTurn && !this.hasState("rush"))
 			return false;
-		if (!eff.actionPt && (!this.hasState("fury") || eff.furyStrike))
+		if (!eff.actionPt && (!this.hasState("fury") || eff.furyState !== 1))
 			return false;
 		if (target.isType("hero") && this.hasState("cannot attack heroes"))
 			return false;
@@ -605,10 +605,12 @@ class Card {
 
 	attack (target, auto = false) {
 
-		if (!auto && (!this.hasState("fury") || !this.furyStrike || this.actionPt > 0)) {
+		if (!auto && (!this.hasState("fury") || this.furyState !== 1)) {
 			this.actionPt--;
-		} else if (!auto && this.hasState("fury") && !this.furyStrike) {
-			this.furyStrike = true;
+			if (this.furyState === 0)
+				this.furyState = 1; 
+		} else if (!auto && this.hasState("fury") && this.furyState === 1) {
+			this.furyState = 2;
 		}
 		if (!auto)
 			this.motionPt = 0;
@@ -972,7 +974,7 @@ class Card {
 		this.skillPt = 1;
 		this.motionPt = 0;
 		this.firstTurn = true;
-		this.furyStrike = false;
+		this.furyState = 0;
 	}
 
 	refresh () {
@@ -983,7 +985,7 @@ class Card {
 				this.actionPt = 1;
 				this.motionPt = 1;
 				this.firstTurn = false;
-				this.furyStrike = false;
+				this.furyState = 0;
 				if (this.frozen)
 					this.frozenTimer = true;
 			}
