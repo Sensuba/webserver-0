@@ -7,6 +7,8 @@ class Action extends Faculty {
 		super(event, src => {
 			src.actionPt--;
 			src.motionPt = 0;
+			if (src.furyState === 1)
+				src.furyState = 0;
 		}, text);
 	}
 
