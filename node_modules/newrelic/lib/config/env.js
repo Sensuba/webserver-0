@@ -152,7 +152,14 @@ const ENV_MAPPING = {
   },
   trusted_account_key: 'NEW_RELIC_TRUSTED_ACCOUNT_KEY',
   primary_application_id: 'NEW_RELIC_PRIMARY_APPLICATION_ID',
-  account_id: 'NEW_RELIC_ACCOUNT_ID'
+  account_id: 'NEW_RELIC_ACCOUNT_ID',
+  infinite_tracing: {
+    trace_observer: {
+      host: 'NEW_RELIC_INFINITE_TRACING_TRACE_OBSERVER_HOST',
+      port: 'NEW_RELIC_INFINITE_TRACING_TRACE_OBSERVER_PORT'
+    },
+    queue_size: 'NEW_RELIC_INFINITE_TRACING_QUEUE_SIZE'
+  }
 }
 
 // List of environment values which are comma-delimited lists.
@@ -239,7 +246,8 @@ const FLOAT_VARS = new Set([
 
 const INT_VARS = new Set([
   'NEW_RELIC_EXPLAIN_THRESHOLD',
-  'NEW_RELIC_MAX_SQL_SAMPLES'
+  'NEW_RELIC_MAX_SQL_SAMPLES',
+  'NEW_RELIC_INFINITE_TRACING_SPAN_EVENTS_QUEUE_SIZE'
 ])
 
 exports.ENV_MAPPING = ENV_MAPPING

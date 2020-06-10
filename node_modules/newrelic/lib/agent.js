@@ -18,12 +18,12 @@ const NAMES = require('./metrics/names')
 const QueryTraceAggregator = require('./db/query-trace-aggregator')
 const sampler = require('./sampler')
 const TransactionTraceAggregator = require('./transaction/trace/aggregator')
-const SpanEventAggregator = require('./spans/span-event-aggregator')
 const TransactionEventAggregator = require('./transaction/transaction-event-aggregator')
 const Tracer = require('./transaction/tracer')
 const TxSegmentNormalizer = require('./metrics/normalizer/tx_segment')
 const uninstrumented = require('./uninstrumented')
 const util = require('util')
+const createSpanEventAggregator = require('./spans/create-span-event-aggregator')
 
 // Map of valid states to whether or not data collection is valid
 const STATES = {
@@ -84,13 +84,7 @@ function Agent(config) {
     this._beforeMetricDataSend.bind(this)
   )
 
-  // Open tracing.
-  this.spanEventAggregator = new SpanEventAggregator({
-    periodMs: config.event_harvest_config.report_period_ms,
-    limit: config.event_harvest_config.harvest_limits.span_event_data
-  },
-  this.collector,
-  this.metrics)
+  this.spanEventAggregator = createSpanEventAggregator(config, this.collector, this.metrics)
 
   this.transactionNameNormalizer = new MetricNormalizer(this.config, 'transaction name')
   // Segment term based tx renaming for MGI mitigation.
@@ -249,6 +243,10 @@ Agent.prototype.start = function start(callback) {
         agent.startAggregators()
         callback(null, config)
       } else {
+        // For data collection that streams immediately, dont delay capture/sending until
+        // the harvest of everything else has completed.
+        agent.startStreaming()
+
         // Harvest immediately for quicker data display, but after at least 1
         // second or the collector will throw away the data.
         //
@@ -407,6 +405,16 @@ Agent.prototype.stopAggregators = function stopAggregators() {
   this.spanEventAggregator.stop()
   this.transactionEventAggregator.stop()
   this.customEventAggregator.stop()
+}
+
+Agent.prototype.startStreaming = function startStreaming() {
+  if (
+    this.spanEventAggregator.isStream &&
+    this.config.distributed_tracing.enabled &&
+    this.config.span_events.enabled
+  ) {
+    this.spanEventAggregator.start()
+  }
 }
 
 Agent.prototype.startAggregators = function startAggregators() {
@@ -795,6 +803,12 @@ Agent.prototype._transactionFinished = function _transactionFinished(transaction
 Agent.prototype.setLambdaArn = function setLambdaArn(arn) {
   if (this.collector instanceof ServerlessCollector) {
     this.collector.setLambdaArn(arn)
+  }
+}
+
+Agent.prototype.setLambdaFunctionVersion = function setLambdaFunctionVersion(function_version) {
+  if (this.collector instanceof ServerlessCollector) {
+    this.collector.setLambdaFunctionVersion(function_version)
   }
 }
 

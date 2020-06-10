@@ -16,7 +16,8 @@ const SUPPORTABILITY = {
   DEPENDENCIES: 'Supportability/InstalledDependencies',
   NODEJS: 'Supportability/Nodejs',
   REGISTRATION: 'Supportability/Registration',
-  EVENT_HARVEST: 'Supportability/EventHarvest'
+  EVENT_HARVEST: 'Supportability/EventHarvest',
+  INFINITE_TRACING: 'Supportability/InfiniteTracing'
 }
 
 const ERRORS = {
@@ -231,6 +232,15 @@ const SPAN_EVENTS = {
   DROPPED: SUPPORTABILITY.PREFIX + 'SpanEvent/Discarded'
 }
 
+const INFINITE_TRACING = {
+  SEEN: SUPPORTABILITY.INFINITE_TRACING + '/Span/Seen',
+  SENT: SUPPORTABILITY.INFINITE_TRACING + '/Span/Sent',
+  SPAN_RESPONSE_ERROR: SUPPORTABILITY.INFINITE_TRACING + '/Span/Response/Error',
+  SPAN_RESPONSE_GRPC_UNIMPLEMENTED: SUPPORTABILITY.INFINITE_TRACING + '/Span/gRPC/UNIMPLEMENTED',
+  SPAN_RESPONSE_GRPC_STATUS: SUPPORTABILITY.INFINITE_TRACING + '/Span/gRPC/%s',
+  DRAIN_DURATION: SUPPORTABILITY.INFINITE_TRACING + '/Drain/Duration'
+}
+
 module.exports = {
   ACTION_DELIMITER: '/',
   ALL: ALL,
@@ -253,6 +263,7 @@ module.exports = {
   GC: GC,
   HAPI: HAPI,
   HTTP: 'HttpDispatcher',
+  INFINITE_TRACING: INFINITE_TRACING,
   LOOP: LOOP,
   MEMCACHE: MEMCACHE,
   MEMORY: MEMORY,
