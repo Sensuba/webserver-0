@@ -4,6 +4,7 @@ var Card = require("./model/Card");
 var Log = require("./model/Log");
 var Action = require("./model/Action");
 var Event = require("./model/Event");
+var Reader = require("./model/Blueprint/Reader");
 
 class Cloner {
 
@@ -75,10 +76,8 @@ class Cloner {
 			clone.faculties.push(new Action(new Event(() => clone.area.manapool.createReceptacle())));
 			clone.area.hero = clone;
 		}
-		if (clone.blueprint) {
-			var Reader = require("./model/blueprint/Reader");
+		if (clone.blueprint)
 			Reader.read(clone.blueprint, clone);
-		}
 		if (model.activated)
 			clone.activate();
 		return clone;
