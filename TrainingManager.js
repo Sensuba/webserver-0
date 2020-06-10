@@ -1,7 +1,7 @@
 var Manager = require("./Manager");
 var CreditManager = require("./CreditManager");
 var DeckAnalyst = require("./DeckAnalyst");
-var TrainingAI = require("./ai/TrainingAI");
+var TrainingAI = require("./TrainingAI");
 
 class TrainingManager extends Manager {
 

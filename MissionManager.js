@@ -2,7 +2,7 @@ var Manager = require("./Manager");
 var CreditManager = require("./CreditManager");
 var DeckAnalyst = require("./DeckAnalyst");
 var Script = require("./mission/Script");
-var ScriptedAI = require("./ai/ScriptedAI");
+var ScriptedAI = require("./ScriptedAI");
 
 class MissionManager extends Manager {
 

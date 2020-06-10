@@ -1,8 +1,8 @@
 var AI = require("./AI");
-var DuelData = require("./analyse/DuelData");
-var Play = require("./analyse/Play");
-var Cloner = require("./analyse/Cloner");
-var Action = require("../model/Action");
+var DuelData = require("./DuelData");
+var Play = require("./Play");
+var Cloner = require("./Cloner");
+var Action = require("./model/Action");
 
 class TrainingAI extends AI {
 
