@@ -20,6 +20,8 @@ class Card {
 		if (nullify)
 			return;
 		this.id = { type: "card", no: board ? board.registerCard(this) : -1 };
+		if (board)
+			board.register(this);
 		this.equals = other => other.id && this.id.type === other.id.type && this.id.no === other.id.no;
 		this.model = model;
 		this.gameboard = board;

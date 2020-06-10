@@ -15,6 +15,7 @@ class Deck {
 		this.area = area;
 		this.cards = [];
 		this.curse = CURSE_DAMAGE;
+		this.area.gameboard.register(this);
 	}
 
 	init (list, shuffle = true) {

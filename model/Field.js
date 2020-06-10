@@ -10,6 +10,7 @@ class Field {
 		this.tiles = [];
 		for (var i = 0; i < 9; i++)
 			this.tiles.push(new Tile(i + 9 * this.id.no, this));
+		this.area.gameboard.register(this);
 	}
 
 	get front () {

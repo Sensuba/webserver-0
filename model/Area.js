@@ -28,6 +28,7 @@ class Area {
 		this.capsule = new Capsule(this);
 		this.nether = new Nether(this);
 		this.choosebox = new Choosebox(this);
+		this.gameboard.register(this);
 	}
 
 	init (decklist, props) {

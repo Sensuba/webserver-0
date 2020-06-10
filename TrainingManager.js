@@ -8,12 +8,13 @@ class TrainingManager extends Manager {
 	constructor (ai) {
 
 		super("training");
+		this.deck = ai;
 	}
 
 	init (socket, name, avatar, deck) {
 
 		this.socket = socket;
-		this.ai = new TrainingAI(this.game, 1);
+		this.ai = new TrainingAI(this.game, 1, this.deck);
 
 		this.game.send = (type, src, data) => {
 			socket.emit("notification", {type, src, data});
@@ -49,9 +50,14 @@ class TrainingManager extends Manager {
 			try {
 				if (this.game.currentArea.id.no === 0 || this.game.ended)
 					return;
-				this.game.command(this.ai.act(), 1);
-				if (this.game.currentArea.id.no === 1)
-					this.callAI();
+				new Promise(resolve => resolve(this.ai.act())).then(r => {
+					this.game.command(r, 1);
+					if (this.game.currentArea.id.no === 1)
+						this.callAI();
+				}).catch(r => {
+					console.log(r);
+					this.game.command({ type: "endturn" }, 1)
+				})
 			} catch (e) {
 				console.log(e);
 				this.finish();

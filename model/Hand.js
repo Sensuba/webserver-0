@@ -14,6 +14,7 @@ class Hand {
 		this.area = area;
 
 		this.cards = [];
+		this.area.gameboard.register(this);
 	}
 
 	shuffle() {

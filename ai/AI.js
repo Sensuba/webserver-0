@@ -7,6 +7,11 @@ class AI {
 		this.no = no;
 	}
 
+	get area () {
+
+		return this.gameboard ? this.gameboard.areas[this.no] : null;
+	}
+
 	act () {
 
 		return null;

@@ -16,13 +16,16 @@ class GameBoard {
 	init (p1, p2) {
 
 		this.data = {
-			cards: []
+			cards: [],
+			items: {}
 		}
+		this.register(this);
 
 		this.updates = [];
 		this.auras = [];
 		this.subscriptions = {};
 		this.indexSubscription = 0;
+		this.truth = true;
 		this.log = new Log();
 		this.notify("init", this,
 			{type: "string", value: p1.name},
@@ -178,6 +181,18 @@ class GameBoard {
 
 		this.data.cards.push(card);
 		return this.data.cards.length-1;
+	}
+
+	register (item) {
+
+		var id = item.id;
+		this.data.items[id.type] = this.data.items[id.type] || {};
+		this.data.items[id.type][id.no] = item;
+	}
+
+	find (id) {
+
+		return id ? (this.data.items[id.type] ? this.data.items[id.type][id.no] : undefined) : id;
 	}
 
 	update () {

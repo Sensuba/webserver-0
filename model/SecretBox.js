@@ -13,6 +13,7 @@ class SecretBox {
 		this.area = area;
 
 		this.cards = [];
+		this.area.gameboard.register(this);
 }
 
 	get count () {

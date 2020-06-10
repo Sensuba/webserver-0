@@ -12,6 +12,7 @@ class ManaPool {
 		this.receptacles = [];
 		this.gems = 0;
 		this.extramana = 0;
+		this.area.gameboard.register(this);
 	}
 
 	createReceptacle (filled = true) {

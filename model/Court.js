@@ -10,6 +10,7 @@ class Court {
 		this.area = area;
 
 		this.card = null;
+		this.area.gameboard.register(this);
 	}
 
 	get isEmpty () {

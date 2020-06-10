@@ -10,6 +10,7 @@ class Tile {
 		this.field = field;
 
 		this.card = null;
+		this.area.gameboard.register(this);
 	}
 
 	get count () {
