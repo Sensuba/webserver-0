@@ -1,10 +1,10 @@
-var GameBoard = require("../../model/GameBoard");
-var Area = require("../../model/Area");
-var Card = require("../../model/Card");
-var Log = require("../../model/Log");
-var Action = require("../../model/Action");
-var Event = require("../../model/Event");
-var Reader = require("../../model/blueprint/Reader");
+var GameBoard = require("./../../model/GameBoard");
+var Area = require("./../../model/Area");
+var Card = require("./../../model/Card");
+var Log = require("./../../model/Log");
+var Action = require("./../../model/Action");
+var Event = require("./../../model/Event");
+var Reader = require("./../../model/blueprint/Reader");
 
 class Cloner {
 
