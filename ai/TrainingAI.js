@@ -17,8 +17,6 @@ class TrainingAI extends AI {
 	async act () {
 
 		var plays = this.generatePlays();
-		//var state = this.computeBoardState();//console.log(state.areas[1].hand.cards.map(c => c.nameCard));
-		//console.log(state.areas[0].field.tiles[6].card.nameCard);
 		var state = this.computeBoardState();
 		var current = this.compute(state);
 
