@@ -79,8 +79,10 @@ class MissionManager extends Manager {
 
 	kick () {
 
-		this.finish();
-		console.log("Mission ended by connection lost");
+		if (!this.game.ended) {
+			this.finish();
+			console.log("Mission ended by connection lost");
+		}
 	}
 }
 

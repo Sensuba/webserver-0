@@ -149,5 +149,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 
 	socket.on('quit', quit);
 
-	socket.on('disconnect', quit);
+	socket.on('disconnect', () => {console.log("disconnect");
+		quit()
+	});
 });

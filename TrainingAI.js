@@ -149,7 +149,7 @@ class TrainingAI extends AI {
 			return value;
 		}
 
-		var hBoardEffect = Math.pow(area.field.entities.filter(e => e.isType("figure")).reduce((acc, e) => acc + effectPower(e), 0), 0.9) * 300;
+		var hBoardEffect = Math.pow(area.field.entities.filter(e => e.isType("figure")).reduce((acc, e) => acc + effectPower(e), 0), 0.9) * 200;
 			-  Math.pow(area.opposite.field.entities.filter(e => e.isType("figure")).reduce((acc, e) => acc + effectPower(e), 0), 0.9) * 500;
 
 		var hHeroCover = heuristic(h => h.field.entities.filter(e => e.cover(h.hero, false)).length * (2.5 - h.hero.chp/3000), 0.8, 300);
@@ -165,7 +165,7 @@ class TrainingAI extends AI {
 			value += e.faculties ? e.faculties.reduce((acc, f) => acc + (f instanceof Action ? 4 : 0.5), 0) : 0;
 			value += e.passives ? e.passives.length * 2 : 0;
 			return value;
-		}, 0), 0.8, 200);
+		}, 0), 0.9, 120);
 
 		var hHandSize = heuristic(h => h.hand.count, 0.85, 600);
 

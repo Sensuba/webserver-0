@@ -81,8 +81,10 @@ class TrainingManager extends Manager {
 
 	kick () {
 
-		this.finish();
-		console.log("Training ended by connection lost");
+		if (!this.game.ended) {
+			this.finish();
+			console.log("Training ended by connection lost");
+		}
 	}
 }
 
