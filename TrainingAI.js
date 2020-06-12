@@ -101,46 +101,51 @@ class TrainingAI extends AI {
 			state = this.gameboard;
 		var area = state.areas[this.no];
 		var plays = [];
-		area.hand.cards.forEach(c => {
-			if (c.canBePlayed) {
-				if (c.targets.length === 0)
-					plays.push(new Play("play", c));
-				else area.gameboard.tiles.forEach(t => {
-					if (c.canBePlayedOn([t])) {
-						if (c.targets.length === 1)
-							plays.push(new Play("play", c, t));
-						else area.gameboard.tiles.forEach(t2 => {
-							if (c.canBePlayedOn([t, t2]))
-								plays.push(new Play("play", c, t, t2));
-						})
-					}
-				})
-			}
-		})
-		area.field.entities.forEach(c => {
-			c.faculties.forEach((f, i) => {
-				if (!f.event.requirement)
-					if (c.canUse(f))
-						plays.push(new Play("faculty", c, i));
-				else area.gameboard.tiles.forEach(t => {
-					if (c.canUse(f, t))
-						plays.push(new Play("faculty", c, i, t));
-				})
-			})
-			if (c.canAct) {
-				area.opposite.field.entities.forEach(e => {
-					if (c.canAttack(e)) {
-						plays.push(new Play("attack", c, e));
-					}
-				})
-				if (c.canMove) {
-					c.location.adjacents.forEach(t => {
-						if (c.canMoveOn(t))
-							plays.push(new Play("move", c, t));
+
+		if (area.choosebox.opened) {
+			area.choosebox.cards.forEach(c => plays.push(new Play("choose", c)));
+		} else {
+			area.hand.cards.forEach(c => {
+				if (c.canBePlayed) {
+					if (c.targets.length === 0)
+						plays.push(new Play("play", c));
+					else area.gameboard.tiles.forEach(t => {
+						if (c.canBePlayedOn([t])) {
+							if (c.targets.length === 1)
+								plays.push(new Play("play", c, t));
+							else area.gameboard.tiles.forEach(t2 => {
+								if (c.canBePlayedOn([t, t2]))
+									plays.push(new Play("play", c, t, t2));
+							})
+						}
 					})
 				}
-			}
-		})
+			})
+			area.field.entities.forEach(c => {
+				c.faculties.forEach((f, i) => {
+					if (!f.event.requirement)
+						if (c.canUse(f))
+							plays.push(new Play("faculty", c, i));
+					else area.gameboard.tiles.forEach(t => {
+						if (c.canUse(f, t))
+							plays.push(new Play("faculty", c, i, t));
+					})
+				})
+				if (c.canAct) {
+					area.opposite.field.entities.forEach(e => {
+						if (c.canAttack(e)) {
+							plays.push(new Play("attack", c, e));
+						}
+					})
+					if (c.canMove) {
+						c.location.adjacents.forEach(t => {
+							if (c.canMoveOn(t))
+								plays.push(new Play("move", c, t));
+						})
+					}
+				}
+			})
+		}
 		return plays;
 	}
 
