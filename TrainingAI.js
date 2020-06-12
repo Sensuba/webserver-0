@@ -59,7 +59,13 @@ class TrainingAI extends AI {
 		}
 
 		var i = values.length;
-		values.push(maxValue(this.computeBoardState(plays[i]), 1, current));
+		var value = 0;
+		try {
+			value = maxValue(this.computeBoardState(plays[i]), 1, current);
+		} catch {
+			value = 0;
+		}
+		values.push(value);
 		if (i+1 >= plays.length)
 			this.completeComputation(callback, state, plays, current, values);
 		else setTimeout(() => this.computePlays(callback, state, plays, current, values), 50);
