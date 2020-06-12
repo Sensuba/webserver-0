@@ -5,16 +5,18 @@ var TrainingAI = require("./TrainingAI");
 
 class TrainingManager extends Manager {
 
-	constructor (ai) {
+	constructor (ai, call) {
 
 		super("training");
 		this.deck = ai;
+		this.call = call;
 	}
 
 	init (socket, name, avatar, deck) {
 
 		this.socket = socket;
-		this.ai = new TrainingAI(this.game, 1, this.deck);
+		this.ai = new TrainingAI(this.game, 1, this.deck, this.call);
+		this.name = name;
 
 		this.game.send = (type, src, data) => {
 			socket.emit("notification", {type, src, data});
@@ -42,7 +44,7 @@ class TrainingManager extends Manager {
 		} catch (e) {
 			console.log(e);
 			socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
-			console.log("Training ended by internal error");
+			console.log("Training for " + (this.name || "Anonymous") + " ended by internal error");
 		}
 
 		var hero1 = this.game.areas[0].hero ? this.game.areas[0].hero.nameCard : "?";
@@ -64,7 +66,7 @@ class TrainingManager extends Manager {
 				console.log(e);
 				this.finish();
 				this.socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
-				console.log("Training ended by internal error");
+				console.log("Training for " + (this.name || "Anonymous") + " ended by internal error");
 			}
 		})	
 	}
@@ -77,7 +79,7 @@ class TrainingManager extends Manager {
 			console.log(e);
 			this.finish();
 			this.socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
-			console.log("Training ended by internal error");
+			console.log("Training for " + (this.name || "Anonymous") + " ended by internal error");
 		}
 	}
 
@@ -85,7 +87,7 @@ class TrainingManager extends Manager {
 
 		if (!this.game.ended) {
 			this.finish();
-			console.log("Training ended by connection lost");
+			console.log("Training for " + (this.name || "Anonymous") + " ended by connection lost");
 		}
 	}
 }

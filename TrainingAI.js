@@ -15,12 +15,13 @@ var CoverHeuristic = require("./heuristics/CoverHeuristic");
 
 class TrainingAI extends AI {
 
-	constructor (gameboard, no, deck) {
+	constructor (gameboard, no, deck, call) {
 
 		super(gameboard, no);
 		this.deck = deck;
 		this.data = new DuelData();
 		this.cloner = new Cloner();
+		this.call = call;
 	}
 
 	act (callback) {
@@ -31,7 +32,8 @@ class TrainingAI extends AI {
 
 		var values = [];
 
-		setTimeout(() => this.computePlays(callback, state, plays, current, values), 50);
+		this.call([this, callback, state, plays, current, values]);
+		//setTimeout(() => this.computePlays(callback, state, plays, current, values), 50);
 		
 		//var values = plays.map(p => maxValue(this.computeBoardState(p), 1, current));
 		//console.log(values.map((v,i) => {return {v: v, p: plays[i].command};}))
@@ -46,11 +48,11 @@ class TrainingAI extends AI {
 			if (pvalue > 100)
 				return pvalue/i;
 			//if ((pvalue - current) < (i-2) * 300 || (i >= 2 && pvalue < c) || (i >= 3 && pvalue < c + 300) || i > 3)
-			if ((i >= 2 && pvalue < c) || i > 3)
+			if ((i >= 2 && pvalue < c) || (i >= 3 && pvalue < c + 0.2) || i > 3)
 				return pvalue;
 			var pplays = this.generatePlays(s);
 			//while ((i == 1 && pplays.length > 15) || (i == 2 && pplays.length > 5) || (i >= 3 && pplays.length > 2))
-			while ((i == 1 && pplays.length > 15) || (i == 2 && pplays.length > 8) || (i >= 3 && pplays.length > 3))
+			while ((i == 2 && pplays.length > 8) || (i >= 3 && pplays.length > 3))
 				pplays = pplays.splice(Math.floor(Math.random()*pplays.length), 1);
 			var pvalues = pplays.map(p => maxValue(this.computeBoardState(p, s), i+1, Math.max(c, pvalue)));
 			s.command({ type: "endturn" }, this.no);
@@ -68,7 +70,8 @@ class TrainingAI extends AI {
 		values.push(value);
 		if (i+1 >= plays.length)
 			this.completeComputation(callback, state, plays, current, values);
-		else setTimeout(() => this.computePlays(callback, state, plays, current, values), 50);
+		else this.call([this, callback, state, plays, current, values], true);
+		//setTimeout(() => this.computePlays(callback, state, plays, current, values), 50);
 	}
 
 	completeComputation (callback, state, plays, current, values) {
@@ -88,6 +91,7 @@ class TrainingAI extends AI {
 			callback(plays[imax].command);
 		}
 		else callback({ type: "endturn" });
+		this.call();
 	}
 
 	generatePlays (state) {
@@ -117,15 +121,6 @@ class TrainingAI extends AI {
 				}
 			})
 			area.field.entities.forEach(c => {
-				c.faculties.forEach((f, i) => {
-					if (!f.event.requirement)
-						if (c.canUse(f))
-							plays.push(new Play("faculty", c, i));
-					else area.gameboard.tiles.forEach(t => {
-						if (c.canUse(f, t))
-							plays.push(new Play("faculty", c, i, t));
-					})
-				})
 				if (c.canAct) {
 					area.opposite.field.entities.forEach(e => {
 						if (c.canAttack(e)) {
@@ -139,6 +134,15 @@ class TrainingAI extends AI {
 						})
 					}
 				}
+				c.faculties.forEach((f, i) => {
+					if (!f.event.requirement)
+						if (c.canUse(f))
+							plays.push(new Play("faculty", c, i));
+					else area.gameboard.tiles.forEach(t => {
+						if (c.canUse(f, t))
+							plays.push(new Play("faculty", c, i, t));
+					})
+				})
 			})
 		}
 		return plays;
