@@ -19,7 +19,7 @@ class TrainingManager extends Manager {
 		this.game.send = (type, src, data) => {
 			socket.emit("notification", {type, src, data});
 			if (type === "newturn" && src.no === 1)
-				this.callAI();
+				setTimeout(() => this.callAI(), 50);
 		}
 		this.game.whisper = (type, no, src, ...data) => no === 0 ? socket.emit("notification", {type, src, data}) : {};
 		this.game.end = (winner) => {
@@ -46,25 +46,21 @@ class TrainingManager extends Manager {
 
 	callAI () {
 
-		setTimeout(() => {
+		if (this.game.currentArea.id.no === 0 || this.game.ended)
+			return;
+		this.ai.act(cmd => {
 			try {
-				if (this.game.currentArea.id.no === 0 || this.game.ended)
-					return;
-				new Promise(resolve => resolve(this.ai.act())).then(r => {
-					this.game.command(r, 1);
-					if (this.game.currentArea.id.no === 1)
-						this.callAI();
-				}).catch(r => {
-					console.log(r);
-					this.game.command({ type: "endturn" }, 1)
-				})
+			console.log(cmd);
+				this.game.command(cmd, 1);
+				if (this.game.currentArea.id.no === 1)
+					setTimeout(() => this.callAI(), 50);
 			} catch (e) {
 				console.log(e);
 				this.finish();
 				this.socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
 				console.log("Training ended by internal error");
 			}
-		}, 500);
+		})	
 	}
 
 	command (socket, cmd) {

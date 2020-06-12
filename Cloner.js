@@ -50,8 +50,9 @@ class Cloner {
 			if (k === "id")
 				continue;
 			clone[k] = data[k];
-			if (!isNaN(clone[k]))
+			if (!isNaN(clone[k])) {
 				clone[k] = parseInt(clone[k], 10);
+			}
 		}
 		clone.model = model.model;
 		clone.identified = [false, false];
@@ -62,6 +63,8 @@ class Cloner {
 		clone.innereffects = [];
 		clone.mutations = [];
 		clone.cmutations = [];
+		clone.firstTurn = model.firstTurn;
+		clone.motionPt = model.motionPt;
 		clone.states = Object.assign({}, model.states);
 		clone.variables = {};
 		if (model.variables)

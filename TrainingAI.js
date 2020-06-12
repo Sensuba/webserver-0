@@ -4,6 +4,15 @@ var Play = require("./Play");
 var Cloner = require("./Cloner");
 var Action = require("./model/Action");
 
+var WinHeuristic = require("./heuristics/WinHeuristic");
+var HPHeuristic = require("./heuristics/HPHeuristic");
+var ManaHeuristic = require("./heuristics/ManaHeuristic");
+var GemHeuristic = require("./heuristics/GemHeuristic");
+var HeroLevelHeuristic = require("./heuristics/HeroLevelHeuristic");
+var HandSizeHeuristic = require("./heuristics/HandSizeHeuristic");
+var BoardPresenceHeuristic = require("./heuristics/BoardPresenceHeuristic");
+var CoverHeuristic = require("./heuristics/CoverHeuristic");
+
 class TrainingAI extends AI {
 
 	constructor (gameboard, no, deck) {
@@ -14,30 +23,61 @@ class TrainingAI extends AI {
 		this.cloner = new Cloner();
 	}
 
-	async act () {
+	act (callback) {
 
-		var plays = this.generatePlays();
 		var state = this.computeBoardState();
+		var plays = this.generatePlays(state);
 		var current = this.compute(state);
+
+		var values = [];
+
+		setTimeout(() => this.computePlays(callback, state, plays, current, values), 50);
+		
+		//var values = plays.map(p => maxValue(this.computeBoardState(p), 1, current));
+		//console.log(values.map((v,i) => {return {v: v, p: plays[i].command};}))
+
+	}
+
+	computePlays (callback, state, plays, current, values) {
 
 		var maxValue = (s, i, c) => {
 
 			var pvalue = this.compute(s);
-			if ((pvalue - current) < (i-2) * 300 || (i >= 2 && pvalue < c) || (i >= 3 && pvalue < c + 300) || i > 3)
+			//if ((pvalue - current) < (i-2) * 300 || (i >= 2 && pvalue < c) || (i >= 3 && pvalue < c + 300) || i > 3)
+			if ((i >= 2 && pvalue < c) || i > 3)
 				return pvalue;
 			var pplays = this.generatePlays(s);
-			while ((i == 1 && pplays.length > 15) || (i == 2 && pplays.length > 5) || (i >= 3 && pplays.length > 2))
+			//while ((i == 1 && pplays.length > 15) || (i == 2 && pplays.length > 5) || (i >= 3 && pplays.length > 2))
+			while ((i == 1 && pplays.length > 15) || (i == 2 && pplays.length > 8) || (i >= 3 && pplays.length > 3))
 				pplays = pplays.splice(Math.floor(Math.random()*pplays.length), 1);
 			var pvalues = pplays.map(p => maxValue(this.computeBoardState(p, s), i+1, Math.max(c, pvalue)));
+			s.command({ type: "endturn" }, this.no);
+			pvalue = this.compute(s);
 			return pvalues.reduce((max, v) => Math.max(max, v), pvalue);
 		}
-		
-		var values = plays.map(p => maxValue(this.computeBoardState(p), 1, current));
 
-		if (plays.length > 0 && values.some(v => v > current))
-			return plays[values.indexOf(Math.max(...values))].command;
+		var i = values.length;
+		values.push(maxValue(this.computeBoardState(plays[i]), 1, current));
+		if (i+1 >= plays.length)
+			this.completeComputation(callback, state, plays, current, values);
+		else setTimeout(() => this.computePlays(callback, state, plays, current, values), 50);
+	}
 
-		return { type: "endturn" };
+	completeComputation (callback, state, plays, current, values) {
+
+		state.command({ type: "endturn" }, this.no);
+		current = this.compute(state);
+
+		if (plays.length > 0 && values.some(v => v > current)) {
+			var vmax = current, imax = 0;
+			for (var i = 0; i < values.length; i++)
+				if (values[i] > vmax) {
+					imax = i;
+					vmax = values[i];
+				}
+			callback(plays[imax].command);
+		}
+		else callback({ type: "endturn" });
 	}
 
 	generateDeck () {
@@ -78,19 +118,20 @@ class TrainingAI extends AI {
 			}
 		})
 		area.field.entities.forEach(c => {
-			if (c.canAct) {
-				c.faculties.forEach((f, i) => {
-					if (!f.event.requirement)
-						if (c.canUse(f))
-							plays.push(new Play("faculty", c, i));
-					else area.gameboard.tiles.forEach(t => {
-						if (c.canUse(f, t))
-							plays.push(new Play("faculty", c, i, t));
-					})
+			c.faculties.forEach((f, i) => {
+				if (!f.event.requirement)
+					if (c.canUse(f))
+						plays.push(new Play("faculty", c, i));
+				else area.gameboard.tiles.forEach(t => {
+					if (c.canUse(f, t))
+						plays.push(new Play("faculty", c, i, t));
 				})
+			})
+			if (c.canAct) {
 				area.opposite.field.entities.forEach(e => {
-					if (c.canAttack(e))
+					if (c.canAttack(e)) {
 						plays.push(new Play("attack", c, e));
+					}
 				})
 				if (c.canMove) {
 					c.location.adjacents.forEach(t => {
@@ -117,7 +158,7 @@ class TrainingAI extends AI {
 
 		var area = state.areas[this.no];
 
-		var heuristic = (h, pow, mlt) => Math.pow(h(area), pow) * mlt - Math.pow(h(area.opposite), pow) * mlt;
+		/*var heuristic = (h, pow, mlt) => Math.pow(h(area), pow) * mlt - Math.pow(h(area.opposite), pow) * mlt;
 
 		var hHeroLethal = heuristic(h => h.hero.destroyed ? 100000 : 0, 1, -1);
 
@@ -169,7 +210,18 @@ class TrainingAI extends AI {
 
 		var hHandSize = heuristic(h => h.hand.count, 0.85, 600);
 
-		var value = hHeroLethal + hHeroHp + hManaReceptacles + hGems + hBoardPresence + hBoardPower + hHeroCover + hBoardCover + hHandSize + hHeroLevel;
+		var value = hHeroLethal + hHeroHp + hManaReceptacles + hGems + hBoardPresence + hBoardPower + hHeroCover + hBoardCover + hHandSize + hHeroLevel;*/
+
+		var win = new WinHeuristic(state, this.no).compute();
+		var hp = new HPHeuristic(state, this.no).compute();
+		var mana = new ManaHeuristic(state, this.no).compute();
+		var gems = new GemHeuristic(state, this.no).compute();
+		var hand = new HandSizeHeuristic(state, this.no).compute();
+		var level = new HeroLevelHeuristic(state, this.no).compute();
+		var board = new BoardPresenceHeuristic(state, this.no).compute();
+		var cover = new CoverHeuristic(state, this.no).compute();
+
+		var value = win * 10000 + hp * 3 + mana * 2 + gems + level * 0.6 + hand * 2 + board * 2.5 + cover;
 
 		return value;
 	}
