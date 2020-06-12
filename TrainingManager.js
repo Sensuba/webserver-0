@@ -29,6 +29,7 @@ class TrainingManager extends Manager {
 				CreditManager.creditPlayer(name, c);
 				this.socket.emit("endgame", {state: winner === 0 ? 3 : 4, credit: c});
 				console.log("Training for " + (name || "Anonymous") + " ended normally");
+				console.log("Generated " + c + " credits");
 			}
 		
 		try {
@@ -44,7 +45,9 @@ class TrainingManager extends Manager {
 			console.log("Training ended by internal error");
 		}
 
-		console.log((name || "Anonymous") + " started training");
+		var hero1 = this.game.areas[0].hero ? this.game.areas[0].hero.nameCard : "?";
+		var hero2 = this.game.areas[1].hero ? this.game.areas[1].hero.nameCard : "?";
+		console.log("Started training | " + (name || "Anonymous") + " (" + hero1 + ") vs CPU (" + hero2 + ")");
 	}
 
 	callAI () {
