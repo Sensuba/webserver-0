@@ -19,7 +19,7 @@ class BoardPresenceHeuristic extends Heuristic {
 			if (e.isType("hero"))
 				return;
 
-			count++;
+			count += e.isType("artifact") ? 2/5 : 1;
 
 			["initiative", "exaltation", "fury", "immune", "concealed", "lethal", "cover neighbors"].forEach(state => { if (e.hasState(state)) effectValue++; });
 			if (e.shield)
@@ -28,7 +28,7 @@ class BoardPresenceHeuristic extends Heuristic {
 			if (e.atk)
 				atkValue += e.eff.atk;
 			if (e.chp)
-				hpValue += e.chp;
+				hpValue += e.isType("artifact") ? e.chp/4 : e.chp;
 		})
 
 		return atkValue + hpValue + (atkValue*hpValue/3000) + effectValue * 400 + count * 500;

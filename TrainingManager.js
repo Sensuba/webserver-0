@@ -25,7 +25,9 @@ class TrainingManager extends Manager {
 		this.game.end = (winner) => {
 				
 				this.game.ended = true;
-				this.socket.emit("endgame", {state: winner === 0 ? 3 : 4, credit: 0});
+				var c = CreditManager.compute(Date.now() - this.date, this.game.log.logs.length);
+				CreditManager.creditPlayer(name, c);
+				this.socket.emit("endgame", {state: winner === 0 ? 3 : 4, credit: c});
 				console.log("Training for " + (name || "Anonymous") + " ended normally");
 			}
 		
@@ -34,7 +36,8 @@ class TrainingManager extends Manager {
 				{ name, avatar, socket, deck },
 				{ name: "AI", deck: this.ai.deck }
 			);
-			this.game.start(this.game.areas[Math.floor(Math.random(0, 2))]);
+			this.game.start();
+			this.date = Date.now();
 		} catch (e) {
 			console.log(e);
 			socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error

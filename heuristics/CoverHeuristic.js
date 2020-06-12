@@ -6,13 +6,13 @@ class CoverHeuristic extends Heuristic {
 	constructor (board, no) {
 
 		super(board, no);
-		this.halfvalue = 3500;
+		this.halfvalue = 3800;
 		this.egoism = 0.3;
 	}
 
 	evaluate () {
 
-		var gthreaths = 200, athreaths = 200, figcover = 0, herocover = 0;
+		var gthreaths = 200, athreaths = 200, figcover = 0, herocover = 0, adjacents = 0;
 		var breakpoints = [];
 
 		var evaluateFigure = f => {
@@ -44,8 +44,15 @@ class CoverHeuristic extends Heuristic {
 
 		this.area.field.entities.forEach(e => {
 
+			adjacents += e.location.adjacents.length;
+
 			if (e.isType("hero"))
 				return;
+
+			if (e.hasState("concealed")) {
+				figcover += gthreaths/2 + athreaths/2;
+				return;
+			}
 
 			if (e.cover(this.area.hero))
 				herocover += (e.chp + 500) * gthreaths/500;
@@ -70,7 +77,7 @@ class CoverHeuristic extends Heuristic {
 				}
 			})
 		})
-		herocover = (1 - this.area.hero.chp/(this.area.hero.hp+500)) * herocover;
+		herocover = (1 - this.area.hero.chp/(this.area.hero.hp+500)) * herocover + adjacents * 50;
 
 		return figcover + herocover;
 	}

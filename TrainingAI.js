@@ -43,6 +43,8 @@ class TrainingAI extends AI {
 		var maxValue = (s, i, c) => {
 
 			var pvalue = this.compute(s);
+			if (pvalue > 100)
+				return pvalue/i;
 			//if ((pvalue - current) < (i-2) * 300 || (i >= 2 && pvalue < c) || (i >= 3 && pvalue < c + 300) || i > 3)
 			if ((i >= 2 && pvalue < c) || i > 3)
 				return pvalue;
@@ -65,6 +67,8 @@ class TrainingAI extends AI {
 
 	completeComputation (callback, state, plays, current, values) {
 
+		//console.log(values.map((v, i) => {return{v, p: plays[i]}}));
+
 		state.command({ type: "endturn" }, this.no);
 		current = this.compute(state);
 
@@ -78,21 +82,6 @@ class TrainingAI extends AI {
 			callback(plays[imax].command);
 		}
 		else callback({ type: "endturn" });
-	}
-
-	generateDeck () {
-
-		return {
-		  hero: 3,
-		  body: [
-		    156, 156, 145, 145, 152,
-		    152, 257, 257, 309, 309,
-		    191, 191, 131, 131, 104,
-		    104, 133, 133, 136, 136,
-		    110, 110, 151, 151, 192,
-		    192, 103, 103, 224, 224
-		  ]
-		}
 	}
 
 	generatePlays (state) {
@@ -226,7 +215,7 @@ class TrainingAI extends AI {
 		var board = new BoardPresenceHeuristic(state, this.no).compute();
 		var cover = new CoverHeuristic(state, this.no).compute();
 
-		var value = win * 10000 + hp * 3 + mana * 2 + gems + level * 0.6 + hand * 2 + board * 2.5 + cover;
+		var value = win * 100 + hp * 3 + mana * 3 + gems + level * 0.6 + hand * 2 + board * 2 + cover;
 
 		return value;
 	}

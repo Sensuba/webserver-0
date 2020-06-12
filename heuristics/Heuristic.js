@@ -19,7 +19,9 @@ class Heuristic {
 		var vb = f(this.evaluate()) * (this.egoism > 0 ? 1 - this.egoism : 1 + this.egoism/2);
 		this.switchArea();
 
-		return va - vb;
+		var value = va - vb;
+
+		return isNaN(value) ? 0 : value;
 	}
 
 	get computationFunction () {
