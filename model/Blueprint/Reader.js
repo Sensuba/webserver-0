@@ -147,6 +147,7 @@ var Timer = require('./Timer');
 var ExtraTurn = require('./ExtraTurn');
 
 var Wait = require('./Wait');
+var Blink = require('./Blink');
 var Message = require('./Message');
 var Highlight = require('./Highlight');
 
@@ -315,6 +316,7 @@ class Reader {
 			case "forevent": bloc = new ForEachEvent(card, ctx); break;
 			case "extraturn": bloc = new ExtraTurn(card, ctx); break;
 			case "wait": bloc = new Wait(card, ctx); break;
+			case "blink": bloc = new Blink(card, ctx); break;
 			case "message": bloc = new Message(card, ctx); break;
 			case "highlight": bloc = new Highlight(card, ctx); break;
 			case "opplus": bloc = new Plus(card, ctx); break;
