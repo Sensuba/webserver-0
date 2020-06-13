@@ -159,8 +159,11 @@ class Card {
 				this.secreteffect = secrets[0];
 		}
 		this.identify();
-		if (this.area && loc.hasCard(this))
+		if (this.area && loc.hasCard(this)) {
 			this.gameboard.notify("cardmove", this, loc, former);
+			if (this.onBoard && this.isType("secret"))
+				this.gameboard.notify("secretsetup", this, loc);
+		}
 		/*if (former != null && !destroyed)
 			Notify ("card.move", former, value);
 		if (location is Tile)
