@@ -43,7 +43,7 @@ var computeAI = (ai, next) => {
 		setTimeout(() => {
 			var c = ais[0];
 			ais.shift();
-			c[0].computePlays(c[1], c[2], c[3], c[4], c[5]);
+			c[0].computePlays(c[1], c[2], c[3], c[4], c[5], c[6]);
 		}, 20);
 }
 
@@ -103,13 +103,13 @@ var start = () => io.sockets.on('connection', function (socket) {
 		manager.init(socket, name, avatar);
 	});
 
-	socket.on('training', function(name, avatar, deck, ai){
+	/*socket.on('training', function(name, avatar, deck, ai){
 
 		socket.training = true;
 		socket.manager = new TrainingManager(ai, computeAI);
 		var manager = socket.manager;
 		manager.init(socket, name, avatar, deck);
-	});
+	});*/
 
 	socket.on('prepare', function(token, deck){
 
