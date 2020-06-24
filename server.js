@@ -92,6 +92,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 			rooms[roomname] = new RoomManager(roomname);
 		var manager = rooms[roomname];
 		socket.manager = manager;
+		socket.name = name;
 		manager.join(socket, name, avatar);
 	});
 
@@ -134,6 +135,14 @@ var start = () => io.sockets.on('connection', function (socket) {
 			delete rooms[manager.room];
 			console.log("Room count: " + Object.keys(rooms).length);
 		}
+	});
+
+	socket.on('chat', function(text){
+
+		var manager = socket.manager;
+		if (!manager || !manager.chat)
+			return;
+		manager.chat(socket, text);
 	});
 
 	socket.on('leave', function(){

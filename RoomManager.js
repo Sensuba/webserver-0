@@ -126,6 +126,23 @@ class RoomManager extends Manager {
 		}
 	}
 
+	chat (socket, text) {
+
+		if (socket.name){
+			this.broadcast("chat", { from: socket.name, text });
+			return;
+		}
+
+		if (this.players.find(p => p.socket === socket)) {
+			this.players.forEach(p => p.socket.emit("chat", { from: p.socket === socket ? 0 : 1, text }));
+			var no = this.players[0].socket === socket ? 2 : 3;
+			this.spectators.forEach(s => s.socket.emit("chat", { from: no, text }));
+		} else {
+			this.players.forEach(p => p.socket.emit("chat", { from: 4, text }));
+			this.spectators.forEach(s => s.socket.emit("chat", { from: s.socket === socket ? 0 : 4, text }));
+		}
+	}
+
 	kick (socket) {
 
 		this.spectators = this.spectators.filter(p => p.socket !== socket);
