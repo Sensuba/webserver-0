@@ -73,10 +73,10 @@
 						] }
 					] }
 				], "else": [
-					{ "type": "branch", "condition": { "or": [ { "card": "var", "check": { "name": "Running the Lesson" } }, { "card": "var", "check": { "name": "Party Time" } } ] }, "if": [
+					{ "type": "branch", "condition": { "or": [ { "card": "var", "check": { "name": "Donner la Leçon" } }, { "card": "var", "check": { "name": "L'Heure de la Pause" } } ] }, "if": [
 						{ "type": "play", "src": "var", "value": [] }
 					], "else": [
-						{ "type": "branch", "condition": { "card": "var", "check": { "name": "Stop Playing Around" } }, "if": [
+						{ "type": "branch", "condition": { "card": "var", "check": { "name": "Fini de Jouer" } }, "if": [
 							{ "type": "branch", "condition": { "location": { "area": "opponent's field", "filter": "figure" } }, "if": [
 								{ "type": "branch", "condition": { "location": { "area": "opponent's field", "filter": { "hp": 300 } } }, "if": [
 									{ "type": "play", "src": "var", "value": [ { "area": "opponent's field", "filter": { "hp": 300 } } ] }
@@ -85,7 +85,7 @@
 								] }
 							], "else": [] }
 						], "else": [
-							{ "type": "branch", "condition": { "card": "var", "check": { "name": "Still Learning" } }, "if": [
+							{ "type": "branch", "condition": { "card": "var", "check": { "name": "Toujours Plus à Apprendre" } }, "if": [
 								{ "type": "play", "src": "var", "value": [ { "area": "field", "filter": "figure" } ] }
 							], "else": [
 							] }
