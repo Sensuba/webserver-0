@@ -621,7 +621,7 @@ class Card {
 			this.motionPt = 0;
 		this.gameboard.notify("charattack", this, target, {type:"bool", value: auto});
 		if (this.retarget) {
-			target = this.retarget;
+			target = this.retarget.card;
 			delete this.retarget;
 		}
 		if (this.destroyed || this.isGhost || !this.onBoard) {
