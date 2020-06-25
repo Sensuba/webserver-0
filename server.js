@@ -142,7 +142,9 @@ var start = () => io.sockets.on('connection', function (socket) {
 		var manager = socket.manager;
 		if (!manager || !manager.chat)
 			return;
-		manager.chat(socket, text);
+		if (text.startsWith("/"))
+			manager.chatcommand(socket, text.substr(1));
+		else manager.chat(socket, text);
 	});
 
 	socket.on('leave', function(){
