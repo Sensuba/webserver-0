@@ -946,8 +946,8 @@ class Card {
 			this.php = other.php;
 			if (other.php) {
 				this.mutatedState = this.mutatedState || {};
-				this.mutatedState.hp = data.php.hp;
-				this.mutatedState.chp = data.php.chp;
+				this.mutatedState.hp = other.php.hp;
+				this.mutatedState.chp = other.php.chp;
 			}
 			this.update();
 			this.chp = other.chp;
