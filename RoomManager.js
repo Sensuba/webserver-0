@@ -26,13 +26,15 @@ class RoomManager extends Manager {
 			this.players.push({ name, avatar, socket });
 			console.log((name || "Anonymous") + " joined " + this.room + " as player");
 		} else {
-			socket.emit('joined', {as: 'spectator'});
-			this.spectators.push({ name, socket });
-			this.game.log.logs.forEach(log => {
-				var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
-				socket.emit('notification', {type: log.type, src: log.src.id, data: datamap});
-			})
-			console.log((name || "Anonymous") + " joined " + this.room + " as spectator");
+			if (this.game && this.game.started) {
+				socket.emit('joined', {as: 'spectator'});
+				this.spectators.push({ name, socket });
+				this.game.log.logs.forEach(log => {
+					var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
+					socket.emit('notification', {type: log.type, src: log.src.id, data: datamap});
+				})
+				console.log((name || "Anonymous") + " joined " + this.room + " as spectator");
+			}
 		}
 	}
 
