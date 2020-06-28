@@ -943,6 +943,7 @@ class Card {
 		this.model = other.model;
 		this.parent = other.parent;
 		if (this.isType("entity")) {
+			this.php = other.php;
 			this.update();
 			this.chp = other.chp;
 		}
@@ -968,7 +969,9 @@ class Card {
 			if (this.isType("character"))
 				this.resetSickness();
 		}
-		this.gameboard.notify("transform", this, {data:this.data});
+		var trsdata = this.data;
+		trsdata.php = other.php;
+		this.gameboard.notify("transform", this, {data: trsdata});
 		if (glaze)
 			this.setState("glazed", true);
 	}
