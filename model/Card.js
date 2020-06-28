@@ -944,6 +944,11 @@ class Card {
 		this.parent = other.parent;
 		if (this.isType("entity")) {
 			this.php = other.php;
+			if (other.php) {
+				this.mutatedState = this.mutatedState || {};
+				this.mutatedState.hp = data.php.hp;
+				this.mutatedState.chp = data.php.chp;
+			}
 			this.update();
 			this.chp = other.chp;
 		}
