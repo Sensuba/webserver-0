@@ -51,7 +51,7 @@ var creditsFor = (time, log, floor = true) => {
 
 	var t = (time)/1000;
 	var a = Math.max(0, log-150);
-	var c = Math.max(0, (2.145+(-2.145-0.027)/(1+Math.pow(t/278, 1.93))) * (a/(a+100)) * 13.5);
+	var c = Math.max(0, (2.145+(-2.145-0.027)/(1+Math.pow(t/278, 1.93))) * (a/(a+100)) * 8.5);
 	return floor ? Math.floor(c) : c;
 }
 
@@ -84,7 +84,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 		socket.emit('assign', {to: roomname});
 	});
 
-	socket.on('join', function(name, avatar, roomname){
+	socket.on('join', function(name, avatar, roomname, bonus = false){
 
 		socket.join(roomname);
 		socket.room = roomname;
@@ -93,7 +93,8 @@ var start = () => io.sockets.on('connection', function (socket) {
 		var manager = rooms[roomname];
 		socket.manager = manager;
 		socket.name = name;
-		manager.join(socket, name, avatar);
+		socket.bonus = bonus;
+		manager.join(socket, name, avatar, bonus);
 	});
 
 	socket.on('mission', function(name, avatar, mission){

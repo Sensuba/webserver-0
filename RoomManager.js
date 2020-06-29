@@ -19,11 +19,11 @@ class RoomManager extends Manager {
 		this.spectators.forEach(s => s.socket.emit(e, data));
 	}
 
-	join (socket, name, avatar) {
+	join (socket, name, avatar, bonus) {
 
 		if (!this.started && this.players.length < 2) {
 			socket.emit('joined', {as: 'player', no: this.players.length});
-			this.players.push({ name, avatar, socket });
+			this.players.push({ name, avatar, socket, bonus });
 			console.log((name || "Anonymous") + " joined " + this.room + " as player");
 		} else {
 			if (this.game && this.game.started) {
@@ -85,6 +85,8 @@ class RoomManager extends Manager {
 					var c = CreditManager.compute(Date.now() - this.date, this.game.log.logs.length, false)
 					if (players[winner].name) creditsW = custom ? Math.floor(c * 1.5) : Math.floor(c * 2.5);
 					if (players[1-winner].name) creditsL = custom ? Math.floor(c * 1.5) : Math.floor(c);
+					if (players[winner].bonus) creditsW *= 2;
+					if (players[1-winner].bonus) creditsL *= 2;
 					CreditManager.creditPlayer(players[winner].name, creditsW);
 					CreditManager.creditPlayer(players[1-winner].name, creditsL);
 				}
@@ -131,11 +133,11 @@ class RoomManager extends Manager {
 				this.finish();
 				var c = 0;
 				if (this.players.length > 1 && this.players[0].name !== this.players[1].name) {
-					CreditManager.compute(Date.now() - this.room.date, this.game.log.logs.length);
-					CreditManager.creditPlayer(this.players[0].name, c);
-					CreditManager.creditPlayer(this.players[1].name, c);
+					c = CreditManager.compute(Date.now() - this.room.date, this.game.log.logs.length);
+					CreditManager.creditPlayer(this.players[0].name, c + (this.players[0].bonus ? c : 0));
+					CreditManager.creditPlayer(this.players[1].name, c + (this.players[1].bonus ? c : 0));
 				}
-				this.players.forEach(p => p.socket.emit("endgame", {state: 6, credit: c})); // State 6 : internal error
+				this.players.forEach(p => p.socket.emit("endgame", {state: 6, credit: c + (p.bonus ? c : 0)})); // State 6 : internal error
 				this.spectators.forEach(s => s.socket.emit("endgame", {state: 6}));
 				console.log("Game " + this.room + " ended by internal error");
 				console.log("Generated " + (c * 2) + " credits");
@@ -205,6 +207,7 @@ class RoomManager extends Manager {
 			var c = 0;
 			if (this.players.length > 0 && !same) {
 				c = Math.floor(CreditManager.compute(Date.now() - this.date, this.game.log.logs.length, false) * 2.5);
+				if (this.players[0].bonus) c *= 2;
 				CreditManager.creditPlayer(this.players[0].name, c);
 			}
 			this.players.forEach(p => p.socket.emit("endgame", {state: 5, credit: c})); // State 5 : connection lost
