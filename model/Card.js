@@ -187,7 +187,7 @@ class Card {
 		for (var k in model) {
 			this[k] = model[k];
 			if (typeof this[k] === 'string' && !isNaN(this[k]))
-				this[k] = parseInt(this[k], 10);
+				this[k] = parseFloat(this[k], 10);
 		}
 		this.originalMana = this.mana;
 		this.originalAtk = this.atk;
@@ -938,7 +938,7 @@ class Card {
 				continue;
 			this[k] = data[k];
 			if (!isNaN(this[k]))
-				this[k] = parseInt(this[k], 10);
+				this[k] = parseFloat(this[k], 10);
 		}
 		this.model = other.model;
 		this.parent = other.parent;
