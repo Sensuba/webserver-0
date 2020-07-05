@@ -78,13 +78,13 @@ class RoomManager extends Manager {
 					return;
 				this.game.ended = true;
 
-				var custom = players.some(player => typeof player.deck.hero === "object" || player.deck.body.some(card => typeof card === "object"));
+				var share = this.private || players.some(player => typeof player.deck.hero === "object" || player.deck.body.some(card => typeof card === "object"));
 
 				var creditsW = 0, creditsL = 0;
 				if (players.length > 1 && players[winner].name !== players[1-winner].name) {
 					var c = CreditManager.compute(Date.now() - this.date, this.game.log.logs.length, false)
-					if (players[winner].name) creditsW = custom ? Math.floor(c * 1.5) : Math.floor(c * 2.5);
-					if (players[1-winner].name) creditsL = custom ? Math.floor(c * 1.5) : Math.floor(c);
+					if (players[winner].name) creditsW = share ? Math.floor(c * 1.65) : Math.floor(c * 2.5);
+					if (players[1-winner].name) creditsL = share ? Math.floor(c * 1.65) : Math.floor(c);
 					if (players[winner].bonus) creditsW *= 2;
 					if (players[1-winner].bonus) creditsL *= 2;
 					CreditManager.creditPlayer(players[winner].name, creditsW);
