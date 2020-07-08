@@ -9,7 +9,9 @@ class Cast extends Bloc {
 		this.f = (src, ins) => {
 			var card = ins[0];
 			card.goto(card.area.court);
-			card.gameboard.notify("trap", card);
+			card.autocast = true;
+			var hastarget = card.events.some(event => event.requirement);
+			card.gameboard.notify("trap", card, hastarget ? ins[1] : undefined);
 			card.events.forEach(event => event.execute(card.gameboard, card, ins[1]));
 			card.destroy();
 			card.gameboard.update();

@@ -10,13 +10,22 @@ class OpenChoosebox extends Bloc {
 		this.f = (src, ins) => {
 			var choosebox = src.gameboard.currentArea.choosebox;
 			if (!choosebox.isEmpty)
-				choosebox.open(choice => {
+				if (src.autocast) {
+					let choice = choosebox.cards[Math.floor(Math.random() * choosebox.cards.length)];
 					if (ins[0])
 						choosebox.cards.forEach(card => card.anihilate());
 					that.out = [choice];
 					if (that.to)
 						that.to.execute(that.toprops);
-				});
+				} else {
+					choosebox.open(choice => {
+						if (ins[0])
+							choosebox.cards.forEach(card => card.anihilate());
+						that.out = [choice];
+						if (that.to)
+							that.to.execute(that.toprops);
+					});
+				}
 			return [];
 		};
 		this.types = [Types.bool];
