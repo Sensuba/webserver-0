@@ -6,7 +6,10 @@ class DoesCover extends Bloc {
 	constructor (src, ctx) {
 
 		super("cover", src, ctx);
-		this.f = (src, ins) => [ins[0].cover(ins[1], false) || ins[0].cover(ins[1], true), ins[0].cover(ins[1], false), ins[0].cover(ins[1], true)];
+		this.f = (src, ins) =>  {
+			var card = ins[0].original || ins[0];
+			return [card.cover(ins[1], false) || card.cover(ins[1], true), card.cover(ins[1], false), card.cover(ins[1], true)];
+		}
 		this.types = [Types.card, Types.card];
 	}
 }
