@@ -913,9 +913,12 @@ class Card {
 	transform (model) {
 
 		this.model = model;
-		var variables = Object.assign({}, this.variables);
+		if (!model.idCardmodel)
+			delete this.idCardmodel;
+		//var variables = Object.assign({}, this.variables);
+		delete this.variables;
 		this.resetBody();
-		this.variables = variables;
+		//this.variables = variables;
 
 		if (this.onBoard) {
 			this.skillPt = 1;
