@@ -16,7 +16,7 @@ class Trap extends Bloc {
 		var that = this;
 		var listener = new Listener(owner, () => that.src.gameboard.subscribe("draw", (t,s,d) => {
 			if (d[0] === owner) {
-				var act = () => {
+				that.act = () => {
 					owner.goto(owner.area.court);
 					owner.gameboard.notify("trap", owner);
 					that.execute({src: owner, image: image});
@@ -24,12 +24,12 @@ class Trap extends Bloc {
 					owner.gameboard.update();
 				}
 				if (owner.area.court.isEmpty)
-					act();
+					that.act();
 				else {
 					owner.goto(owner.area.capsule);
 					that.unsub = that.src.gameboard.subscribe("cardmove", (t2,s2,d2) => {
 						if (owner.area.court.isEmpty) {
-							act();
+							that.act();
 							that.unsub();
 							delete that.unsub;
 						}
