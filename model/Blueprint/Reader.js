@@ -114,6 +114,7 @@ var BreakLocation = require('./BreakLocation');
 var BreakPlayer = require('./BreakPlayer');
 
 var Archetype = require('./Archetype');
+var Category = require('./Category');
 var Color = require('./Color');
 var Extremum = require('./Extremum');
 var CurrentPlayer = require('./CurrentPlayer');
@@ -282,6 +283,7 @@ class Reader {
 			case "target": bloc = new TargetData(card, ctx); break;
 			case "extremum": bloc = new Extremum(card, ctx); break;
 			case "archetype": bloc = new Archetype(card, ctx); break;
+			case "category": bloc = new Category(card, ctx); break;
 			case "color": bloc = new Color(card, ctx); break;
 			case "analyse": bloc = new Analyse(card, ctx); break;
 			case "innerdata": bloc = new InnerData(card, ctx); break;
