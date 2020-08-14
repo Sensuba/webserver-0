@@ -29,9 +29,9 @@ class Trap extends Bloc {
 					owner.goto(owner.area.capsule);
 					that.unsub = that.src.gameboard.subscribe("cardmove", (t2,s2,d2) => {
 						if (owner.area.court.isEmpty) {
-							that.act();
 							that.unsub();
 							delete that.unsub;
+							that.act();
 						}
 					});
 				}

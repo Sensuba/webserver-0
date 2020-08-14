@@ -58,7 +58,7 @@ class TrainingManager extends Manager {
 			return;
 		this.ai.act(cmd => {
 			try {
-			//console.log(cmd);
+			console.log(cmd);
 				this.game.command(cmd, 1);
 				if (this.game.currentArea.id.no === 1)
 					setTimeout(() => this.callAI(), 50);

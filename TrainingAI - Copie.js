@@ -1,7 +1,6 @@
 var AI = require("./AI");
 var DuelData = require("./DuelData");
 var Play = require("./Play");
-var Group = require("./PlayGroup");
 var Cloner = require("./Cloner");
 var Action = require("./model/Action");
 
@@ -31,7 +30,9 @@ class TrainingAI extends AI {
 		var plays = this.generatePlays(state);
 		var current = this.compute(state);
 
-		this.call([this, callback, state, plays, current, 0, 0]);
+		var values = [];
+
+		this.call([this, callback, state, plays, current, values]);
 		//setTimeout(() => this.computePlays(callback, state, plays, current, values), 50);
 		
 		//var values = plays.map(p => maxValue(this.computeBoardState(p), 1, current));
@@ -39,72 +40,55 @@ class TrainingAI extends AI {
 
 	}
 
-	computePlays (callback, state, plays, current, groupindex, playindex) {
+	computePlays (callback, state, plays, current, values) {
 
-		if (groupindex >= plays.length) {
-			this.completeComputation(callback, state, plays, current);
-			return;
+		var maxValue = (s, i, c) => {
+
+			var pvalue = this.compute(s);
+			if (pvalue > 100)
+				return pvalue/i;
+			//if ((pvalue - current) < (i-2) * 300 || (i >= 2 && pvalue < c) || (i >= 3 && pvalue < c + 300) || i > 3)
+			if ((i >= 2 && pvalue < c) || (i >= 3 && pvalue < c + 0.2) || i > 3)
+				return pvalue;
+			var pplays = this.generatePlays(s);
+			//while ((i == 1 && pplays.length > 15) || (i == 2 && pplays.length > 5) || (i >= 3 && pplays.length > 2))
+			while ((i == 2 && pplays.length > 8) || (i >= 3 && pplays.length > 3))
+				pplays = pplays.splice(Math.floor(Math.random()*pplays.length), 1);
+			var pvalues = pplays.map(p => maxValue(this.computeBoardState(p, s), i+1, Math.max(c, pvalue)));
+			s.command({ type: "endturn" }, this.no);
+			pvalue = this.compute(s);
+			return pvalues.reduce((max, v) => Math.max(max, v), pvalue);
 		}
 
-		var group = plays[groupindex];
-
-		var valueGroup = (g, priority) => {//console.log(priority);
-		
-			g.plays = g.plays.sort((a, b) => a.value-b.value);
-			g.plays.forEach((p, i) => p.priority = (i > 0 && g.plays[i-1].value === p.value ? g.plays[i-1].priority : g.plays.length-i+priority));
-			var mprio = g.plays[g.plays.length-1].priority;
-			if (mprio > priority+1)
-				for (let i = g.plays.length-1; i >= 0 && i >= g.plays.length-1; i--)
-					if (g.plays[i].priority === mprio)
-						g.plays[i].priority = priority+1;
-			g.plays.forEach(p => {if (priority === 0)console.log({command:p.command, value:p.value})
-				if (p.priority < 3) {
-					p.subplays = this.generatePlays(p.state);
-					p.subplays.forEach(subgroup => {
-						subgroup.plays.forEach(p => valuePlay(p));
-						valueGroup(subgroup, p.priority)
-					});
-					let vmax = p.value;
-					p.subplays.forEach(subgroup => subgroup.plays.forEach(p => vmax = Math.max(p.value, vmax)));
-					p.value = vmax;
-				}
-				delete p.state;
-			})
+		var i = values.length;
+		var value = 0;
+		try {
+			value = maxValue(this.computeBoardState(plays[i]), 1, current);
+		} catch {
+			value = 0;
 		}
-
-		var valuePlay = (p) => {
-
-			var s = this.computeBoardState(p, state);
-			var v = this.compute(s);
-			p.evaluate(v, s);
-		}
-
-		valuePlay(group.plays[playindex]);
-
-		var valued = group.valued;
-		if (valued)
-			valueGroup(group, 0);
-
-		this.call([this, callback, state, plays, current, valued ? groupindex + 1 : groupindex, valued ? 0 : playindex + 1], true);
+		values.push(value);
+		if (i+1 >= plays.length)
+			this.completeComputation(callback, state, plays, current, values);
+		else this.call([this, callback, state, plays, current, values], true);
 		//setTimeout(() => this.computePlays(callback, state, plays, current, values), 50);
 	}
 
-	completeComputation (callback, state, plays, current) {
+	completeComputation (callback, state, plays, current, values) {
 
 		//console.log(values.map((v, i) => {return{v, p: plays[i]}}));
 
-		//state.command({ type: "endturn" }, this.no);
-		//current = this.compute(state);
+		state.command({ type: "endturn" }, this.no);
+		current = this.compute(state);
 
-		if (plays.length > 0 && plays.some(g => g.plays.some(p => p.value > current))) {
-			var vmax = current, pmax = null;
-			plays.forEach(g => g.plays.forEach(p => {
-				if (p.value > vmax) {
-					vmax = p.value;
-					pmax = p;
+		if (plays.length > 0 && values.some(v => v > current)) {
+			var vmax = current, imax = 0;
+			for (var i = 0; i < values.length; i++)
+				if (values[i] > vmax) {
+					imax = i;
+					vmax = values[i];
 				}
-			}))
-			callback(pmax.command);
+			callback(plays[imax].command);
 		}
 		else callback({ type: "endturn" });
 		this.call();
@@ -122,53 +106,42 @@ class TrainingAI extends AI {
 		} else {
 			area.hand.cards.forEach(c => {
 				if (c.canBePlayed) {
-					let group = new Group();
 					if (c.targets.length === 0)
-						group.push(new Play("play", c));
+						plays.push(new Play("play", c));
 					else area.gameboard.tiles.forEach(t => {
 						if (c.canBePlayedOn([t])) {
 							if (c.targets.length === 1)
-								group.push(new Play("play", c, t));
+								plays.push(new Play("play", c, t));
 							else area.gameboard.tiles.forEach(t2 => {
 								if (c.canBePlayedOn([t, t2]))
-									group.push(new Play("play", c, t, t2));
+									plays.push(new Play("play", c, t, t2));
 							})
 						}
 					})
-					if (!group.empty)
-						plays.push(group);
 				}
 			})
 			area.field.entities.forEach(c => {
 				if (c.canAct) {
-					let group = new Group();
 					area.opposite.field.entities.forEach(e => {
-						if (c.canAttack(e))
-							group.push(new Play("attack", c, e));
+						if (c.canAttack(e)) {
+							plays.push(new Play("attack", c, e));
+						}
 					})
-					if (!group.empty)
-						plays.push(group);
-					group = new Group();
 					if (c.canMove) {
 						c.location.adjacents.forEach(t => {
 							if (c.canMoveOn(t))
-								group.push(new Play("move", c, t));
+								plays.push(new Play("move", c, t));
 						})
 					}
-					if (!group.empty)
-						plays.push(group);
 				}
 				c.faculties.forEach((f, i) => {
-					let group = new Group();
 					if (!f.event.requirement)
 						if (c.canUse(f))
-							group.push(new Play("faculty", c, i));
+							plays.push(new Play("faculty", c, i));
 					else area.gameboard.tiles.forEach(t => {
 						if (c.canUse(f, t))
-							group.push(new Play("faculty", c, i, t));
+							plays.push(new Play("faculty", c, i, t));
 					})
-					if (!group.empty)
-						plays.push(group);
 				})
 			})
 		}

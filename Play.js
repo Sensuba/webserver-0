@@ -16,6 +16,17 @@ class Play {
 		}
 	}
 
+	get valued () {
+
+		return this.value !== undefined;
+	}
+
+	evaluate (v, s) {
+
+		this.value = v;
+		this.state = s;
+	}
+
 	get command () {
 
 		switch (this.type) {
