@@ -23,7 +23,7 @@ class RoomManager extends Manager {
 
 		if (!this.started && this.players.length < 2) {
 			socket.emit('joined', {as: 'player', no: this.players.length});
-			this.players.push({ name, avatar, socket, bonus: false });
+			this.players.push({ name, avatar, socket, bonus });
 			console.log((name || "Anonymous") + " joined " + this.room + " as player");
 		} else {
 			if (this.game && this.game.started) {
@@ -206,7 +206,7 @@ class RoomManager extends Manager {
 			this.finish();
 			var c = 0;
 			if (this.players.length > 0 && !same) {
-				c = Math.floor(CreditManager.compute(Date.now() - this.date, this.game.log.logs.length, false) * this.private ? 1.65 : 2.5);
+				c = Math.floor(CreditManager.compute(Date.now() - this.date, this.game.log.logs.length, false) * (this.private ? 1.65 : 2.5));
 				if (this.players[0].bonus) c *= 2;
 				CreditManager.creditPlayer(this.players[0].name, c);
 			}
