@@ -78,7 +78,7 @@ class RoomManager extends Manager {
 					return;
 				this.game.ended = true;
 
-				var share = this.private || players.some(player => typeof player.deck.hero === "object" || player.deck.body.some(card => typeof card === "object"));
+				var share = this.startedprivate || players.some(player => typeof player.deck.hero === "object" || player.deck.body.some(card => typeof card === "object"));
 
 				var creditsW = 0, creditsL = 0;
 				if (players.length > 1 && players[winner].name !== players[1-winner].name) {
@@ -117,6 +117,7 @@ class RoomManager extends Manager {
 			var hero1 = this.game.areas[0].hero ? this.game.areas[0].hero.nameCard : "?";
 			var hero2 = this.game.areas[1].hero ? this.game.areas[1].hero.nameCard : "?";
 			console.log("Started game " + this.room + " | " + players[0].name + " (" + hero1 + ") vs " + players[1].name + " (" + hero2 + ")");
+			this.startedprivate = this.private;
 			this.private = true;
 			this.start();
 		}
