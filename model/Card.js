@@ -205,6 +205,7 @@ class Card {
 		this.states = {};
 		this.shield = false;
 		delete this.poisondmg;
+		delete this.armor;
 		this.dying = false;
 		delete this.variables;
 		delete this.countered;
@@ -503,6 +504,7 @@ class Card {
 		this.events = [];
 		this.states = {};
 		delete this.poisondmg;
+		delete this.armor;
 		this.breakShield();
 		delete this.blueprint;
 		delete this.variables;
@@ -630,7 +632,7 @@ class Card {
 		}
 		this.oncontact = target;
 		target.oncontact = this;
-		var dmg1 = target.damage(this.eff.atk, this, true);
+		var dmg1 = target.damage(this.eff.atk - target.eff.armor, this, true);
 		var dmg2;
 		if (!this.eff.states.initiative)
 			dmg2 = target.ripost(this);
@@ -646,7 +648,7 @@ class Card {
 
 		var res = () => {};
 		if (this.isType("figure") && this.eff.atk > 0)
-			res = other.damage(this.eff.atk, this, true);
+			res = other.damage(this.eff.atk - target.eff.armor, this, true);
 		return res;
 	}
 
@@ -964,6 +966,7 @@ class Card {
 		this.states = Object.assign({}, other.states);
 		this.variables = Object.assign({}, other.variables);
 		this.shield = other.shield;
+		this.armor = other.armor;
 		this.poisondmg = other.poisondmg;
 		this.frozenTimer = other.frozenTimer;
 		this.identified = [false, false];
