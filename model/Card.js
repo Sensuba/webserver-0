@@ -648,7 +648,7 @@ class Card {
 
 		var res = () => {};
 		if (this.isType("figure") && this.eff.atk > 0)
-			res = other.damage(this.eff.atk - target.eff.armor, this, true);
+			res = other.damage(this.eff.atk - other.eff.armor, this, true);
 		return res;
 	}
 
