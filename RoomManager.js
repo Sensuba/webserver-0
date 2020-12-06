@@ -85,8 +85,8 @@ class RoomManager extends Manager {
 					var c = CreditManager.compute(Date.now() - this.date, this.game.log.logs.length, false)
 					if (players[winner].name) creditsW = share ? Math.floor(c * 1.65) : Math.floor(c * 2.5);
 					if (players[1-winner].name) creditsL = share ? Math.floor(c * 1.65) : Math.floor(c);
-					if (players[winner].bonus) creditsW *= 2;
-					if (players[1-winner].bonus) creditsL *= 2;
+					//if (players[winner].bonus) creditsW *= 2;
+					//if (players[1-winner].bonus) creditsL *= 2;
 					CreditManager.creditPlayer(players[winner].name, creditsW);
 					CreditManager.creditPlayer(players[1-winner].name, creditsL);
 				}
@@ -208,7 +208,7 @@ class RoomManager extends Manager {
 			var c = 0;
 			if (this.players.length > 0 && !same) {
 				c = Math.floor(CreditManager.compute(Date.now() - this.date, this.game.log.logs.length, false) * (this.private ? 1.65 : 2.5));
-				if (this.players[0].bonus) c *= 2;
+				//if (this.players[0].bonus) c *= 2;
 				CreditManager.creditPlayer(this.players[0].name, c);
 			}
 			this.players.forEach(p => p.socket.emit("endgame", {state: 5, credit: c})); // State 5 : connection lost
