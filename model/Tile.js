@@ -33,6 +33,14 @@ class Tile {
 		return true;
 	}
 
+	get horizontalPosition () {
+
+		let line = this.line;
+		for (let i = 0; i < line.length; i++)
+			if (line[i] === this)
+				return 2*i + (this.inFront ? 1 : 0);
+	}
+
 	place (card) {
 
 		if (this.card !== null)
@@ -194,6 +202,76 @@ class Tile {
 		numo = numo > 3 ? (numo - 4) * 2 : numo * 2 + 1;
 
 		return Math.ceil(Math.abs(num - numo)/2);
+	}
+
+	changeHazards (hazards) {
+
+		if (hazards === this.hazards || (!hazards && !this.hazards))
+			return;
+		if (hazards)
+			this.hazards = hazards;
+		else delete this.hazards;
+		this.area.gameboard.notify("hazards", this, { type: "string", value: this.hazards });
+	}
+
+	clearHazards () {
+
+		this.changeHazards();
+	}
+
+	applyHazards (card) {
+
+		if (!this.hazards)
+			return;
+
+		if (card.isType("character")) {
+
+			switch (this.hazards) {
+			case "fire": card.damage(300); break;
+			case "water": if (card.isType("figure")) card.freeze(); break;
+			case "wind": card.setPoints (card.actionPt, card.skillPt, card.motionPt + 1); break;
+			case "portal": {
+				if (!card.isType("figure")) break;
+				let target = null;
+				let portals = [];
+				let minDistance = 100;
+				this.field.tiles.forEach(t => {
+					if (t !== this && t.hazards === "portal") {
+						portals.push(t);
+						let distance = this.distanceTo(t);
+						if (distance < minDistance)
+							minDistance = distance;
+					}
+				});
+				if (portals.length > 0) {
+					portals = portals.filter(t => this.distanceTo(t) === minDistance);
+					target = portals[Math.floor(Math.random() * portals.length)];
+				}
+				else {
+					this.field.opposite.tiles.forEach(t => {
+						if (t !== this && t.hazards === "portal") {
+							portals.push(t);
+							let distance = this.inFront ? this.mirror.distanceTo(t) : this.tilesAhead.reduce((acc, e) => Math.min(acc, e.mirror.distanceTo(t)), 100);
+							if (distance < minDistance)
+								minDistance = distance;
+						}
+					});
+					if (portals.length > 0) {
+						portals = portals.filter(t => (this.inFront ? this.mirror.distanceTo(t) : this.tilesAhead.reduce((acc, e) => Math.min(acc, e.mirror.distanceTo(t)), 100)) === minDistance);
+						target = portals[Math.floor(Math.random() * portals.length)];
+					}
+				}
+				if (target) {
+					delete target.hazards;
+					card.goto(target);
+				}
+			}
+			break;
+			default: break;
+			}
+		}
+
+		delete this.hazards;
 	}
 }
 

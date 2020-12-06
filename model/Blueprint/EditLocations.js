@@ -9,7 +9,7 @@ class EditLocations extends Bloc {
 		this.f = (src, ins) => {
 			var add = ins[0].slice(), remove = ins[0].slice();
 			if (ins[0].includes(ins[1]))
-				remove.filter(i => i !== ins[1]);
+				remove = remove.filter(i => i !== ins[1]);
 			else
 				add.push(ins[1]);
 			return [add, remove];

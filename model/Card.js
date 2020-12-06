@@ -118,6 +118,7 @@ class Card {
 			this.resetSickness();
 		this.activate();
 		this.gameboard.notify("summon", this, tile);
+		tile.applyHazards(this);
 		this.gameboard.update();
 	}
 
@@ -161,6 +162,8 @@ class Card {
 		this.identify();
 		if (this.area && loc.hasCard(this)) {
 			this.gameboard.notify("cardmove", this, loc, former);
+			if (this.onBoard && (!this.isType("character") || this.chp))
+				loc.applyHazards(this);
 			if (this.onBoard && this.isType("secret"))
 				this.gameboard.notify("secretsetup", this, loc);
 		}
@@ -632,7 +635,7 @@ class Card {
 		}
 		this.oncontact = target;
 		target.oncontact = this;
-		var dmg1 = target.damage(this.eff.atk - target.eff.armor, this, true);
+		var dmg1 = target.damage(this.eff.atk - (target.eff.armor || 0), this, true);
 		var dmg2;
 		if (!this.eff.states.initiative)
 			dmg2 = target.ripost(this);
@@ -648,7 +651,7 @@ class Card {
 
 		var res = () => {};
 		if (this.isType("figure") && this.eff.atk > 0)
-			res = other.damage(this.eff.atk, this, true);
+			res = other.damage(this.eff.atk - (other.eff.armor || 0), this, true);
 		return res;
 	}
 
@@ -861,8 +864,8 @@ class Card {
 
 	move (tile) {
 
-		this.motionPt--;
 		this.goto(tile);
+		this.motionPt--;
 		this.gameboard.notify("charmove", this, tile);
 		this.gameboard.update();
 	}
