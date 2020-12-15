@@ -25,13 +25,15 @@ class Trap extends Bloc {
 				}
 				if (owner.area.court.isEmpty)
 					that.act();
-				else {
+				else if (!that.trapCasting) {
 					owner.goto(owner.area.capsule);
+					that.trapCasting = true;
 					that.unsub = that.src.gameboard.subscribe("cardmove", (t2,s2,d2) => {
 						if (owner.area.court.isEmpty) {
 							that.unsub();
 							delete that.unsub;
 							that.act();
+							delete that.trapCasting;
 						}
 					});
 				}
