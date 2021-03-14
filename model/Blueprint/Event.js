@@ -9,15 +9,27 @@ class Event {
 
 	check (t,s,d) {
 
-		return this.type === t && this.condition(t,s,d);
+		return this.getTypes().includes(t) && this.condition(t,s,d);
 	}
 
 	subscribe (f) {
 
-		return this.gameboard.subscribe(this.type, (t,s,d) => {
-			if (this.condition(t,s,d))
-				f(t,s,d);
-		})
+		var unsubs = [];
+		this.getTypes().forEach(type =>
+			unsubs.push(this.gameboard.subscribe(type, (t,s,d) => {
+				if (this.condition(t,s,d))
+					f(t,s,d);
+		})))
+
+		return () => unsubs.forEach(unsub => unsub());
+	}
+
+	getTypes () {
+
+		switch (this.type) {
+		case "cast": return ["playcard", "trap"];
+		default: return [this.type];
+		}
 	}
 }
 
