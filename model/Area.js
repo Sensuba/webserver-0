@@ -85,8 +85,8 @@ class Area {
 		})
 		this.manapool.reload();
 		this.gameboard.update();
-		this.gameboard.notify("newturn", this);
 		this.field.cards.forEach(e => e.refresh());
+		this.gameboard.notify("newturn", this);
 		this.draw();
 		this.gameboard.update();
 	}

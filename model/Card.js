@@ -126,12 +126,20 @@ class Card {
 
 		if (this.location === loc)
 			return;
+		var former = this.location;
+
+		if (this.onBoard && loc instanceof Tile && loc.occupied) {
+			let swapcard = loc.card;
+			loc.card = null;
+			this.goto(loc);
+			swapcard.goto(former);
+			return;
+		}
 
 		delete this.dying;
 		if (loc instanceof Court && this.overload)
 			this.lb = this.eff.overload && this.eff.ol && this.eff.ol >= this.eff.overload ? Math.floor(this.eff.ol/this.eff.overload) : 0;
 
-		var former = this.location;
 		this.location = loc;
 		if (former instanceof Tile && !(loc instanceof Tile) && this.activated)
 			this.deactivate();
