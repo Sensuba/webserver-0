@@ -432,9 +432,9 @@ class Card {
 			return;
 		}
 
+		let love = 0;
 		if (this.isType("artifact"))
 			this.chp += amt;
-		let love = 0;
 		else {
 			if (src.hasState("love"))
 				love = Math.max(0, this.chp + amt - this.eff.hp);
