@@ -423,7 +423,7 @@ class Card {
 	heal (amt, src) {
 
 		if (amt === null || amt === undefined)
-			amt = this.eff.hp;
+			amt = this.eff.hp - this.chp;
 		if (!this.chp || amt <= 0 || this.isGhost)
 			return;
 
@@ -436,14 +436,13 @@ class Card {
 		if (this.isType("artifact"))
 			this.chp += amt;
 		else {
-			if (src.hasState("love"))
+			if (this.hasState("love"))
 				love = Math.max(0, this.chp + amt - this.eff.hp);
-			amt = Math.min(amt, this.eff.hp - this.chp);
-			if (amt <= 0)
-				return;
+			amt = Math.max(0, Math.min(amt, this.eff.hp - this.chp));
 			this.chp += amt;
 		}
-		this.gameboard.notify("healcard", this, amt, src);
+		if (amt > 0)
+			this.gameboard.notify("healcard", this, amt, src);
 		if (love > 0)
 			this.boost(0, love, 0);
 	}
