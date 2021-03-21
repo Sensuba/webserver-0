@@ -434,13 +434,18 @@ class Card {
 
 		if (this.isType("artifact"))
 			this.chp += amt;
+		let love = 0;
 		else {
+			if (src.hasState("love"))
+				love = Math.max(0, this.chp + amt - this.eff.hp);
 			amt = Math.min(amt, this.eff.hp - this.chp);
 			if (amt <= 0)
 				return;
 			this.chp += amt;
 		}
 		this.gameboard.notify("healcard", this, amt, src);
+		if (love > 0)
+			this.boost(0, love, 0);
 	}
 
 	boost (atk, hp, range) {
