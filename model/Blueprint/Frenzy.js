@@ -17,17 +17,17 @@ class Frenzy extends Bloc {
 		var that = this;
 		owner.passives.push(new Listener(owner, () => that.src.gameboard.subscribe("charattack", (t,s,d) => {
 			if (s === owner) {
-				let victim = d[0];
+				this.victim = d[0];
 				if (that.unsub1)
 					that.unsub1();
 				that.unsub1 = that.src.gameboard.subscribe("damagecard", (t,s,d) => {
-					if (s === victim && d[1] === owner && owner.onBoard && s.chp !== undefined && s.chp <= 0) {
+					if (s === this.victim && d[1] === owner && owner.onBoard && s.chp !== undefined && s.chp <= 0) {
 						that.unsub1();
 						delete that.unsub1;
 						if (that.unsub2)
 							that.unsub2();
 						that.unsub2 = that.src.gameboard.subscribe("destroycard", (t2,s2,d2) => {
-							if (victim === s2 && s2.isType("character")) {
+							if (this.victim === s2 && s2.isType("character")) {
 								that.execute({src: owner, image: image});
 								that.unsub2();
 								delete that.unsub2;
