@@ -206,6 +206,7 @@ class Card {
 		this.originalRange = this.range;
 		delete this.supercode;
 		delete this.mutatedState;
+		delete this.mutdata;
 		this.ol = 0;
 		this.events = [];
 		this.faculties = [];
