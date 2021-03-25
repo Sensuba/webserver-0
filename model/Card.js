@@ -326,9 +326,14 @@ class Card {
 		return this.states && this.hasState("concealed") ? true : false;
 	}
 
+	get immune () {
+
+		return this.states && this.hasState("immune") ? true : false;
+	}
+
 	targetableBy (other) {
 
-		return !this.exalted && (this.area && other.area && this.area === other.area || !this.concealed);
+		return !this.exalted && !((this.area && other.area && this.area !== other.area) && (this.concealed || this.immune));
 	}
 
 	destroy (discard) {
@@ -819,16 +824,24 @@ class Card {
 		case "artifact":
 			this.summon(targets[0]);
 			this.gameboard.notify("playcard", this, targets[0], targets[1]);
+			let ftarget = targets.length > 1 ? (this.retarget || targets[1]) : undefined;
+			if (ftarget && this.area && ftarget.area && this.area != ftarget.area && ftarget.immune)
+				break;
 			this.events.forEach(event => {
 				if (!event.requirement || targets.length > 1)
-					event.execute(this.gameboard, this, targets.length > 1 ? (this.retarget || targets[1]) : undefined)
+					event.execute(this.gameboard, this, ftarget)
 			});
 			break;
 		case "spell":
 			this.goto(this.area.court);
-			this.gameboard.notify("playcard", this, targets ? targets[0] : undefined);
-			if (!this.countered)
-				this.events.forEach(event => event.execute(this.gameboard, this, targets ? (this.retarget || targets[0]) : undefined));
+			let spelltarget = targets ? targets[0] : undefined;
+			this.gameboard.notify("playcard", this, spelltarget);
+			spelltarget = targets ? (this.retarget || targets[0]) : undefined;
+			if (this.countered || (spelltarget && this.area && spelltarget.area && this.area != spelltarget.area && spelltarget.immune)) {
+				this.destroy();
+				break;
+			}
+			this.events.forEach(event => event.execute(this.gameboard, this, spelltarget));
 			this.destroy();
 			break;
 		case "secret":
