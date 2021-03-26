@@ -52,8 +52,6 @@ class Area {
 		var d = this.deck.draw(filter);
 		if (d) {
 			if (this.hand.isMaxed) {
-				d.reveal();
-				this.gameboard.notify("burncard", this, d);
 				d.discard();
 			} else {
 				d.goto(this.hand);

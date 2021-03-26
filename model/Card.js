@@ -340,6 +340,12 @@ class Card {
 
 		if (this.destroyed || this.dying)
 			return;
+		if (this.inDeck) {
+			this.reveal();
+			this.gameboard.notify("burncard", this.area, this);
+			this.anihilate();
+			return;
+		}
 		this.dying = true;
 		let onboard = this.onBoard;
 		this.gameboard.notify(discard ? "discardcard" : "destroycard", this, { type: "boolean", value: onboard });
@@ -476,7 +482,9 @@ class Card {
 		if (!value || (value < 0 && this.mana <= 0))
 			return;
 
-		this.mana = Math.max(0, this.mana + value);
+		if (this.mana + value < 0)
+			value = -this.mana;
+		this.mana = this.mana + value;
 		this.gameboard.notify("changecost", this, value);
 	}
 
