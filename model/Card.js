@@ -51,7 +51,7 @@ class Card {
 
 	get inDeck() {
 
-		return this.location instanceof Deck;
+		return this.location && this.location.id.type === "deck";
 	}
 
 	get onBoard() {

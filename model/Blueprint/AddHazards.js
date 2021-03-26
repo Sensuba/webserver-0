@@ -7,7 +7,7 @@ class AddHazards extends Bloc {
 
 		super("addhazards", src, ctx);
 		this.f = (src, ins) => {
-			ins[0].changeHazards(ins[1]);
+			ins[0].addHazards(ins[1]);
 			return [];
 		};
 		this.types = [Types.tile, Types.hazard];

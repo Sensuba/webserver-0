@@ -7,10 +7,10 @@ class ClearHazards extends Bloc {
 
 		super("clearhazards", src, ctx);
 		this.f = (src, ins) => {
-			delete ins[0].clearHazards();
+			ins[0].clearHazards(ins[1]);
 			return [];
 		};
-		this.types = [Types.tile];
+		this.types = [Types.tile, Types.hazard];
 	}
 }
 

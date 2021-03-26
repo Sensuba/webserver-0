@@ -1,3 +1,4 @@
+const HAZARDS_GROUPS = [["fire", "water", "flowers"], ["wind"], ["portal"]]
 
 class Tile {
 
@@ -10,6 +11,7 @@ class Tile {
 		this.field = field;
 
 		this.card = null;
+		this.hazards = [];
 		this.area.gameboard.register(this);
 	}
 
@@ -204,70 +206,90 @@ class Tile {
 		return Math.ceil(Math.abs(num - numo)/2);
 	}
 
-	changeHazards (hazards) {
+	addHazards (hazards) {
 
-		if (hazards === this.hazards || (!hazards && !this.hazards))
+		if (!hazards || this.hasHazards(hazards))
 			return;
-		if (hazards)
-			this.hazards = hazards;
-		else delete this.hazards;
-		this.area.gameboard.notify("hazards", this, { type: "string", value: this.hazards });
-		if (hazards) {
-			if (this.occupied)
-				this.applyHazards(this.card);
-			else if (this.hazards === "portal")
-				this.field.tiles.forEach(t => {
-					if (t !== this && t.hazards === "portal" && t.occupied)
-						t.applyHazards(t.card);
-				})
+		if (this.hazards.length === 0)
+			this.hazards.push(hazards)
+		else {
+			let groupindex = HAZARDS_GROUPS.findIndex(group => group.includes(hazards));
+			let index = this.hazards.findIndex(h => HAZARDS_GROUPS[groupindex].includes(h));
+			if (index > -1)
+				this.hazards[index] = hazards;
+			else this.hazards.push(hazards);
 		}
+		this.area.gameboard.notify("hazards", this, { type: "string", value: hazards });
+		if (this.occupied)
+			this.applyHazards(this.card);
+		else if (this.hasHazards("portal"))
+			this.field.tiles.forEach(t => {
+				if (t !== this && t.hasHazards("portal") && t.occupied)
+					t.applyHazards(t.card);
+			})
 	}
 
-	clearHazards () {
+	hasHazards (hazards) {
 
-		this.changeHazards();
+		return this.hazards.includes(hazards);
+	}
+
+	clearHazards (hazards) {
+
+		if (!hazards) {
+			this.hazards = [];
+			this.area.gameboard.notify("clearhazards", this, { type: "string", value: null });
+		}
+		else {
+			let index = this.hazards.indexOf(hazards);
+			if (index > -1) {
+			 	this.hazards.splice(index, 1);
+				this.area.gameboard.notify("clearhazards", this, { type: "string", value: hazards });
+			}
+		}
 	}
 
 	applyHazards (card) {
 
-		if (!this.hazards)
+		if (this.hazards.length < 1)
 			return;
 
-		if (card.isType("entity")) {
+		this.hazards.forEach(hazards => {
 
-			switch (this.hazards) {
-			case "fire": if (card.isType("figure")) { card.damage(300); this.clearHazards(); } break;
-			case "water": if (card.isType("figure")) { card.freeze(); this.clearHazards(); } break;
-			case "flowers": if (card.isType("figure")) { card.boost(200, 200, 0); this.clearHazards(); } break;
-			case "wind": if (card.isType("character")) { card.setPoints (card.actionPt, card.skillPt, card.motionPt + 1); this.clearHazards(); } break;
-			case "portal": {
-				let target = null;
-				let portals = [];
-				let minDistance = 100;
-				this.field.tiles.forEach(t => {
-					if (t !== this && t.hazards === "portal") {
-						portals.push(t);
-						let distance = this.distanceTo(t);
-						if (distance < minDistance)
-							minDistance = distance;
+			if (card.isType("entity")) {
+
+				switch (hazards) {
+				case "fire": if (card.isType("figure")) { card.damage(300); this.clearHazards(hazards); } break;
+				case "water": if (card.isType("figure")) { card.freeze(); this.clearHazards(hazards); } break;
+				case "flowers": if (card.isType("figure")) { card.boost(200, 200, 0); this.clearHazards(hazards); } break;
+				case "wind": if (card.isType("character")) { card.setPoints (card.actionPt, card.skillPt, card.motionPt + 1); this.clearHazards(hazards); } break;
+				case "portal": {
+					let target = null;
+					let portals = [];
+					let minDistance = 100;
+					this.field.tiles.forEach(t => {
+						if (t !== this && t.hasHazards("portal")) {
+							portals.push(t);
+							let distance = this.distanceTo(t);
+							if (distance < minDistance)
+								minDistance = distance;
+						}
+					});
+					if (portals.length > 0) {
+						portals = portals.filter(t => this.distanceTo(t) === minDistance);
+						target = portals[Math.floor(Math.random() * portals.length)];
 					}
-				});
-				if (portals.length > 0) {
-					portals = portals.filter(t => this.distanceTo(t) === minDistance);
-					target = portals[Math.floor(Math.random() * portals.length)];
+					if (target) {
+						this.clearHazards(hazards);
+						target.clearHazards(hazards);
+						card.goto(target);
+					}
 				}
-				if (target) {
-					this.clearHazards();
-					target.clearHazards();
-					card.goto(target);
+				break;
+				default: break;
 				}
 			}
-			break;
-			default: break;
-			}
-		}
-
-		
+		})
 	}
 }
 
