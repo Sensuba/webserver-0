@@ -389,13 +389,14 @@ class Card {
 		}
 
 		this.chp -= dmg;
+		let overkill = this.chp <= 0 ? -this.chp : 0;
 		if (!discret)
 			this.gameboard.notify("damagecard", this, dmg, src);
 		if (this.chp <= 0 || (!this.isType("hero") && src && src.hasState("lethal"))) {
 			new Update(() => this.destroy(), this.gameboard);
 		}
 		if (discret)
-			return () => this.gameboard.notify("damagecard", this, dmg, src);
+			return () => this.gameboard.notify("damagecard", this, dmg, src, overkill);
 	}
 
 	poison (psn) {

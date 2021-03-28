@@ -371,7 +371,7 @@ class Reader {
 			case "discard-trigger": bloc = new Trigger(el.type, card, ctx, "discardcard"); break;
 			case "discard-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0].value]); break;
 			case "damage-trigger": bloc = new Trigger(el.type, card, ctx, "damagecard"); break;
-			case "damage-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[1], d.data[0]]); break;
+			case "damage-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[1], d.data[0], d.data[2]]); break;
 			case "poison-trigger": bloc = new Trigger(el.type, card, ctx, "poisontrigger"); break;
 			case "poison-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0]]); break;
 			case "heal-trigger": bloc = new Trigger(el.type, card, ctx, "healcard"); break;
