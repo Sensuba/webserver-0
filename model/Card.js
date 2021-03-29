@@ -141,7 +141,7 @@ class Card {
 			this.lb = this.eff.overload && this.eff.ol && this.eff.ol >= this.eff.overload ? Math.floor(this.eff.ol/this.eff.overload) : 0;
 
 		this.location = loc;
-		if (former instanceof Tile && !(loc instanceof Tile) && this.activated)
+		if (former instanceof Tile && !(loc instanceof Tile || loc instanceof Court) && this.activated)
 			this.deactivate();
 		if (former && former.hasCard (this))
 			former.removeCard (this);
