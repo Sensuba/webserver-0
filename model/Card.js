@@ -391,7 +391,7 @@ class Card {
 		this.chp -= dmg;
 		let overkill = this.chp <= 0 ? -this.chp : 0;
 		if (!discret)
-			this.gameboard.notify("damagecard", this, dmg, src);
+			this.gameboard.notify("damagecard", this, dmg, src, overkill);
 		if (this.chp <= 0 || (!this.isType("hero") && src && src.hasState("lethal"))) {
 			new Update(() => this.destroy(), this.gameboard);
 		}
