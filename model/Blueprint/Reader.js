@@ -82,6 +82,8 @@ var FilterModel = require('./FilterModel');
 var FilterStats = require('./FilterStats');
 var FilterEffect = require('./FilterEffect');
 var FilterVariable = require('./FilterVariable');
+var FilterCovered = require('./FilterCovered');
+var FilterCovering = require('./FilterCovering');
 var CheckCard = require('./CheckCard');
 var CheckTile = require('./CheckTile');
 var CheckLeftRight = require('./CheckLeftRight');
@@ -283,6 +285,8 @@ class Reader {
 			case "filterstats": bloc = new FilterStats(card, ctx); break;
 			case "filtereffect": bloc = new FilterEffect(card, ctx); break;
 			case "filtervar": bloc = new FilterVariable(card, ctx); break;
+			case "filtercovered": bloc = new FilterCovered(card, ctx); break;
+			case "filtercovering": bloc = new FilterCovering(card, ctx); break;
 			case "countcards": bloc = new CountCards(card, ctx); break;
 			case "counttiles": bloc = new CountTiles(card, ctx); break;
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
