@@ -1,4 +1,4 @@
-const HAZARDS_GROUPS = [["fire", "water", "flowers"], ["wind"], ["portal"]]
+const HAZARDS_GROUPS = [["fire", "water", "flowers", "butterflies"], ["wind"], ["portal"]]
 
 class Tile {
 
@@ -262,6 +262,7 @@ class Tile {
 				case "fire": if (card.isType("figure")) { card.damage(300); this.clearHazards(hazards); } break;
 				case "water": if (card.isType("figure")) { card.freeze(); this.clearHazards(hazards); } break;
 				case "flowers": if (card.isType("figure")) { card.boost(200, 200, 0); this.clearHazards(hazards); } break;
+				case "butterflies": if (card.isType("figure")) { card.poison(200); this.clearHazards(hazards); } break;
 				case "wind": if (card.isType("character")) { card.setPoints (card.actionPt, card.skillPt, card.motionPt + 1); this.clearHazards(hazards); } break;
 				case "portal": {
 					let target = null;
