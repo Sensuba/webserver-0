@@ -404,7 +404,7 @@ class Card {
 
 		if (!this.chp || psn <= 0 || this.isGhost)
 			return;
-		if (this.hasState("immune"))
+		if (this.hasState("immune") || this.hasState("vaccinated"))
 			return;
 
 		this.poisondmg = (this.poisondmg || 0) + psn;
