@@ -38,8 +38,7 @@ class Card {
 				this.skillPt = 1;
 				this.chp = this.hp;
 				this.activate();
-				if (this.isType("character"))
-					this.resetSickness();
+				this.resetSickness();
 			}
 		}
 	}
@@ -114,8 +113,7 @@ class Card {
 		this.goto(tile, true);
 		this.chp = chp;
 		this.php = { hp: this.hp, chp: this.chp }
-		if (this.isType("character"))
-			this.resetSickness();
+		this.resetSickness();
 		this.activate();
 		this.gameboard.notify("summon", this, tile);
 		tile.applyHazards(this);
@@ -157,8 +155,7 @@ class Card {
 		}
 		if (this.onBoard && former && former.area === this.area.opposite) {
 			this.skillPt = 1;
-			if (this.isType("character"))
-				this.resetSickness();
+			this.resetSickness();
 		}
 		if (this.onBoard && this.isType("secret")) {
 			var secrets = this.innereffects.filter(e => e.type === "secret");
@@ -278,6 +275,7 @@ class Card {
 		this.mutations = [];
 		this.cmutations = [];
 		this.states = {};
+		delete this.armor;
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
 		if (this.scripts)
@@ -964,8 +962,7 @@ class Card {
 			this.skillPt = 1;
 			this.chp = this.hp;
 			this.activate();
-			if (this.isType("character"))
-				this.resetSickness();
+			this.resetSickness();
 		}
 		this.gameboard.notify("transform", this, {data:this.data});
 	}
@@ -1015,8 +1012,7 @@ class Card {
 
 		if (this.onBoard) {
 			this.skillPt = 1;
-			if (this.isType("character"))
-				this.resetSickness();
+			this.resetSickness();
 		}
 		var trsdata = this.data;
 		trsdata.php = other.php;
@@ -1027,11 +1023,16 @@ class Card {
 
 	resetSickness () {
 
-		this.actionPt = 1;
-		this.skillPt = 1;
-		this.motionPt = 0;
-		this.firstTurn = true;
-		this.furyState = 0;
+		if (this.isType("entity")) {
+
+			this.skillPt = 1;
+			if (this.isType("character")) {
+				this.actionPt = 1;
+				this.motionPt = 0;
+				this.firstTurn = true;
+				this.furyState = 0;
+			}
+		}
 	}
 
 	refresh () {

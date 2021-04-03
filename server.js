@@ -13,6 +13,7 @@ var RoomManager = require("./RoomManager");
 var MissionManager = require("./MissionManager");
 var TrainingManager = require("./TrainingManager");
 var CreditManager = require("./CreditManager");
+var User = require("./User");
 
 console.log("Initialization...");
 var axios = require('axios');
@@ -33,6 +34,7 @@ Bank.init(api, () => {
 CreditManager.init(api);
 
 var ais = [];
+var pendingUsers = [];
 
 var computeAI = (ai, next) => {
 
@@ -84,42 +86,41 @@ var start = () => io.sockets.on('connection', function (socket) {
 		socket.emit('assign', {to: roomname});
 	});
 
-	socket.on('join', function(name, avatar, roomname, bonus = false){
+	socket.on('join', function(id, name, avatar, roomname, bonus = false){
 
 		socket.join(roomname);
 		socket.room = roomname;
 		if (!(roomname in rooms))
 			rooms[roomname] = new RoomManager(roomname);
 		var manager = rooms[roomname];
-		socket.manager = manager;
-		socket.name = name;
-		socket.bonus = bonus;
-		manager.join(socket, name, avatar, bonus);
+		var user = new User(socket, id, manager, name, avatar);
+		user.bonus = bonus;
+		manager.join(user);
 	});
 
-	socket.on('mission', function(name, avatar, mission){
+	socket.on('mission', function(id, name, avatar, mission){
 
 		socket.mission = mission;
-		socket.manager = new MissionManager(mission);
-		var manager = socket.manager;
-		manager.init(socket, name, avatar);
+		var manager = new MissionManager(mission);
+		var user = new User(socket, id, manager, name, avatar);
+		manager.init(user);
 	});
 
-	/*socket.on('training', function(name, avatar, deck, ai){
+	socket.on('training', function(id, name, avatar, deck, ai){
 
 		socket.training = true;
-		socket.manager = new TrainingManager(ai, computeAI);
-		var manager = socket.manager;
-		manager.init(socket, name, avatar, deck);
-	});*/
+		var manager = new TrainingManager(ai, computeAI);
+		var user = new User(socket, id, manager, name, avatar);
+		manager.init(user, deck);
+	});
 
 	socket.on('prepare', function(token, deck){
 
-		if (!socket.manager)
+		if (!socket.user)
 			return;
 
-		var manager = socket.manager;
-		manager.prepare(socket, deck, token);
+		var manager = socket.user.manager;
+		manager.prepare(socket.user, deck, token);
 		if (manager.finished) {
 			delete rooms[manager.room];
 			console.log("Room count: " + Object.keys(rooms).length);
@@ -128,10 +129,13 @@ var start = () => io.sockets.on('connection', function (socket) {
 
 	socket.on('command', function(cmd){
 
-		var manager = socket.manager;
+		if (!socket.user)
+			return;
+
+		var manager = socket.user.manager;
 		if (!manager)
 			return;
-		manager.command(socket, cmd);
+		manager.command(socket.user, cmd);
 		if (manager.finished) {
 			delete rooms[manager.room];
 			console.log("Room count: " + Object.keys(rooms).length);
@@ -140,21 +144,27 @@ var start = () => io.sockets.on('connection', function (socket) {
 
 	socket.on('chat', function(text){
 
-		var manager = socket.manager;
+		if (!socket.user)
+			return;
+
+		var manager = socket.user.manager;
 		if (!manager || !manager.chat)
 			return;
 		if (text.startsWith("/"))
-			manager.chatcommand(socket, text.substr(1));
-		else manager.chat(socket, text);
+			manager.chatcommand(socket.user, text.substr(1));
+		else manager.chat(socket.user, text);
 	});
 
 	socket.on('leave', function(){
 
+		if (!socket.user)
+			return;
+
 		console.log("Client leaved " + socket.room);
-		var manager = socket.manager;
+		var manager = socket.user.manager;
 		if (!manager)
 			return;
-		manager.kick(socket);
+		manager.kick(socke.user);
 	});
 
 	var quit = () => {
@@ -165,16 +175,39 @@ var start = () => io.sockets.on('connection', function (socket) {
 			var manager = rooms[roomname];
 			if (!manager)
 				return;
-			manager.kick(socket);
+			if (socket.user)
+				manager.kick(socket.user);
 			if (manager.finished) {
 				delete rooms[manager.room];
 				console.log("Room count: " + Object.keys(rooms).length);
 			}
-		} else if (socket.manager)
-			socket.manager.kick(socket);
+		} else if (socket.user)
+			socket.user.manager.kick(socket.user);
 	}
 
 	socket.on('quit', quit);
 
-	socket.on('disconnect', quit);
+	socket.on('disconnect', function(){
+
+		if (socket.user) {
+			let user = socket.user;
+			user.disconnect();
+			pendingUsers.push(user);
+			setTimeout(() => {
+				if (pendingUsers.includes(user) && user.disconnected && user.socket === socket) {
+					pendingUsers = pendingUsers.filter(u => u !== user);
+					quit();
+				}
+			}, 5000);
+		} else quit();
+	});
+
+	socket.on('reconnectuser', function(userID) {
+
+		let user = pendingUsers.find(u => u.id === userID);
+		if (user) {
+			pendingUsers = pendingUsers.filter(u => u !== user);
+			user.reconnect(socket);
+		}
+	})
 });

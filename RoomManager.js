@@ -15,35 +15,34 @@ class RoomManager extends Manager {
 
 	broadcast (e, data) {
 
-		this.players.forEach(p => p.socket.emit(e, data));
-		this.spectators.forEach(s => s.socket.emit(e, data));
+		this.players.forEach(p => p.emit(e, data));
+		this.spectators.forEach(s => s.emit(e, data));
 	}
 
-	join (socket, name, avatar, bonus) {
+	join (user) {
 
 		if (!this.started && this.players.length < 2) {
-			socket.emit('joined', {as: 'player', no: this.players.length});
-			this.players.push({ name, avatar, socket, bonus });
-			console.log((name || "Anonymous") + " joined " + this.room + " as player");
+			user.emit('joined', {as: 'player', no: this.players.length});
+			this.players.push(user);
+			console.log((user.name || "Anonymous") + " joined " + this.room + " as player");
 		} else {
 			if (this.game && this.game.started) {
-				socket.emit('joined', {as: 'spectator'});
-				this.spectators.push({ name, socket });
+				user.emit('joined', {as: 'spectator'});
+				this.spectators.push(user);
 				this.game.log.logs.forEach(log => {
 					var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
-					socket.emit('notification', {type: log.type, src: log.src.id, data: datamap});
+					user.emit('notification', {type: log.type, src: log.src.id, data: datamap});
 				})
-				console.log((name || "Anonymous") + " joined " + this.room + " as spectator");
+				console.log((user.name || "Anonymous") + " joined " + this.room + " as spectator");
 			}
 		}
 	}
 
-	prepare (socket, deck, token) {
+	prepare (player, deck, token) {
 
 		if (!DeckAnalyst.check(deck, token))
 			return;
 
-		var player = this.players.find(p => p.socket === socket);
 		var players = this.players;
 		var that = this;
 		player.token = token;
@@ -56,21 +55,21 @@ class RoomManager extends Manager {
 			this.game.send = (type, src, data) => this.broadcast("notification", {type, src, data});
 			this.game.whisper = (type, no, src, ...data) => {
 				if (players[no]) {
-					players[no].socket.emit("notification", {type, src, data});
+					players[no].emit("notification", {type, src, data});
 					this.whispers[no].push({type, src, data});
 					that.players.forEach(p => {
 						if (p.access && p !== players[no] && p.access.some(e => e === no))
-							p.socket.emit("notification", {type, src, data});
+							p.emit("notification", {type, src, data});
 					});
 					that.spectators.forEach(s => {
 						if (s.access && s.access.some(e => e === no))
-							s.socket.emit("notification", {type, src, data});
+							s.emit("notification", {type, src, data});
 					});
 				}
 			}
 			this.game.explain = (type, src, data) => {
 				if (this.spectators)
-					this.spectators.forEach(s => s.socket.emit("notification", {type, src, data}));
+					this.spectators.forEach(s => s.emit("notification", {type, src, data}));
 			}
 			this.game.end = (winner) => {
 				
@@ -92,10 +91,10 @@ class RoomManager extends Manager {
 				}
 
 				if (players[winner])
-					players[winner].socket.emit("endgame", {state: 3, credit: creditsW}); // State 3 : win
+					players[winner].emit("endgame", {state: 3, credit: creditsW}); // State 3 : win
 				if (players[1-winner])
-					players[1-winner].socket.emit("endgame", {state: 4, credit: creditsL}); // State 4 : lose
-				this.spectators.forEach(spec => spec.socket.emit("endgame", {state: 1})); // State 1 : end
+					players[1-winner].emit("endgame", {state: 4, credit: creditsL}); // State 4 : lose
+				this.spectators.forEach(spec => spec.emit("endgame", {state: 1})); // State 1 : end
 				var winnername = players[winner] ? players[winner].name || "Anonymous" : "?";
 				var losername = players[1-winner] ? players[1-winner].name || "Anonymous" : "?";
 				console.log("Game " + this.room + " ended | " + winnername + " won over " + losername);
@@ -123,9 +122,9 @@ class RoomManager extends Manager {
 		}
 	}
 
-	command (socket, cmd) {
+	command (user, cmd) {
 
-		var no = this.players.findIndex(p => p.socket === socket);
+		var no = this.players.findIndex(p => p === user);
 		if (no >= 0) {
 			try {
 				this.game.command(cmd, no);
@@ -138,71 +137,71 @@ class RoomManager extends Manager {
 					CreditManager.creditPlayer(this.players[0].name, c + (this.players[0].bonus ? c : 0));
 					CreditManager.creditPlayer(this.players[1].name, c + (this.players[1].bonus ? c : 0));
 				}
-				this.players.forEach(p => p.socket.emit("endgame", {state: 6, credit: c + (p.bonus ? c : 0)})); // State 6 : internal error
-				this.spectators.forEach(s => s.socket.emit("endgame", {state: 6}));
+				this.players.forEach(p => p.emit("endgame", {state: 6, credit: c + (p.bonus ? c : 0)})); // State 6 : internal error
+				this.spectators.forEach(s => s.emit("endgame", {state: 6}));
 				console.log("Game " + this.room + " ended by internal error");
 				console.log("Generated " + (c * 2) + " credits");
 			}
 		}
 	}
 
-	chatcommand (socket, text) {
+	chatcommand (user, text) {
 
 		var items = text.split(' ');
 		var cmd = items[0];
 
 		switch (cmd) {
 		case "reveal": {
-			var p = this.players.find(p => p.socket === socket);
+			var p = this.players.find(p => p === user);
 			if (!p || items.length > 1) {
-				var no = this.players.findIndex(p => p.socket === socket);
-				var other = this.players.find(p => p.socket.name && p.socket.name === items[1]);
+				var no = this.players.findIndex(p => p === user);
+				var other = this.players.find(p => p.name && p.name === items[1]);
 				if (!other)
-					other = this.spectators.find(p => p.socket.name && p.socket.name === items[1]);
+					other = this.spectators.find(p => p.name && p.name === items[1]);
 				if (other && other !== p && (!other.access || !other.access.some(e => e === no))) {
 					this.whispers[no].forEach(w => {
-						other.socket.emit("notification", w);
+						other.emit("notification", w);
 					})
-					other.socket.emit("info", { type: "access", access: no});
+					other.emit("info", { type: "access", access: no});
 					other.access = other.access || [];
 					other.access.push(no);
-					socket.emit("chat", { type: "info", info: 1 });
+					user.emit("chat", { type: "info", info: 1 });
 				} else
-					socket.emit("chat", { type: "info", info: 2 });
+					user.emit("chat", { type: "info", info: 2 });
 			} else
-				socket.emit("chat", { type: "info", info: 2 });
+				user.emit("chat", { type: "info", info: 2 });
 			break;
 		}
-		default: socket.emit("chat", { type: "info", info: 0 });
+		default: user.emit("chat", { type: "info", info: 0 });
 		}
 	}
 
-	chat (socket, text) {
+	chat (user, text) {
 
-		if (socket.name){
-			this.broadcast("chat", { type: "text", from: socket.name, text });
+		if (user.name){
+			this.broadcast("chat", { type: "text", from: user.name, text });
 			return;
 		}
 
-		if (this.players.find(p => p.socket === socket)) {
-			this.players.forEach(p => p.socket.emit("chat", { type: "text", from: p.socket === socket ? 0 : 1, text }));
-			var no = this.players[0].socket === socket ? 2 : 3;
-			this.spectators.forEach(s => s.socket.emit("chat", { type: "text", from: no, text }));
+		if (this.players.find(p => p === user)) {
+			this.players.forEach(p => p.emit("chat", { type: "text", from: p === user ? 0 : 1, text }));
+			var no = this.players[0] === user ? 2 : 3;
+			this.spectators.forEach(s => s.emit("chat", { type: "text", from: no, text }));
 		} else {
-			this.players.forEach(p => p.socket.emit("chat", { type: "text", from: 4, text }));
-			this.spectators.forEach(s => s.socket.emit("chat", { type: "text", from: s.socket === socket ? 0 : 4, text }));
+			this.players.forEach(p => p.emit("chat", { type: "text", from: 4, text }));
+			this.spectators.forEach(s => s.emit("chat", { type: "text", from: s === user ? 0 : 4, text }));
 		}
 	}
 
-	kick (socket) {
+	kick (user) {
 
-		this.spectators = this.spectators.filter(p => p.socket !== socket);
-		if (this.players.every(p => p.socket !== socket))
+		this.spectators = this.spectators.filter(p => p !== user);
+		if (this.players.every(p => p !== user))
 			return;
 		var same = this.players.length > 1 && this.players[0].name === this.players[1].name;
-		var pdis = this.players.find(p => p.socket === socket);
+		var pdis = this.players.find(p => p === user);
 		var name = pdis ? pdis.name : "Anonymous";
-		this.players = this.players.filter(p => p.socket !== socket);
+		this.players = this.players.filter(p => p !== user);
 		if (this.started && !this.finished && this.players.length <= 1) {
 			this.finish();
 			var c = 0;
@@ -211,8 +210,8 @@ class RoomManager extends Manager {
 				//if (this.players[0].bonus) c *= 2;
 				CreditManager.creditPlayer(this.players[0].name, c);
 			}
-			this.players.forEach(p => p.socket.emit("endgame", {state: 5, credit: c})); // State 5 : connection lost
-			this.spectators.forEach(s => s.socket.emit("endgame", {state: 5}));
+			this.players.forEach(p => p.emit("endgame", {state: 5, credit: c})); // State 5 : connection lost
+			this.spectators.forEach(s => s.emit("endgame", {state: 5}));
 			console.log("Game " + this.room + " ended | Connection with " + name + " lost");
 			console.log("Generated " + c + " credits");
 		}

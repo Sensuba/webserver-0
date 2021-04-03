@@ -12,39 +12,39 @@ class MissionManager extends Manager {
 		this.mission = mission;
 	}
 
-	init (socket, name, avatar) {
+	init (user) {
 
-		this.socket = socket;
+		this.user = user;
 		this.script = new Script(this.mission);
 		this.ai = new ScriptedAI(this.game, 1, this.script.data.ai.behaviour);
 
 		this.game.send = (type, src, data) => {
-			socket.emit("notification", {type, src, data});
+			user.emit("notification", {type, src, data});
 			if (type === "newturn" && src.no === 1)
 				this.callAI();
 		}
-		this.game.whisper = (type, no, src, ...data) => no === 0 ? socket.emit("notification", {type, src, data}) : {};
+		this.game.whisper = (type, no, src, ...data) => no === 0 ? user.emit("notification", {type, src, data}) : {};
 		this.game.end = (winner) => {
 				
 				this.game.ended = true;
-				this.socket.emit("endgame", {state: winner === 0 ? 3 : 4, credit: 0});
+				this.user.emit("endgame", {state: winner === 0 ? 3 : 4, credit: 0});
 				console.log("Mission for " + (name || "Anonymous") + " ended normally");
 			}
 		
 		try {
 			this.game.init(
-				{ name, avatar, socket, deck: this.script.data.player.deck, props: this.script.data.player.props },
+				{ name: user.name, avatar: user.avatar, socket: user.socket, deck: this.script.data.player.deck, props: this.script.data.player.props },
 				{ name: this.script.data.ai.name, deck: this.script.data.ai.deck, props: this.script.data.ai.props }
 			);
 			this.script.rule(this.game);
 			this.game.start(this.game.areas[this.script.data.first]);
 		} catch (e) {
 			console.log(e);
-			socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
+			user.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
 			console.log("Mission ended by internal error");
 		}
 
-		console.log((name || "Anonymous") + " started mission " + this.mission.mission + " - " + this.mission.chapter);
+		console.log((user.name || "Anonymous") + " started mission " + this.mission.mission + " - " + this.mission.chapter);
 	}
 
 	callAI () {
@@ -59,20 +59,20 @@ class MissionManager extends Manager {
 			} catch (e) {
 				console.log(e);
 				this.finish();
-				this.socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
+				this.user.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
 				console.log("Mission ended by internal error");
 			}
 		}, 500);
 	}
 
-	command (socket, cmd) {
+	command (user, cmd) {
 
 		try {
 			this.game.command(cmd, 0);
 		} catch (e) {
 			console.log(e);
 			this.finish();
-			this.socket.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
+			this.user.emit("endgame", {state: 6, credit: 0}); // State 6 : internal error
 			console.log("Mission ended by internal error");
 		}
 	}
