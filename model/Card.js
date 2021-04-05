@@ -982,16 +982,7 @@ class Card {
 		}
 		this.model = other.model;
 		this.parent = other.parent;
-		if (this.isType("entity")) {
-			this.php = other.php;
-			if (other.php) {
-				this.mutatedState = this.mutatedState || {};
-				this.mutatedState.hp = other.php.hp;
-				this.mutatedState.chp = other.php.chp;
-			}
-			this.update();
-			this.chp = other.chp;
-		}
+
 		this.events = [];
 		this.faculties = [];
 		this.passives = [];
@@ -1005,10 +996,24 @@ class Card {
 		this.poisondmg = other.poisondmg;
 		this.frozenTimer = other.frozenTimer;
 		this.identified = [false, false];
+
+		if (this.isType("entity")) {
+			this.php = other.php;
+			if (other.php) {
+				this.mutatedState = this.mutatedState || {};
+				this.mutatedState.hp = other.php.hp;
+				this.mutatedState.chp = other.php.chp;
+				this.mutatedState.states = Object.assign({}, this.states);
+			}
+			this.update();
+			this.chp = other.chp;
+		}
 		if (wasActivated)
 			this.activate();
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
+		if (this.isType("artifact") || this.isType("secret"))
+			this.faculties.push(new ArtifactSkill(new Event(() => new Update(() => this.destroy(), this.gameboard)), 0));
 
 		if (this.onBoard) {
 			this.skillPt = 1;
