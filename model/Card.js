@@ -153,7 +153,7 @@ class Card {
 			this.deactivate();
 			this.activate();
 		}
-		if (this.onBoard && former && former.area === this.area.opposite) {
+		if (this.onBoard && former && (former.area === this.area.opposite || former.locationOrder === null || former.locationOrder === undefined)) {
 			this.skillPt = 1;
 			this.resetSickness();
 		}
