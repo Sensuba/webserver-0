@@ -22,7 +22,7 @@ class Token extends Bloc {
 		this.types = [Types.int];
 	}
 
-	genParent (src) {console.log(src);
+	genParent (src) {
 
 		if (src.idCardmodel)
 			return src.idCardmodel > 10000 || src.idCardmodel < 0 ? src : src.idCardmodel;
