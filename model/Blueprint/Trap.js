@@ -17,7 +17,7 @@ class Trap extends Bloc {
 		var listener = new Listener(owner, () => that.src.gameboard.subscribe("draw", (t,s,d) => {
 			if (d[0] === owner) {
 				that.act = () => {
-					if (!owner.inHand && !(owner.location.id.type != "capsule"))
+					if (!owner.inHand && !(owner.location.id.type === "capsule"))
 						return;
 					owner.goto(owner.area.court);
 					owner.gameboard.notify("trap", owner);
