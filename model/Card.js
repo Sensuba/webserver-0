@@ -97,6 +97,7 @@ class Card {
 		delete copy.secretcount;
 		delete copy.secretparam;
 		delete copy.secreteffect;
+		copy.lastwill = this.innereffects && this.innereffects.some(ie => ie.type === "lw");
 		copy.model = this.model.idCardmodel;
 		if (copy.parent)
 			copy.parent = copy.parent.idCardmodel;
@@ -215,6 +216,7 @@ class Card {
 		this.shield = false;
 		delete this.poisondmg;
 		delete this.armor;
+		delete this.silenced;
 		this.dying = false;
 		delete this.variables;
 		delete this.countered;
@@ -987,15 +989,18 @@ class Card {
 		this.faculties = [];
 		this.passives = [];
 		this.innereffects = [];
+		other.innereffects.forEach(ie => this.innereffects.push(ie));
 		this.mutations = [];
 		this.cmutations = [];
 		this.states = Object.assign({}, other.states);
 		this.variables = Object.assign({}, other.variables);
 		this.shield = other.shield;
 		this.armor = other.armor;
+		this.silenced = other.silenced;
 		this.poisondmg = other.poisondmg;
 		this.frozenTimer = other.frozenTimer;
 		this.identified = [false, false];
+		this.silenced = other.silenced;
 
 		if (this.isType("entity")) {
 			this.php = other.php;
@@ -1010,8 +1015,10 @@ class Card {
 		}
 		if (wasActivated)
 			this.activate();
-		if (this.blueprint)
-			Reader.read(this.blueprint, this);
+		/*if (this.blueprint)
+			Reader.read(this.blueprint, this);*/
+		other.passives.forEach(p => this.passives.push(p.copy(this)));
+		other.faculties.forEach(f => this.faculties.push(f.copy()));
 		if (this.isType("artifact") || this.isType("secret"))
 			this.faculties.push(new ArtifactSkill(new Event(() => new Update(() => this.destroy(), this.gameboard)), 0));
 

@@ -15,6 +15,7 @@ class ContactMutation extends Bloc {
 
 		var mut = x => this.in[0]({src: owner, data: x})(x);
 		owner.cmutations.push({effect: mut, targets: this.in[1]()});
+		owner.innereffects.push(this);
 	}
 }
 

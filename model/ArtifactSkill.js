@@ -12,6 +12,11 @@ class ArtifactSkill extends Faculty {
 
 		return src.skillPt > 0 && !src.frozen && src.area && src.eff.chp >= -this.durability && (!this.event.requirement || this.event.requirement(src, target));
 	}
+
+	copy () {
+
+		return new ArtifactSkill(this.event, this.durability, this.text);
+	}
 }
 
 module.exports = ArtifactSkill;

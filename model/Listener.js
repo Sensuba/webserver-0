@@ -4,6 +4,7 @@ class Listener {
 		
 		this.src = src;
 		this.subscribe = subscribe;
+		this.globaleff = globaleff;
 		this.unsubscribe = () => {};
 		this.activated = false;
 		if (src.activated || globaleff)
@@ -14,7 +15,7 @@ class Listener {
 
 		if (this.activated)
 			return;
-		this.unsubscribe = this.subscribe();
+		this.unsubscribe = this.subscribe(this.src);
 		this.activated = true;
 	}
 
@@ -24,6 +25,11 @@ class Listener {
 			return;
 		this.unsubscribe();
 		this.activated = false;
+	}
+
+	copy (src) {
+
+		return new Listener(src, this.subscribe, this.globaleff);
 	}
 }
 

@@ -36,6 +36,11 @@ class Aura {
 
 		return this.mutation(target);
 	}
+
+	copy (src) {
+
+		return new Aura(src, this.mutation, this.area, this.targets);
+	}
 }
 
 module.exports = Aura;

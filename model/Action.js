@@ -16,6 +16,11 @@ class Action extends Faculty {
 
 		return src.actionPt > 0 && !src.firstTurn && !src.frozen && (!this.event.requirement || this.event.requirement(src, target));
 	}
+
+	copy () {
+
+		return new Action (this.event, this.text);
+	}
 }
 
 module.exports = Action;

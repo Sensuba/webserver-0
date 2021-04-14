@@ -16,10 +16,10 @@ class Listener extends Bloc {
 
 		var onBoard = this.in[1]();
 		var that = this;
-		owner.passives.push(new EListener(owner, () => this.in[0]().subscribe((t,s,d) => {
-			if (!onBoard || (owner.onBoard && !owner.isGhost)) {
+		owner.passives.push(new EListener(owner, own => this.in[0]().subscribe((t,s,d) => {
+			if (!onBoard || (own.onBoard && !own.isGhost)) {
 				that.data = { src: s, data: d };
-				that.execute({ src: owner, image: image });
+				that.execute({ src: own, image: image });
 			}
 		}), !onBoard));
 	}

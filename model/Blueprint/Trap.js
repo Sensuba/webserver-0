@@ -14,23 +14,23 @@ class Trap extends Bloc {
 	setup (owner, image) {
 
 		var that = this;
-		var listener = new Listener(owner, () => that.src.gameboard.subscribe("draw", (t,s,d) => {
-			if (d[0] === owner) {
+		var listener = new Listener(owner, own => that.src.gameboard.subscribe("draw", (t,s,d) => {
+			if (d[0] === own) {
 				that.act = () => {
-					if (!owner.inHand && !(owner.location.id.type === "capsule"))
+					if (!own.inHand && !(own.location.id.type === "capsule"))
 						return;
-					owner.goto(owner.area.court);
-					owner.gameboard.notify("trap", owner);
-					that.execute({src: owner, image: image});
-					owner.destroy();
-					owner.gameboard.update();
+					own.goto(own.area.court);
+					own.gameboard.notify("trap", own);
+					that.execute({src: own, image: image});
+					own.destroy();
+					own.gameboard.update();
 				}
-				if (owner.area.court.isEmpty)
+				if (own.area.court.isEmpty)
 					that.act();
 				else {
-					owner.goto(owner.area.capsule);
+					own.goto(own.area.capsule);
 					let unsub = that.src.gameboard.subscribe("cardmove", (t2,s2,d2) => {
-						if (owner.area.court.isEmpty) {
+						if (own.area.court.isEmpty) {
 							unsub();
 							that.act();
 						}

@@ -12,6 +12,11 @@ class Skill extends Faculty {
 
 		return src.skillPt > 0 && !src.frozen && src.area && src.area.manapool.usableMana >= this.mana && (!this.event.requirement || this.event.requirement(src, target));
 	}
+
+	copy () {
+
+		return new Skill(this.event, this.mana, this.text);
+	}
 }
 
 module.exports = Skill;
