@@ -28,7 +28,7 @@ class MissionManager extends Manager {
 				
 				this.game.ended = true;
 				this.user.emit("endgame", {state: winner === 0 ? 3 : 4, credit: 0});
-				console.log("Mission for " + (name || "Anonymous") + " ended normally");
+				console.log("Mission for " + (user.name || "Anonymous") + " ended normally");
 			}
 		
 		try {

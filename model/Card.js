@@ -846,7 +846,7 @@ class Card {
 			let spelltarget = targets ? targets[0] : undefined;
 			this.gameboard.notify("playcard", this, spelltarget);
 			spelltarget = targets ? (this.retarget || targets[0]) : undefined;
-			if (this.countered || (spelltarget && this.area && spelltarget.area && this.area != spelltarget.area && spelltarget.immune)) {
+			if (this.countered || (spelltarget && this.area && spelltarget.area && this.area != spelltarget.area && spelltarget.immune)) {console.log("")
 				this.destroy();
 				break;
 			}
@@ -1015,10 +1015,13 @@ class Card {
 		}
 		if (wasActivated)
 			this.activate();
-		/*if (this.blueprint)
-			Reader.read(this.blueprint, this);*/
-		other.passives.forEach(p => this.passives.push(p.copy(this)));
-		other.faculties.forEach(f => this.faculties.push(f.copy()));
+		if (this.onBoard || this.location.id.type === "capsule") {
+			other.passives.forEach(p => this.passives.push(p.copy(this)));
+			other.faculties.forEach(f => this.faculties.push(f.copy()));
+		} else {
+			if (this.blueprint)
+				Reader.read(this.blueprint, this);
+		}
 		if (this.isType("artifact") || this.isType("secret"))
 			this.faculties.push(new ArtifactSkill(new Event(() => new Update(() => this.destroy(), this.gameboard)), 0));
 
