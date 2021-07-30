@@ -20,7 +20,7 @@ class Analyse extends Bloc {
 			}
 			return [count > 0, count];
 		}
-		this.types = [Types.event, Types.period, Types.bool];
+		this.types = [Types.event, Types.period, Types.bool, Types.int];
 	}
 
 	execute (props) {
@@ -41,8 +41,10 @@ class Analyse extends Bloc {
 				c = 0;
 			let nprops = Object.assign({}, props);
 			nprops.data = { src:log.src, data:log.data };
-			if (event.check(log.type, log.src, log.data) && this.in[2](nprops))
-				c++;
+			if (event.check(log.type, log.src, log.data) && this.in[2](nprops)) {
+				let add = this.in[3] ? this.in[3](nprops) : null;
+				c += add === null || add === undefined ? 1 : add;
+			}
 		})
 		return c;
 	}
@@ -55,8 +57,10 @@ class Analyse extends Bloc {
 				c = 0;
 			let nprops = Object.assign({}, props);
 			nprops.data = { src:log.src, data:log.data };
-			if (event.check(log.type, log.src, log.data) && this.in[2](nprops))
-				c++;
+			if (event.check(log.type, log.src, log.data) && this.in[2](nprops)) {
+				let add = this.in[3] ? this.in[3](nprops) : null;
+				c += add === null || add === undefined ? 1 : add;
+			}
 		})
 		return c;
 	}
@@ -75,8 +79,10 @@ class Analyse extends Bloc {
 				return;
 			let nprops = Object.assign({}, props);
 			nprops.data = { src:log.src, data:log.data };
-			if (event.check(log.type, log.src, log.data) && this.in[2](nprops))
-				c++;
+			if (event.check(log.type, log.src, log.data) && this.in[2](nprops)) {
+				let add = this.in[3] ? this.in[3](nprops) : null;
+				c += add === null || add === undefined ? 1 : add;
+			}
 		})
 		return c;
 	}
@@ -89,19 +95,25 @@ class Analyse extends Bloc {
 				c = 0;
 			let nprops = Object.assign({}, props);
 			nprops.data = { src:log.src, data:log.data };
-			if (event.check(log.type, log.src, log.data) && this.in[2](nprops))
-				c++;
+			if (event.check(log.type, log.src, log.data) && this.in[2](nprops)) {
+				let add = this.in[3] ? this.in[3](nprops) : null;
+				c += add === null || add === undefined ? 1 : add;
+			}
 		})
 		return c;
 	}
 
 	countAllGame (event, props) {
 
-		return event.gameboard.log.logs.filter(log => {
+		return event.gameboard.log.logs.reduce((acc, log) => {
 			let nprops = Object.assign({}, props);
 			nprops.data = { src:log.src, data:log.data };
-			return event.check(log.type, log.src, log.data) && this.in[2](nprops)
-		}).length;
+			if (event.check(log.type, log.src, log.data) && this.in[2](nprops)) {
+				let add = this.in[3] ? this.in[3](nprops) : null;
+				return acc + (add === null || add === undefined ? 1 : add);
+			}
+			return acc;
+		}, 0);
 	}
 }
 

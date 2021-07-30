@@ -23,7 +23,9 @@ class Deck {
 		this.cards = [];
 		if (!shuffle)
 			this.shufflelock = true;
-		list.forEach(el => new Card(Bank.get(el), this.area.gameboard, this));
+		this.starting = list.map(el => Bank.get(el));
+		this.starting.forEach(el => new Card(el, this.area.gameboard, this));
+		this.highlander = new Set(this.starting.map(card => card.idCardmodel)).size === this.starting.length;
 		delete this.shufflelock;
 	}
 

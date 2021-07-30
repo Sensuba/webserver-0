@@ -1,14 +1,14 @@
 
-const MAX_CARDS = 3;
+const MAX_CARDS = 2;
 
-class SecretBox {
+class HonorBoard {
 
 	constructor (area) {
 
-		this.id = { type: "secretbox", no: area.id.no };
+		this.id = { type: "honorboard", no: area.id.no };
 
 		this.locationOrder = 3;
-		this.public = false;
+		this.public = true;
 
 		this.area = area;
 
@@ -63,4 +63,4 @@ class SecretBox {
 	}
 }
 
-module.exports = SecretBox;
+module.exports = HonorBoard;

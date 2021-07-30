@@ -3,6 +3,7 @@ var Card = require("./Card");
 var Field = require("./Field");
 var Hand = require("./Hand");
 var Court = require("./Court");
+var HonorBoard = require("./HonorBoard");
 var Cemetery = require("./Cemetery");
 var Discard = require("./Discard");
 var Capsule = require("./Capsule");
@@ -23,6 +24,7 @@ class Area {
 		this.hand = new Hand(this);
 		this.manapool = new ManaPool(this);
 		this.court = new Court(this);
+		this.honorboard = new HonorBoard(this);
 		this.cemetery = new Cemetery(this);
 		this.discard = new Discard(this);
 		this.capsule = new Capsule(this);

@@ -3,6 +3,7 @@ var Hand = require("./Hand");
 var Deck = require("./Deck");
 var Tile = require("./Tile");
 var Court = require("./Court");
+var HonorBoard = require("./HonorBoard");
 var Cemetery = require("./Cemetery");
 var Discard = require("./Discard");
 var Update = require("./Update");
@@ -148,7 +149,7 @@ class Card {
 			this.resetBody ();
 		if (loc && !loc.hasCard (this))
 			loc.addCard (this);
-		if (loc instanceof Tile && !(former instanceof Tile) && !this.activated)
+		if ((loc instanceof Tile || loc instanceof HonorBoard) && !(former instanceof Tile) && !this.activated)
 			this.activate();
 		if (former instanceof Tile && loc instanceof Tile && this.activated && former.area !== loc.area) {
 			this.deactivate();
@@ -225,6 +226,7 @@ class Card {
 		delete this.secretparam;
 		delete this.secreteffect;
 		delete this.goingtodie;
+		delete this.steps;
 		if (!model.blueprint)
 			delete this.blueprint;
 		this.clearBoardInstance();
@@ -752,6 +754,16 @@ class Card {
 
 		if (!this.inHand || !this.canBePaid || !this.area.isPlaying)
 			return false;
+		if (this.isType("trial")) {
+			if (!this.steps) return false;
+			let i = 0;
+			while (i < this.steps.length) {
+				if (!this.area.honorboard.cards.some(c => c.model.idCardmodel === this.model.idCardmodel && c.steps[i].completed))
+					return this.steps[i].condition();
+				i++;
+			}
+			return false;
+		}
 		if (this.targets.length === 0)
 			return true;
 
@@ -762,6 +774,16 @@ class Card {
 
 		if (!this.inHand || !this.canBePaid || !this.area.isPlaying)
 			return false;
+		if (this.isType("trial")) {
+			if (!this.steps) return false;
+			let i = 0;
+			while (i < this.steps.length) {
+				if (!this.area.honorboard.cards.some(c => c.model.idCardmodel === this.model.idCardmodel && c.steps[i].completed))
+					return this.steps[i].condition();
+				i++;
+			}
+			return false;
+		}
 		if (this.targets.length === 0)
 			return true;
 		if (!targets || targets.length === 0)
@@ -846,7 +868,7 @@ class Card {
 			let spelltarget = targets ? targets[0] : undefined;
 			this.gameboard.notify("playcard", this, spelltarget);
 			spelltarget = targets ? (this.retarget || targets[0]) : undefined;
-			if (this.countered || (spelltarget && this.area && spelltarget.area && this.area != spelltarget.area && spelltarget.immune)) {console.log("")
+			if (this.countered || (spelltarget && this.area && spelltarget.area && this.area != spelltarget.area && spelltarget.immune)) {
 				this.destroy();
 				break;
 			}
@@ -856,6 +878,28 @@ class Card {
 		case "secret":
 			this.goto(targets[0]);
 			this.gameboard.notify("playcard", this, targets[0]);
+			break;
+		case "trial":
+			this.goto(this.area.court);
+			this.gameboard.notify("playcard", this);
+			if (this.countered) {
+				this.destroy();
+				break;
+			}
+			let i = 0;
+			while (i < this.steps.length) {
+				if (!this.area.honorboard.cards.some(c => c.model.idCardmodel === this.model.idCardmodel && c.steps[i].completed)) {
+					this.steps[i].trigger();
+					this.steps[i].completed = true;
+					let step = i + 1;
+					this.gameboard.notify("trial", this, step);
+					this.goto(this.area.honorboard);
+					break;
+				}
+				i++;
+			}
+			if (i >= this.steps.length)
+				this.destroy();
 			break;
 		default: break;
 		}
