@@ -523,6 +523,7 @@ class Card {
 
 		this.ol += value;
 		this.gameboard.notify("overloadcard", this, value);
+		this.update();
 	}
 
 	silence () {
