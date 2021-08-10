@@ -178,6 +178,7 @@ class Card {
 			Notify ("card.move", former, value);
 		if (location is Tile)
 			lastTileOn = location as Tile;*/
+		this.update();
 	}
 
 	/*loadModel () {
@@ -471,13 +472,11 @@ class Card {
 
 		this.atk += atk;
 		this.hp += hp;
-		if (hp < 0 && !this.isType("artifact"))
-			this.chp = Math.min(this.chp, this.eff.hp);
 		this.range = Math.min(this.range + range, MAX_RANGE);
 		this.gameboard.notify("boostcard", this, atk, hp, range);
 		this.update();
-		if (this.chp <= 0)
-			new Update(() => this.destroy(), this.gameboard);
+		if (hp < 0 && !this.isType("artifact"))
+			this.chp = Math.min(this.chp, this.eff.hp);
 	}
 
 	changeCost (value) {
@@ -1204,6 +1203,8 @@ class Card {
 
 		if (!wasCovering && res.states["cover neighbors"])
 			this.gameboard.update();
+		if (res.chp != null && res.chp != undefined && res.chp <= 0)
+			new Update(() => this.destroy(), this.gameboard);
 	}
 
 	/*get eff () {
