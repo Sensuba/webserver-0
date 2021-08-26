@@ -436,6 +436,12 @@ class Card {
 		this.damage(this.poisondmg, null);
 	}
 
+	charge (charge) {
+
+		this.gameboard.notify("charge", this, charge);
+		this.charges = Math.min(5, Math.max(0, (this.charges || 0) + charge));
+	}
+
 	heal (amt, src) {
 
 		if (amt === null || amt === undefined)
