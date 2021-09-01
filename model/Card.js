@@ -13,7 +13,7 @@ var Mutation = require("./Mutation");
 var Reader = require("./Blueprint/Reader");
 
 const MAX_RANGE = 3;
-
+ 
 class Card {
 
 	constructor (model, board, location, nullify) {
