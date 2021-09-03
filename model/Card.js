@@ -1194,6 +1194,10 @@ class Card {
 			if (aura.applicable(this))
 				res = aura.apply(res);
 		});
+		if (this.onBoard && this.location.hasHazards("wind")) {
+			res.states = res.states || {};
+			res.states.initiative = true;
+		}
 		if (!this.mutatedState)
 			this.mutatedState = res;
 		this.mutatedState.states = Object.assign({}, res.states);

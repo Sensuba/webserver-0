@@ -263,7 +263,6 @@ class Tile {
 				case "water": if (card.isType("figure")) { card.freeze(); this.clearHazards(hazards); } break;
 				case "flowers": if (card.isType("figure")) { card.boost((this.area.hero && this.area.hero.variables && this.area.hero.variables.flowersboost ? this.area.hero.variables.flowersboost : 0) + 200, (this.area.hero && this.area.hero.variables && this.area.hero.variables.flowersboost ? this.area.hero.variables.flowersboost : 0) + 200, 0); this.clearHazards(hazards); } break;
 				case "butterflies": if (card.isType("figure")) { card.poison((this.area.hero && this.area.hero.butterfliesboost && this.area.hero.variables.butterfliesboost ? this.area.hero.variables.butterfliesboost : 0) + 200); this.clearHazards(hazards); } break;
-				case "wind": if (card.isType("character")) { card.setPoints (card.actionPt, card.skillPt, card.motionPt + 1); this.clearHazards(hazards); } break;
 				case "portal": {
 					let target = null;
 					let portals = [];
