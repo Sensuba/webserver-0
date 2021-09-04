@@ -1184,7 +1184,7 @@ class Card {
 		let updatephp = () => {
 			if (this.isType("character") && this.onBoard) {
 				this.php = this.php || { hp: this.hp, chp: this.chp };
-				var plushp = Math.max (0, res.hp - this.php.hp);
+				var plushp = Math.max (res.negativehpmodifier || 0, res.hp - this.php.hp);
 				this.chp = Math.min(res.hp, (this.chp || this.hp) + plushp);
 				res.chp = this.chp;
 				this.php = { hp: res.hp, chp: res.chp };
