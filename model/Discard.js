@@ -5,7 +5,7 @@ class Discard {
 
 		this.id = { type: "discard", no: area.id.no };
 
-		this.locationOrder = 0;
+		this.locationOrder = 4;
 
 		this.area = area;
 
