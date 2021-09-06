@@ -7,6 +7,8 @@ class DoesCover extends Bloc {
 
 		super("cover", src, ctx);
 		this.f = (src, ins) =>  {
+			if (!ins[0] || !ins[1])
+				return [false, false, false];
 			var card = ins[0].original || ins[0];
 			return [card.cover(ins[1], false) || card.cover(ins[1], true), card.cover(ins[1], false), card.cover(ins[1], true)];
 		}
