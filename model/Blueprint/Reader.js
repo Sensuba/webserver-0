@@ -410,6 +410,8 @@ class Reader {
 			case "levelup-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.src.level]); break;
 			case "secret-trigger": bloc = new Trigger(el.type, card, ctx, "triggersecret"); break;
 			case "secret-data": bloc = new Data(el.type, card, ctx, d => [d.src]); break;
+			case "hazards-trigger": bloc = new Trigger(el.type, card, ctx, "hazards"); break;
+			case "hazards-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[0].value]); break;
 			default: bloc = new Bloc(el.type, card, ctx); break;
 			}
 			ctx[key].push(bloc);
