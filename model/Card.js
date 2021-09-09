@@ -1194,9 +1194,14 @@ class Card {
 			if (aura.applicable(this))
 				res = aura.apply(res);
 		});
-		if (this.onBoard && this.location.hasHazards("wind")) {
-			res.states = res.states || {};
-			res.states.initiative = true;
+		if (this.onBoard) {
+			if (this.location.hasHazards("wind")) {
+				res.states = res.states || {};
+				res.states.initiative = true;
+			} else if if (this.location.hasHazards("shadow")) {
+				res.states = res.states || {};
+				res.states.concealed = true;
+			}
 		}
 		if (!this.mutatedState)
 			this.mutatedState = res;
