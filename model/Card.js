@@ -540,7 +540,9 @@ class Card {
 		this.mutations = [];
 		this.cmutations = [];
 		this.events = [];
-		this.states = {};
+		if (this.hasState("glazed"))
+			this.states = { glazed: true };
+		else this.states = {};
 		delete this.poisondmg;
 		delete this.armor;
 		this.breakShield();

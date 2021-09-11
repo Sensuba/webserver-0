@@ -19,7 +19,7 @@ class Skill extends Bloc {
 
 		var ins = this.computeIn();
 		var req = ins[0];
-		var tar = this.target ? (req ? (src, target) => (req(src, target) && (!target.card || target.card.targetableBy(owner))) : (src, target) => true) : null;
+		var tar = this.target ? (req ? (src, target) => (this.in[0]()(src, target) && (!target.card || target.card.targetableBy(owner))) : (src, target) => true) : null;
 		var e = new Event((src, target) => {
 			if (target)
 				this.chosen = target;

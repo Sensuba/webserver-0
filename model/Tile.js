@@ -1,4 +1,4 @@
-const HAZARDS_GROUPS = [["fire", "water", "flowers", "butterflies"], ["wind"], ["shadow"], ["portal, seal"]]
+const HAZARDS_GROUPS = [["fire", "water", "flowers", "butterflies"], ["wind"], ["shadow"], ["portal", "seal"]]
 
 class Tile {
 

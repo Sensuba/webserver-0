@@ -73,9 +73,11 @@ class Area {
 
 	newTurn () {
 
-		this.opposite.field.tiles.forEach(t => {
+		this.field.tiles.forEach(t => {
 			if (t.hasHazards("wind"))
 				t.clearHazards("wind");
+			if (t.hasHazards("shadow"))
+				t.clearHazards("shadow");
 		})
 		this.field.entities.forEach(e => {
 			if (e.poisoned)
