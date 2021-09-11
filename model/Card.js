@@ -1009,7 +1009,9 @@ class Card {
 			delete this.idCardmodel;
 		//var variables = Object.assign({}, this.variables);
 		delete this.variables;
+		this.computing = true;
 		this.resetBody();
+		delete this.computing;
 		//this.variables = variables;
 
 		if (this.onBoard) {
@@ -1019,6 +1021,7 @@ class Card {
 			this.resetSickness();
 		}
 		this.gameboard.notify("transform", this, {data:this.data});
+		this.gameboard.update();
 	}
 
 	copy (other, glaze) {
