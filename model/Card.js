@@ -100,8 +100,15 @@ class Card {
 		delete copy.secreteffect;
 		copy.lastwill = this.innereffects && this.innereffects.some(ie => ie.type === "lw");
 		copy.model = this.model.idCardmodel;
+		var genParent = a => {
+			if (a.parent) {
+				if (a.parent.parent)
+					return { parent: genParent(a.parent), notoken: a.parent.notoken };
+				else return a.parent.idCardmodel;
+			}
+		}
 		if (copy.parent)
-			copy.parent = copy.parent.idCardmodel;
+			copy.parent = genParent(copy);
 		return copy;
 	}
 
@@ -396,7 +403,8 @@ class Card {
 		if (!discret)
 			this.gameboard.notify("damagecard", this, dmg, src, overkill);
 		if (this.chp <= 0 || (!this.isType("hero") && src && src.hasState("lethal"))) {
-			new Update(() => this.destroy(), this.gameboard);
+			this.goingtodie = true;
+			new Update(() => { if (this.goingtodie) this.destroy(); }, this.gameboard);
 		}
 		if (discret)
 			return () => this.gameboard.notify("damagecard", this, dmg, src, overkill);
@@ -1009,19 +1017,17 @@ class Card {
 			delete this.idCardmodel;
 		//var variables = Object.assign({}, this.variables);
 		delete this.variables;
-		this.computing = true;
 		this.resetBody();
-		delete this.computing;
 		//this.variables = variables;
 
 		if (this.onBoard) {
 			this.skillPt = 1;
 			this.chp = this.hp;
+			this.php = { hp: this.hp, chp: this.chp }
 			this.activate();
 			this.resetSickness();
 		}
 		this.gameboard.notify("transform", this, {data:this.data});
-		this.gameboard.update();
 	}
 
 	copy (other, glaze) {
@@ -1223,8 +1229,10 @@ class Card {
 
 		if (!wasCovering && res.states["cover neighbors"])
 			this.gameboard.update();
-		if (res.chp != null && res.chp != undefined && res.chp <= 0)
-			new Update(() => this.destroy(), this.gameboard);
+		if (res.chp != null && res.chp != undefined && res.chp <= 0) {
+			this.goingtodie = true;
+			new Update(() => { if (this.goingtodie) this.destroy(); }, this.gameboard);
+		}
 	}
 
 	/*get eff () {
