@@ -137,6 +137,7 @@ var InnerData = require('./InnerData');
 var Token = require('./Token');
 var Timestamp = require('./Timestamp');
 var LimitBreak = require('./LimitBreak');
+var Source = require('./Source');
 var ManaPool = require('./ManaPool');
 var Highlander = require('./Highlander');
 var FindRandomCard = require('./FindRandomCard');
@@ -320,6 +321,7 @@ class Reader {
 			case "current": bloc = new CurrentPlayer(card, ctx); break;
 			case "timestamp": bloc = new Timestamp(card, ctx); break;
 			case "limitbrk": bloc = new LimitBreak(card, ctx); break;
+			case "source": bloc = new Source(card, ctx); break;
 			case "manapool": bloc = new ManaPool(card, ctx); break;
 			case "highlander": bloc = new Highlander(card, ctx); break;
 			case "intvar": bloc = new IntVariable(card, ctx); break;

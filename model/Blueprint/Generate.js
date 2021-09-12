@@ -10,8 +10,9 @@ class Generate extends Bloc {
 		this.f = (src, ins) => {
 			var gen;
 			var n = ins[1] === null ? 1 : ins[1];
-			for (var i = 0; i < n; i++)
+			for (var i = 0; i < n; i++) {
 				gen = new Card(ins[0], src.gameboard, ins[2]);
+			}
 			return [gen];
 		};
 		this.types = [Types.model, Types.int, Types.location];
