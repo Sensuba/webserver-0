@@ -6,7 +6,7 @@ class Source extends Bloc {
 	constructor (src, ctx) {
 
 		super("source", src, ctx);
-		this.f = (src, ins) => [src];
+		this.f = (src, ins) => [this.src];
 		this.types = [];
 	}
 }
