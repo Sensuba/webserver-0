@@ -556,6 +556,7 @@ class Card {
 		this.breakShield();
 		delete this.blueprint;
 		delete this.variables;
+		delete this.charges;
 		this.mana = this.originalMana;
 		this.atk = this.originalAtk;
 		this.hp = this.originalHp;
