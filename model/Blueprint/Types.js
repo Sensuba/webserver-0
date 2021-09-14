@@ -142,6 +142,7 @@ class Types {
 		case 'enemy entity': return targets.enemyEntity;
 		case 'enemy character': return targets.enemyCharacter;
 		case 'enemy figure': return targets.enemyFigure;
+		case 'player': return targets.player;
 		default: return targets.tile;
 		}
 	}

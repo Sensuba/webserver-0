@@ -18,7 +18,8 @@ const targets = {
 	enemyEmpty: (src, target) => targets.enemy(src, target) && targets.empty(src, target),
 	enemyEntity: (src, target) => targets.enemy(src, target) &&targets.entity(src, target),
 	enemyCharacter: (src, target) => targets.enemy(src, target) && targets.character(src, target),
-	enemyFigure: (src, target) => targets.enemy(src, target) && targets.figure(src, target)
+	enemyFigure: (src, target) => targets.enemy(src, target) && targets.figure(src, target),
+	player: (src, target) => target.occupied && target.card.isType("hero"),
 };
 
 class Event {
