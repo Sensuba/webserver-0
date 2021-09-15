@@ -21,7 +21,7 @@ class Listener {
 
 	deactivate () {
 
-		if (!this.activated && this.globaleff)
+		if (!this.activated || this.globaleff)
 			return;
 		this.unsubscribe();
 		this.activated = false;
