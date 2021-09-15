@@ -402,7 +402,7 @@ class Card {
 		let overkill = this.chp <= 0 ? -this.chp : 0;
 		if (!discret)
 			this.gameboard.notify("damagecard", this, dmg, src, overkill);
-		if (this.chp <= 0 || (!this.isType("hero") && src && src.hasState("lethal"))) {
+		if (this.chp <= 0 || (this.isType("figure") && src && src.hasState("lethal"))) {
 			this.goingtodie = true;
 			new Update(() => { if (this.goingtodie) this.destroy(); }, this.gameboard);
 		}
@@ -1028,6 +1028,7 @@ class Card {
 			this.activate();
 			this.resetSickness();
 		}
+		this.update();
 		this.gameboard.notify("transform", this, {data:this.data});
 	}
 
