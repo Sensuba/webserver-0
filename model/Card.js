@@ -885,7 +885,7 @@ class Card {
 			let spelltarget = targets ? targets[0] : undefined;
 			this.gameboard.notify("playcard", this, spelltarget);
 			spelltarget = targets ? (this.retarget || targets[0]) : undefined;
-			if (this.countered || (spelltarget && this.area && spelltarget.area && this.area != spelltarget.area && spelltarget.immune)) {
+			if (this.countered || (spelltarget && this.area && spelltarget.area && this.area != spelltarget.area && spelltarget.immune && this.targets[0](this, spelltarget) !== "player")) {
 				this.destroy();
 				break;
 			}

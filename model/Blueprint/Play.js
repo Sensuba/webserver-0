@@ -17,7 +17,12 @@ class Play extends Bloc {
 	setup (owner, image) {
 
 		var req = this.in[0]();
-		var tar = this.target ? (req ? (src, target) => (this.in[0]()(src, target) && (!target.card || target.card.targetableBy(owner))) : (src, target) => true) : null;
+		var tar = this.target ? (req ? (src, target) => {
+			let res = this.in[0]()(src, target);
+			if (res === "player")
+				return true;
+			return res && (!target.card || target.card.targetableBy(owner));
+		} : (src, target) => true) : null;
 		owner.events.push(new Event((src, target) => {
 			if (target)
 				this.chosen = target;
