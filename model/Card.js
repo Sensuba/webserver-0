@@ -228,6 +228,7 @@ class Card {
 		delete this.silenced;
 		this.dying = false;
 		delete this.variables;
+		delete this.charges;
 		delete this.countered;
 		delete this.retarget;
 		delete this.secretcount;
@@ -675,7 +676,7 @@ class Card {
 			target = this.retarget.card;
 			delete this.retarget;
 		}
-		if (this.destroyed || this.isGhost || !this.onBoard) {
+		if (this.destroyed || this.isGhost || !this.onBoard || target.destroyed || target.isGhost || !target.onBoard) {
 			this.gameboard.update();
 			return;
 		}
