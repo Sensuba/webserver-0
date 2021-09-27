@@ -10,7 +10,7 @@ class LastWill extends Bloc {
 		this.f = (src, ins) => [this];
 		this.types = [];
 		this.out = [this];
-		this.trigger = (src, image) => this.execute({src, image});
+		this.trigger = (src, image) => this.execute({src, image, trigger: this});
 	}
 
 	setup (owner, image) {
