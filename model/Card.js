@@ -400,15 +400,26 @@ class Card {
 		}
 
 		this.chp -= dmg;
-		let overkill = this.chp <= 0 ? -this.chp : 0;
-		if (!discret)
+		let overkill = this.chp <= 0 ? -this.chp : 0, overkilln = () => {};
+		if (src && src.hasState("piercing") && overkill && this.location.tilesBehind.some(t => t.occupied && t.card.isType("entity"))) {
+			let okn = this.location.tilesBehind.filter(t => t.occupied && t.card.isType("entity")).map(t => t.card.damage(overkill, src, true));
+			overkilln = () => { okn.forEach(n => n()); }
+		}
+		var damagen = () => {
+
 			this.gameboard.notify("damagecard", this, dmg, src, overkill);
+			overkilln();
+			if (src && src.hasState("lifelink"))
+				src.area.hero.heal(dmg, src);
+		}
+		if (!discret)
+			damagen();
 		if (this.chp <= 0 || (this.isType("figure") && src && src.hasState("lethal"))) {
 			this.goingtodie = true;
 			new Update(() => { if (this.goingtodie) this.destroy(); }, this.gameboard);
 		}
 		if (discret)
-			return () => this.gameboard.notify("damagecard", this, dmg, src, overkill);
+			return () => damagen();
 	}
 
 	poison (psn) {
