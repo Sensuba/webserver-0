@@ -1,7 +1,7 @@
 var Bloc = require('./Bloc');
 var Types = require('./Types');
 
-class Copycar extends Bloc {
+class Copycat extends Bloc {
 
 	constructor (src, ctx) {
 
@@ -14,4 +14,4 @@ class Copycar extends Bloc {
 	}
 }
 
-module.exports = Copycar;
+module.exports = Copycat;
