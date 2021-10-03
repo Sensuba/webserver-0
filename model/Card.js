@@ -968,6 +968,7 @@ class Card {
 		this.states = this.states || {};
 		this.states[state] = value;
 		this.gameboard.notify("setstate", this, { type: "string", value: state }, { type: "boolean", value: value });
+		this.update();
 	}
 
 	move (tile) {
@@ -1091,7 +1092,7 @@ class Card {
 		if (wasActivated)
 			this.activate();
 		if (this.onBoard || (this.location.id.type === "capsule" && this.isType("entity"))) {
-			other.passives.forEach(p => this.passives.push(p.copy(this)));
+			other.passives.forEach(p => this.passives.push(p.copy(this)));console.log(this.passives)
 			other.faculties.forEach(f => this.faculties.push(f.copy()));
 		} else {
 			if (this.blueprint)
