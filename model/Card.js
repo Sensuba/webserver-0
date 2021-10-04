@@ -700,8 +700,7 @@ class Card {
 		if (dmg2) dmg2(); if (dmg1) dmg1();
 		this.oncontact = null;
 		target.oncontact = null;
-		if (!target.isType("artifact"))
-			this.gameboard.notify("charcontact", this, target);
+		this.gameboard.notify("charcontact", this, target);
 		this.gameboard.update();
 	}
 
@@ -1041,7 +1040,7 @@ class Card {
 			this.activate();
 			this.resetSickness();
 		}
-		this.update();
+		this.gameboard.update();
 		this.gameboard.notify("transform", this, {data:this.data});
 	}
 
@@ -1107,6 +1106,7 @@ class Card {
 		}
 		var trsdata = this.data;
 		trsdata.php = other.php;
+		this.gameboard.update();
 		this.gameboard.notify("transform", this, {data: trsdata});
 		if (glaze)
 			this.setState("glazed", true);
