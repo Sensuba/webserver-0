@@ -82,7 +82,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 		for (var i = 0; i < 10; i++)
 			roomname += batch.charAt(Math.floor(Math.random() * batch.length));
 		if (!(roomname in rooms))
-			rooms[roomname] = new RoomManager(roomname, prv);
+			rooms[roomname] = new RoomManager(roomname, api, prv);
 		socket.emit('assign', {to: roomname});
 	});
 
@@ -91,7 +91,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 		socket.join(roomname);
 		socket.room = roomname;
 		if (!(roomname in rooms))
-			rooms[roomname] = new RoomManager(roomname);
+			rooms[roomname] = new RoomManager(roomname, api);
 		var manager = rooms[roomname];
 		var user = new User(socket, id, manager, name, avatar);
 		user.bonus = bonus;

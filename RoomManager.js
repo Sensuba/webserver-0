@@ -4,10 +4,11 @@ var DeckAnalyst = require("./DeckAnalyst");
 
 class RoomManager extends Manager {
 
-	constructor (room, prv = true) {
+	constructor (room, api, prv = true) {
 
 		super("room");
 		this.room = room;
+		this.api = api;
 		this.private = prv;
 		this.players = [];
 		this.spectators = [];
@@ -97,6 +98,10 @@ class RoomManager extends Manager {
 				this.spectators.forEach(spec => spec.emit("endgame", {state: 1})); // State 1 : end
 				var winnername = players[winner] ? players[winner].name || "Anonymous" : "?";
 				var losername = players[1-winner] ? players[1-winner].name || "Anonymous" : "?";
+				this.api.post("/tmp/replay", {idRoom: this.room, log: JSON.stringify(this.game.log.logs)})
+			    .catch(err => {
+			      this.error(error)(err);
+			    });
 				console.log("Game " + this.room + " ended | " + winnername + " won over " + losername);
 				console.log("Generated " + (creditsW + creditsL) + " credits");
 			}
@@ -171,7 +176,7 @@ class RoomManager extends Manager {
 			} else
 				user.emit("chat", { type: "info", info: 2 });
 			break;
-		}
+		} 
 		default: user.emit("chat", { type: "info", info: 0 });
 		}
 	}

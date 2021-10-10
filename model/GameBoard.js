@@ -120,6 +120,12 @@ class GameBoard {
 		}, 153000);
 	}
 
+
+	acceptCommand (cmdtype) {
+
+		this.log.add({ type: "command", cmd: cmdtype });
+	}
+
 	command (cmd, player) {
 
 		if (this.ended)
@@ -129,32 +135,42 @@ class GameBoard {
 
 		switch (cmd.type) {
 		case "concede": {
-			if (!this.ended)
+			if (!this.ended) {
+				this.acceptCommand(cmd.type);
 				p.hero.destroy();
+			}
 			break; }
 		case "play": {
 			let card = this.data.cards[cmd.id.no],
 				targets = cmd.targets ? cmd.targets.map(id => this.tiles.find(t => t.id.no === id.no)) : undefined;
-			if (card.canBePlayedOn(targets))
+			if (card.canBePlayedOn(targets)) {
+				this.acceptCommand(cmd.type);
 				card.play(targets);
+			}
 			break; }
 		case "attack": {
 			let card = this.data.cards[cmd.id.no],
 				target = this.data.cards[cmd.target.no];
-			if (card.canAttack(target))
+			if (card.canAttack(target)) {
+				this.acceptCommand(cmd.type);
 				card.attack(target);
+			}
 			break; }
 		case "move": {
 			let card = this.data.cards[cmd.id.no],
 				tile = this.tiles.find(t => t.id.no === cmd.to.no);
-			if (card.canMoveOn(tile))
+			if (card.canMoveOn(tile)) {
+				this.acceptCommand(cmd.type);
 				card.move(tile);
+			}
 			break; }
 		case "faculty": {
 			let card = this.data.cards[cmd.id.no],
 				target = cmd.target ? this.tiles.find(t => t.id.no === cmd.target.no) : undefined;
-			if (card.faculties && card.faculties.length > cmd.faculty && card.canUse(card.faculties[cmd.faculty], target))
+			if (card.faculties && card.faculties.length > cmd.faculty && card.canUse(card.faculties[cmd.faculty], target)) {
+				this.acceptCommand(cmd.type);
 				card.use(cmd.faculty, target);
+			}
 			break; }
 		case "param": {
 			let card = this.data.cards[cmd.id.no];
@@ -167,11 +183,14 @@ class GameBoard {
 			break; }
 		case "choose": {
 			let card = this.data.cards[cmd.id.no];
+			this.acceptCommand(cmd.type);
 			this.currentArea.choosebox.choose(card);
 			break; }
 		case "endturn":
-			if (p.isPlaying)
+			if (p.isPlaying) {
+				this.acceptCommand(cmd.type);
 				this.newTurn();
+			}
 			break;
 		default: break;
 		}
