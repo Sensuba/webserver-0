@@ -226,8 +226,8 @@ class RoomManager extends Manager {
 				//if (this.players[0].bonus) c *= 2;
 				CreditManager.creditPlayer(this.players[0].name, c);
 			}
-			this.players.forEach(p => p.emit("endgame", {state: 5, credit: c})); // State 5 : connection lost
-			this.spectators.forEach(s => s.emit("endgame", {state: 5}));
+			this.players.forEach(p => p.emit("endgame", {state: 7, credit: c})); // State 7 : connection lost with a player
+			this.spectators.forEach(s => s.emit("endgame", {state: 7}));
 			console.log("Game " + this.room + " ended | Connection with " + name + " lost");
 			console.log("Generated " + c + " credits");
 		}
