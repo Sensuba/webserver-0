@@ -31,6 +31,8 @@ class RoomManager extends Manager {
 				user.emit('joined', {as: 'spectator'});
 				this.spectators.push(user);
 				this.game.log.logs.forEach(log => {
+					if (log.type === "command")
+						return;
 					var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
 					user.emit('notification', {type: log.type, src: log.src.id, data: datamap});
 				})
