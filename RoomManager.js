@@ -104,6 +104,8 @@ class RoomManager extends Manager {
 						nlog.src = log.src.id;
 					if (log.data)
 						nlog.data = log.data.map(d => d ? d.id || d : d);
+					if (nlog.type === "newcard" && nlog.data && log.src.originalData)
+						nlog.data.push(log.src.originalData);
 					return nlog;
 				}))})
 			    .catch(err => {

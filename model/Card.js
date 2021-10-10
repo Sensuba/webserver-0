@@ -32,6 +32,7 @@ class Card {
 
 		this.location = null;
 		this.identified = [false, false];
+		this.originalData = this.data;
 		if (location) {
 			this.gameboard.notify("newcard", this, location);
 			this.goto(location);
@@ -98,6 +99,7 @@ class Card {
 		delete copy.secretcount;
 		delete copy.secretparam;
 		delete copy.secreteffect;
+		delete copy.originalData;
 		copy.lastwill = this.innereffects && this.innereffects.some(ie => ie.type === "lw");
 		copy.model = this.model.idCardmodel;
 		var genParent = a => {
