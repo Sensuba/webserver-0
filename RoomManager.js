@@ -98,7 +98,14 @@ class RoomManager extends Manager {
 				this.spectators.forEach(spec => spec.emit("endgame", {state: 1})); // State 1 : end
 				var winnername = players[winner] ? players[winner].name || "Anonymous" : "?";
 				var losername = players[1-winner] ? players[1-winner].name || "Anonymous" : "?";
-				this.api.post("/tmp/replay", {idRoom: this.room, log: JSON.stringify(this.game.log.logs)})
+				this.api.post("/tmp/replay", {idRoom: this.room, log: JSON.stringify(this.game.log.logs.map(log => {
+					var nlog = { type: log.type }
+					if (log.src)
+						nlog.src = log.src;
+					if (log.data)
+						nlog.data = log.data.map(d => d ? d.id || d : d);
+					return nlog;
+				}))})
 			    .catch(err => {
 			      this.error(error)(err);
 			    });
