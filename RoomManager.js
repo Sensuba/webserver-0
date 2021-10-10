@@ -101,7 +101,7 @@ class RoomManager extends Manager {
 				this.api.post("/tmp/replay", {idRoom: this.room, log: JSON.stringify(this.game.log.logs.map(log => {
 					var nlog = { type: log.type }
 					if (log.src)
-						nlog.src = log.src;
+						nlog.src = log.src.id;
 					if (log.data)
 						nlog.data = log.data.map(d => d ? d.id || d : d);
 					return nlog;
