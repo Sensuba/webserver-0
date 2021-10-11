@@ -12,6 +12,28 @@ class MissionManager extends Manager {
 		this.mission = mission;
 	}
 
+	isCyclic (obj) {
+	    var seenObjects = [];
+
+	    function detect (obj) {
+	        if (obj && typeof obj === 'object') {
+	            if (seenObjects.indexOf(obj) !== -1) {
+	                return true;
+	            }
+	            seenObjects.push(obj);
+	            for (var key in obj) {
+	                if (obj.hasOwnProperty(key) && detect(obj[key])) {
+	                    console.log(obj, 'cycle at ' + key);
+	                    return true;
+	                }
+	            }
+	        }
+	        return false;
+	    }
+
+	    return detect(obj);
+	}
+
 	init (user) {
 
 		this.user = user;
@@ -19,6 +41,7 @@ class MissionManager extends Manager {
 		this.ai = new ScriptedAI(this.game, 1, this.script.data.ai.behaviour);
 
 		this.game.send = (type, src, data) => {
+			if (this.isCyclic({type, src, data})) console.log({type, src, data});
 			user.emit("notification", {type, src, data});
 			if (type === "newturn" && src.no === 1)
 				this.callAI();
