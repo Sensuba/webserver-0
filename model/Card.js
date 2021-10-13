@@ -696,10 +696,13 @@ class Card {
 		this.oncontact = target;
 		target.oncontact = this;
 		var dmg1 = target.damage(this.eff.atk - (target.eff.armor || 0), this, true);
+		var dmgcleave;
+		if (this.hasState("cleave"))
+			dmgcleave = target.location.neighbors.filter(t => t.occupied && t.card.isType("entity")).map(t => t.card.damage(this.eff.atk - (t.card.eff.armor || 0), this, true));
 		var dmg2;
 		if (!this.eff.states.initiative)
 			dmg2 = target.ripost(this);
-		if (dmg2) dmg2(); if (dmg1) dmg1();
+		if (dmg2) dmg2(); if (dmg1) dmg1(); if (dmgcleave) dmgcleave.forEach(dc => dc());
 		this.oncontact = null;
 		target.oncontact = null;
 		this.gameboard.notify("charcontact", this, target);
