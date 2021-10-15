@@ -29,12 +29,12 @@ class Aura {
 
 	applicable (target) {
 
-		return (!this.targets || this.targets(target)) && this.area().includes(target.location);
+		return (!this.targets || this.targets(target)) && this.area(this.src).includes(target.location);
 	}
 
 	apply (target) {
 
-		return this.mutation(target);
+		return this.mutation(this.src, target);
 	}
 
 	copy (src) {
