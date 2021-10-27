@@ -221,7 +221,7 @@ class Card {
 		this.faculties = [];
 		this.passives = [];
 		this.innereffects = [];
-		this.mutations = [];
+		this.clearMutations();
 		this.cmutations = [];
 		this.states = {};
 		this.shield = false;
@@ -287,7 +287,7 @@ class Card {
 		this.passives = [];
 		this.innereffects = [];
 		this.faculties = [new Action(new Event(() => this.area.manapool.createReceptacle()))];
-		this.mutations = [];
+		this.clearMutations();
 		this.cmutations = [];
 		this.states = {};
 		delete this.armor;
@@ -560,7 +560,7 @@ class Card {
 		this.faculties = [];
 		this.passives = [];
 		this.innereffects = [];
-		this.mutations = [];
+		this.clearMutations();
 		this.cmutations = [];
 		this.events = [];
 		if (this.hasState("glazed"))
@@ -1074,7 +1074,7 @@ class Card {
 		this.passives = [];
 		this.innereffects = [];
 		other.innereffects.forEach(ie => this.innereffects.push(ie));
-		this.mutations = [];
+		this.clearMutations();
 		this.cmutations = [];
 		this.states = Object.assign({}, other.states);
 		this.variables = Object.assign({}, other.variables);
@@ -1162,6 +1162,13 @@ class Card {
 				unsub();
 			});
 		this.gameboard.update();
+	}
+
+	clearMutations () {
+
+		if (!this.mutations)
+			return;
+		this.mutations.forEach(mut => mut.detach(this));
 	}
 
 	activate () {
