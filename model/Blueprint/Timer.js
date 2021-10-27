@@ -15,7 +15,7 @@ class Timer extends Bloc {
 					bloc.images[ctx.image] = bloc.out;
 				}
 			}));
-			var unsub = src.gameboard.subscribe(timeToEvent(ins[0].time), (t,s,d) => {
+			var unsub = src.gameboard.subscribe(this.timeToEvent(ins[0].time), (t,s,d) => {
 				if (ins[0].player === null || (src.area && (ins[0].player === 0 ? src.area : src.area.opposite).isPlaying)) {
 					if (this.callback) {
 						this.callback.execute(Object.assign({}, props, {image: timerimage}));
