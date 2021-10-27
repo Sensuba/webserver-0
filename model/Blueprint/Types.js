@@ -184,10 +184,13 @@ class Types {
 		switch (value) {
 		case 'end of turn': return { player: null, time: 1 };
 		case 'start of turn': return { player: null, time: 0 };
-		case 'end of opponent\'s turn': return { player: src.area.opposite, time: 1 };
-		case 'start of your turn': return { player: src.area, time: 0 };
-		case 'start of opponent\'s turn': return { player: src.area.opposite, time: 0 };
-		case 'end of your turn': return { player: src.area, time: 1 };
+		case 'cleanup': return { player: null, time: 2 };
+		case 'end of opponent\'s turn': return { player: 1, time: 1 };
+		case 'start of your turn': return { player: 0, time: 0 };
+		case 'your cleanup': return { player: 0, time: 2 };
+		case 'start of opponent\'s turn': return { player: 1, time: 0 };
+		case 'end of your turn': return { player: 0, time: 1 };
+		case 'opponent\'s cleanup': return { player: 1, time: 2 };
 		default: return { player: null, time: 1 };
 		}
 	}

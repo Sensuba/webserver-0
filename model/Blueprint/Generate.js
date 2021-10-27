@@ -1,5 +1,6 @@
 var Bloc = require('./Bloc');
 var Types = require('./Types');
+var Hand = require('../Hand');
 
 class Generate extends Bloc {
 
@@ -11,7 +12,7 @@ class Generate extends Bloc {
 			var gen;
 			var n = ins[1] === null ? 1 : ins[1];
 			for (var i = 0; i < n; i++) {
-				gen = new Card(ins[0], src.gameboard, ins[2]);
+				gen = new Card(ins[0], src.gameboard, (ins[2] instanceof Hand && ins[2].isMaxed) ? ins[2].area.nether : ins[2]);
 			}
 			return [gen];
 		};

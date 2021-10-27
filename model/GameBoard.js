@@ -100,6 +100,7 @@ class GameBoard {
 		if (this.currentArea.choosebox.opened)
 			this.currentArea.choosebox.chooseAtRandom();
 		this.notify("endturn", this.currentArea);
+		this.notify("cleanup", this.currentArea);
 		if (this.currentArea.extraTurns)
 			this.currentArea.extraTurns--;
 		else

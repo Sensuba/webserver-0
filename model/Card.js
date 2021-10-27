@@ -685,6 +685,9 @@ class Card {
 		}
 		if (!auto)
 			this.motionPt = 0;
+		if (this.destroyed || this.isGhost || !this.onBoard || target.destroyed || target.isGhost || !target.onBoard) {
+			return;
+		}
 		this.gameboard.notify("charattack", this, target, {type:"bool", value: auto});
 		if (this.retarget) {
 			target = this.retarget.card;
