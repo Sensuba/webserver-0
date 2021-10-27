@@ -15,8 +15,8 @@ class Timer extends Bloc {
 					bloc.images[ctx.image] = bloc.out;
 				}
 			}));
-			var unsub = src.gameboard.subscribe(ins[0].time ? "endturn" : "newturn", (t,s,d) => {
-				if (ins[0].player === null || ins[0].player.isPlaying) {
+			var unsub = src.gameboard.subscribe(timeToEvent(ins[0].time), (t,s,d) => {
+				if (ins[0].player === null || (src.area && (ins[0].player === 0 ? src.area : src.area.opposite).isPlaying)) {
 					if (this.callback) {
 						this.callback.execute(Object.assign({}, props, {image: timerimage}));
 						src.gameboard.update();
@@ -27,6 +27,16 @@ class Timer extends Bloc {
 		}
 		this.types = [Types.timestamp];
 		this.toPrepare.push("callback");
+	}
+
+	timeToEvent (time) {
+
+		switch (time) {
+		case 0: return "newturn";
+		case 1: return "endturn";
+		case 2: return "cleanup";
+		default: return "newturn";
+		}
 	}
 }
 
