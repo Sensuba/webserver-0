@@ -66,7 +66,7 @@ class GameBoard {
 		//this.subscriptions[type].slice().forEach(sub => sub.notify(type, src, data));
 	}
 
-	subscribe (type, notify) {
+	subscribe (type, notify) {if (type === 'cleanup') console.log("sub");
 
 		if (!this.subscriptions[type])
 			this.subscriptions[type] = [];
@@ -98,8 +98,8 @@ class GameBoard {
 	newTurn () {
 
 		if (this.currentArea.choosebox.opened)
-			this.currentArea.choosebox.chooseAtRandom();
-		this.notify("endturn", this.currentArea);
+			this.currentArea.choosebox.chooseAtRandom();this.update();console.log("endturn");
+		this.notify("endturn", this.currentArea);this.update();this.update();console.log("cleanup");
 		this.notify("cleanup", this.currentArea);
 		if (this.currentArea.extraTurns)
 			this.currentArea.extraTurns--;
