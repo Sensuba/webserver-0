@@ -406,7 +406,7 @@ class Card {
 		var okn = [];
 		if (src && src.hasState("piercing") && overkill && this.location.tilesBehind.some(t => t.occupied && t.card.isType("entity"))) {
 			okn = this.location.tilesBehind.filter(t => t.occupied && t.card.isType("entity")).map(t => t.card.damage(overkill, src, true));
-			overkilln = () => { okn.forEach(n => { if(n) n(); } }
+			overkilln = () => { okn.forEach(n => { if(n) n(); }) }
 		}
 		var damagen = () => {
 
