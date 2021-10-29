@@ -7,7 +7,7 @@ class Timestamp extends Bloc {
 	constructor (src, ctx) {
 
 		super("timestamp", src, ctx);
-		this.f = (src, ins) => [ new Event(src, this.timeToEvent(ins[0].time), (t,s,d) => ins[0].player === null || (ins[0].player === 0 && s.isPlaying) || (ins[0].player === 1 && src.opposite.isPlaying)) ];
+		this.f = (src, ins) => [ new Event(src, this.timeToEvent(ins[0].time), (t,s,d) => ins[0].player === null || (ins[0].player === 0 && src.area && src.area.isPlaying) || (ins[0].player === 1 && src.area && src.area.opposite.isPlaying)) ];
 		this.types = [Types.timestamp];
 	}
 
