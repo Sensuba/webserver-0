@@ -16,7 +16,7 @@ class Timer extends Bloc {
 				}
 			}));
 			var unsub = src.gameboard.subscribe(this.timeToEvent(ins[0].time), (t,s,d) => {
-				if (ins[0].player === null || (src.area && (ins[0].player === 0 ? src.area : src.area.opposite).isPlaying)) {
+				if (ins[0].player === null || (ins[0].player === 0 && src.area && src.area.isPlaying) || (ins[0].player === 1 && src.area && src.area.opposite.isPlaying)) {
 					if (this.callback) {
 						this.callback.execute(Object.assign({}, props, {image: timerimage}));
 						src.gameboard.update();
