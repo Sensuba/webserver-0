@@ -463,6 +463,7 @@ class Card {
 
 		this.gameboard.notify("charge", this, charge);
 		this.charges = Math.min(5, Math.max(0, (this.charges || 0) + charge));
+		this.update();
 	}
 
 	heal (amt, src) {
@@ -1252,8 +1253,10 @@ class Card {
 		updatephp();
 		if (this.states && this.states.frozen && !this.frozen)
 			this.states.frozen = false;
-		if (this.poisondmg && this.hasState("vaccinated"))
+		if (this.poisondmg && this.hasState("vaccinated")) 
 			delete this.poisondmg;
+		this.states = this.states || {};
+		this.states.poisoned = this.poisoned;
 		this.computing = false;
 
 		this.mutatedState = res;
