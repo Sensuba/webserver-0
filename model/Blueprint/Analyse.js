@@ -13,7 +13,7 @@ class Analyse extends Bloc {
 				case 1: count = this.countThisTurn(ins[0], props); break;
 				case 2: count = this.countAllGame(ins[0], props); break;
 				case 3: count = this.countSincePreviousTurn(ins[0], props); break;
-				case 4: count = this.countAllGame(ins[0], props); break;
+				case 4: count = this.countPreviousTurn(ins[0], props); break;
 				case 5: count = this.countYourTurn(ins[0], props); break;
 				case 6: count = this.countSinceYourTurn(ins[0], props); break;
 				default: break;
@@ -60,6 +60,29 @@ class Analyse extends Bloc {
 			if (event.check(log.type, log.src, log.data) && this.in[2](nprops)) {
 				let add = this.in[3] ? this.in[3](nprops) : null;
 				c += add === null || add === undefined ? 1 : add;
+			}
+		})
+		return c;
+	}
+
+	countPreviousTurn (event, props) {
+
+		let c = 0, n = 0, you = false;
+		event.gameboard.log.logs.forEach(log => {
+			if (log.type === "newturn") {
+				if (log.src.id.no === this.src.area.id.no) {
+					you = true;
+					c = n;
+					n = 0;
+				} else you = false;
+			}
+			if (!you)
+				return;
+			let nprops = Object.assign({}, props);
+			nprops.data = { src:log.src, data:log.data };
+			if (event.check(log.type, log.src, log.data) && this.in[2](nprops)) {
+				let add = this.in[3] ? this.in[3](nprops) : null;
+				n += add === null || add === undefined ? 1 : add;
 			}
 		})
 		return c;

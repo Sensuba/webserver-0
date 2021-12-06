@@ -435,6 +435,7 @@ class Card {
 
 		this.poisondmg = (this.poisondmg || 0) + psn;
 		this.gameboard.notify("poisoncard", this, psn);
+		this.gameboard.update();
 	}
 
 	get poisoned () {
@@ -451,6 +452,7 @@ class Card {
 
 		this.poisondmg -= value;
 		this.gameboard.notify("curepoison", this, value);
+		this.gameboard.update();
 	}
 
 	triggerPoison () {

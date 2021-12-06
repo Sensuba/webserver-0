@@ -13,7 +13,7 @@ class ForEachEvent extends Bloc {
 				case 1: logs = this.logsThisTurn(ins[0], props); break;
 				case 2: logs = this.logsOpponentsTurn(ins[0], props); break;
 				case 3: logs = this.logsSincePreviousTurn(ins[0], props); break;
-				case 4: logs = this.logsAllGame(ins[0], props); break;
+				case 4: logs = this.logsPreviousTurn(ins[0], props); break;
 				default: break;
 			}
 
@@ -84,6 +84,27 @@ class ForEachEvent extends Bloc {
 			nprops.data = { src:log.src, data:log.data };
 			if (event.check(log.type, log.src, log.data) && this.in[2](nprops))
 				c.push(nprops.data);
+		})
+		return c;
+	}
+
+	logsPreviousTurn (event, props) {
+
+		let c = [], n = [], you = false;
+		event.gameboard.log.logs.forEach(log => {
+			if (log.type === "newturn") {
+				if (log.src.id.no === this.src.area.id.no) {
+					you = true;
+					c = n;
+					n = [];
+				} else you = false;
+			}
+			if (!you)
+				return;
+			let nprops = Object.assign({}, props);
+			nprops.data = { src:log.src, data:log.data };
+			if (event.check(log.type, log.src, log.data) && this.in[2](nprops))
+				n.push(nprops.data);
 		})
 		return c;
 	}
