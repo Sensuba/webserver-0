@@ -73,8 +73,6 @@ class Area {
 
 	newTurn () {
 
-		this.field.entities.forEach(e => console.log(e.php));
-
 		this.field.tiles.forEach(t => {
 			if (t.hasHazards("wind"))
 				t.clearHazards("wind");

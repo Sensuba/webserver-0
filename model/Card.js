@@ -1017,8 +1017,10 @@ class Card {
 
 	clearVariable (name) {
 
-		if (this.variables)
+		if (this.variables) {
 			delete this.variables[name];
+			this.gameboard.notify("clearvar", this, { type: "string", value: name });
+		}
 	}
 
 	parameter (option, param) {
