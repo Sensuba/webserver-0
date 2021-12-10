@@ -1225,6 +1225,7 @@ class Card {
 		res = Object.assign({}, this);
 		res.isEff = true;
 		res.original = this;
+		res.area = this.area;
 		res.states = Object.assign({}, this.states);
 		let updatephp = () => {
 			if (this.isType("character") && this.onBoard) {
