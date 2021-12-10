@@ -534,7 +534,8 @@ class Card {
 		}
 		if (hp || hp === 0) {
 			this.hp = hp;
-			this.chp = hp;
+			if (!isNaN(this.chp))
+				this.chp = hp;
 			//this.originalHp = this.hp;
 			delete this.php;
 		}
