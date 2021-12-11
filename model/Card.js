@@ -896,7 +896,8 @@ class Card {
 		case "figure":
 		case "artifact":
 			this.summon(targets[0]);
-			this.gameboard.notify("playcard", this, targets[0], targets[1]);
+			let playtargetcard = targets[1] && targets[1].card ? targets[1].card : undefined;
+			this.gameboard.notify("playcard", this, targets[0], targets[1], playtargetcard);
 			let ftarget = targets.length > 1 ? (this.retarget || targets[1]) : undefined;
 			if (ftarget && this.area && ftarget.area && this.area != ftarget.area && ftarget.immune)
 				break;
@@ -908,7 +909,8 @@ class Card {
 		case "spell":
 			this.goto(this.area.court);
 			let spelltarget = targets ? targets[0] : undefined;
-			this.gameboard.notify("playcard", this, spelltarget);
+			let spelltargetcard = spelltarget && spelltarget.card ? spelltarget.card : undefined;
+			this.gameboard.notify("playcard", this, spelltarget, spelltargetcard);
 			spelltarget = targets ? (this.retarget || targets[0]) : undefined;
 			if (this.countered || (spelltarget && this.area && spelltarget.area && this.area != spelltarget.area && spelltarget.immune && this.targets[0](this, spelltarget) !== "player")) {
 				this.destroy();
