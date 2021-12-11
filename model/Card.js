@@ -395,7 +395,7 @@ class Card {
 			this.breakShield();
 			return;
 		}
-		if (this.hasState("will to live") && dmg >= this.chp) {
+		if (this.hasState("immortal") && dmg >= this.chp) {
 			dmg = this.chp - 1;
 			if (dmg <= 0)
 				return;
@@ -544,6 +544,7 @@ class Card {
 			//this.originalRange = this.range;
 		}
 		this.gameboard.notify("setcard", this, cost, atk, hp, range);
+		this.update();
 		if (this.chp <= 0)
 			new Update(() => this.destroy(), this.gameboard);
 	}
@@ -1009,6 +1010,7 @@ class Card {
 		else if (value !== null && value !== undefined)
 			data = { type: "int", value: value };
 		this.gameboard.notify("storevar", this, { type: "string", value: name }, data);
+		this.gameboard.update();
 	}
 
 	getVariable (name) {
@@ -1021,6 +1023,7 @@ class Card {
 		if (this.variables) {
 			delete this.variables[name];
 			this.gameboard.notify("clearvar", this, { type: "string", value: name });
+			this.gameboard.update();
 		}
 	}
 
