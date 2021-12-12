@@ -41,7 +41,7 @@ class Card {
 				this.chp = this.hp;
 				this.activate();
 				this.resetSickness();
-			} else if (this.isType("seal") && this.onBoard)
+			} else if (this.isType("seal") && this.location instanceof HonorBoard)
 				this.activate();
 		}
 	}
