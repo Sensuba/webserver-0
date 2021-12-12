@@ -41,7 +41,8 @@ class Card {
 				this.chp = this.hp;
 				this.activate();
 				this.resetSickness();
-			}
+			} else if (this.isType("seal") && this.onBoard)
+				this.activate();
 		}
 	}
 
@@ -57,7 +58,7 @@ class Card {
 
 	get onBoard() {
 
-		return this.location instanceof Tile;
+		return this.location instanceof Tile || (this.isType("seal") && this.location instanceof HonorBoard);
 	}
 
 	get destroyed() {
@@ -798,16 +799,6 @@ class Card {
 
 		if (!this.inHand || !this.canBePaid || !this.area.isPlaying)
 			return false;
-		if (this.isType("trial")) {
-			if (!this.steps) return false;
-			let i = 0;
-			while (i < this.steps.length) {
-				if (!this.area.honorboard.cards.some(c => c.model.idCardmodel === this.model.idCardmodel && c.steps[i].completed))
-					return this.steps[i].condition();
-				i++;
-			}
-			return false;
-		}
 		if (this.targets.length === 0)
 			return true;
 
@@ -818,16 +809,6 @@ class Card {
 
 		if (!this.inHand || !this.canBePaid || !this.area.isPlaying)
 			return false;
-		if (this.isType("trial")) {
-			if (!this.steps) return false;
-			let i = 0;
-			while (i < this.steps.length) {
-				if (!this.area.honorboard.cards.some(c => c.model.idCardmodel === this.model.idCardmodel && c.steps[i].completed))
-					return this.steps[i].condition();
-				i++;
-			}
-			return false;
-		}
 		if (this.targets.length === 0)
 			return true;
 		if (!targets || targets.length === 0)
@@ -924,28 +905,6 @@ class Card {
 		case "secret":
 			this.goto(targets[0]);
 			this.gameboard.notify("playcard", this, targets[0]);
-			break;
-		case "trial":
-			this.goto(this.area.court);
-			this.gameboard.notify("playcard", this);
-			if (this.countered) {
-				this.destroy();
-				break;
-			}
-			let i = 0;
-			while (i < this.steps.length) {
-				if (!this.area.honorboard.cards.some(c => c.model.idCardmodel === this.model.idCardmodel && c.steps[i].completed)) {
-					this.steps[i].trigger();
-					this.steps[i].completed = true;
-					let step = i + 1;
-					this.gameboard.notify("trial", this, step);
-					this.goto(this.area.honorboard);
-					break;
-				}
-				i++;
-			}
-			if (i >= this.steps.length)
-				this.destroy();
 			break;
 		default: break;
 		}
