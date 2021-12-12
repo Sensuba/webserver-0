@@ -58,7 +58,7 @@ class Card {
 
 	get onBoard() {
 
-		return this.location instanceof Tile || (this.isType("seal") && this.location instanceof HonorBoard);
+		return this.location instanceof Tile;
 	}
 
 	get destroyed() {
