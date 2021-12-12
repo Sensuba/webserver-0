@@ -504,10 +504,12 @@ class Card {
 
 		this.atk += atk;
 		this.hp += hp;
+		if (hp < 0 && this.chp && !this.isType("artifact"))
+			this.chp += hp;
 		this.range = Math.min(this.range + range, MAX_RANGE);
 		this.gameboard.notify("boostcard", this, atk, hp, range);
 		this.update();
-		if (hp < 0 && !this.isType("artifact"))
+		if (hp < 0 && this.chp && !this.isType("artifact"))
 			this.chp = Math.min(this.chp, this.eff.hp);
 	}
 
