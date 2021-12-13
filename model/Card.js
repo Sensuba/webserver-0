@@ -1147,7 +1147,7 @@ class Card {
 
 		if (this.activated)
 			return;
-		this.activated = true;
+		this.activated = true;console.log(this.nameCard);
 		this.passives.forEach(passive => passive.activate());
 	}
 
