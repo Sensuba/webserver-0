@@ -188,7 +188,7 @@ class Card {
 			Notify ("card.move", former, value);
 		if (location is Tile)
 			lastTileOn = location as Tile;*/
-		this.update();
+		this.gameboard.update();
 	}
 
 	/*loadModel () {
