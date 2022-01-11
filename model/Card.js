@@ -93,6 +93,7 @@ class Card {
 		delete copy.mutdata;
 		delete copy.php;
 		delete copy.dying;
+		delete copy.pOrder;
 		delete copy.goingtodie;
 		delete copy.variables;
 		delete copy.countered;
@@ -159,6 +160,8 @@ class Card {
 			this.resetBody ();
 		if (loc && !loc.hasCard (this))
 			loc.addCard (this);
+		if ((loc instanceof Tile || loc instanceof HonorBoard) && !this.pOrder)
+			this.gameboard.registerCardOrder(this);
 		if ((loc instanceof Tile || loc instanceof HonorBoard) && !(former instanceof Tile) && !this.activated)
 			this.activate();
 		if (former instanceof Tile && loc instanceof Tile && this.activated && former.area !== loc.area) {
@@ -217,6 +220,8 @@ class Card {
 		delete this.supercode;
 		delete this.mutatedState;
 		delete this.mutdata;
+		if (!this.onBoard)
+			delete this.pOrder;
 		this.ol = 0;
 		this.events = [];
 		this.faculties = [];
@@ -875,6 +880,7 @@ class Card {
 	play (targets) {
 
 		this.area.manapool.use(this.eff.mana);
+		this.setState("temporary", false);
 		switch(this.cardType) {
 		case "figure":
 		case "artifact":
@@ -1032,7 +1038,7 @@ class Card {
 			this.deactivate();
 		var data = other.data;
 		for (var k in data) {
-			if (k === "id")
+			if (k === "id" || k === "pOrder")
 				continue;
 			this[k] = data[k];
 			if (!isNaN(this[k]))

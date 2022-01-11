@@ -25,6 +25,7 @@ class GameBoard {
 		this.auras = [];
 		this.subscriptions = {};
 		this.indexSubscription = 0;
+		this.indexPOrder = 1;
 		this.truth = true;
 		this.log = new Log();
 		this.notify("init", this,
@@ -75,10 +76,17 @@ class GameBoard {
 		return () => this.subscriptions[type].splice(this.subscriptions[type].findIndex(sub => sub.id === id), 1);
 	}
 
+	registerCardOrder (card) {
+
+		card.pOrder = this.indexPOrder++;
+	}
+
 	start (area) {
 
 		this.notify("start", this);
 		area = area || this.areas[Math.floor(Math.random()*2)];
+		this.registerCardOrder(area.hero);
+		this.registerCardOrder(area.opposite.hero);
 		this.currentArea = area;
 		this.currentArea.draw (this.currentArea.startingHand === undefined ? 4 : this.currentArea.startingHand);
 		this.currentArea.opposite.draw (this.currentArea.opposite.startingHand === undefined ? 5 : this.currentArea.opposite.startingHand);
@@ -101,6 +109,7 @@ class GameBoard {
 			this.currentArea.choosebox.chooseAtRandom();
 		this.notify("endturn", this.currentArea);
 		this.update();
+		this.currentArea.hand.cards.filter(c => c.hasState("temporary")).forEach(c => c.discard());
 		this.notify("cleanup", this.currentArea);
 		if (this.currentArea.extraTurns)
 			this.currentArea.extraTurns--;
