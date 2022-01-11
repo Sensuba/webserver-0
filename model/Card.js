@@ -325,7 +325,7 @@ class Card {
 	freeze () {
 
 		this.states.frozen = true;
-		this.frozenTimer = false;
+		this.frozenTimer = this.frozenTimer || false;
 		this.update();
 		this.gameboard.notify("charfreeze", this);
 	}
