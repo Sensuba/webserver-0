@@ -231,7 +231,7 @@ class GameBoard {
 			this.updateState = 1;
 			while (this.updates.length > 0)
 				this.updates[0].trigger();
-			[3, 2, 1, 0].forEach(prio => this.data.cards.forEach(card => {
+			[3, 2, 1, 0].forEach(prio => this.data.cards.sort((a, b) => a.pOrder && b.pOrder ? b.pOrder - a.pOrder : 0).forEach(card => {
 				if (this.updateState === 2)
 					return;
 				if (card.location && card.location.locationOrder === prio)
