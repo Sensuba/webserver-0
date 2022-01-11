@@ -94,6 +94,7 @@ class Card {
 		delete copy.php;
 		delete copy.dying;
 		delete copy.pOrder;
+		delete copy.stopShifting;
 		delete copy.goingtodie;
 		delete copy.variables;
 		delete copy.countered;
@@ -881,7 +882,11 @@ class Card {
 
 		this.area.manapool.use(this.eff.mana);
 		this.setState("temporary", false);
-		this.setState("bonus", false);
+		if (this.hasState("bonus")) {
+			this.setState("bonus", false);
+			if (this.stopShifting)
+				this.stopShifting();
+		}
 		switch(this.cardType) {
 		case "figure":
 		case "artifact":
@@ -1041,7 +1046,7 @@ class Card {
 		data.model = this.model;
 		this.transform(model);
 		this.setState("bonus", true);
-		if (end)
+		if (end) {
 			var unsub = end.subscribe((t,s,d) => {
 				for (var k in data) {
 					if (k === "id")
@@ -1050,10 +1055,13 @@ class Card {
 					if (!isNaN(this[k]))
 						this[k] = parseFloat(this[k], 10);
 				}
+				delete this.stopShifting;
 				unsub();
 				this.gameboard.update();
 				this.gameboard.notify("transform", this, {data:this.data});
 			});
+			this.stopShifting = unsub;
+		}
 		this.gameboard.update();
 	}
 
