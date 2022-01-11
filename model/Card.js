@@ -1038,7 +1038,7 @@ class Card {
 			return;
 
 		var data = this.data;
-		transform(model);
+		this.transform(model);
 		this.setState("bonus", true);
 		if (end)
 			var unsub = end.subscribe((t,s,d) => {
