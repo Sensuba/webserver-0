@@ -87,9 +87,9 @@ class GameBoard {
 		area = area || this.areas[Math.floor(Math.random()*2)];
 		this.registerCardOrder(area.hero);
 		this.registerCardOrder(area.opposite.hero);
+		area.draw (this.currentArea.startingHand === undefined ? 4 : this.currentArea.startingHand);
+		area.opposite.draw (this.currentArea.opposite.startingHand === undefined ? 5 : this.currentArea.opposite.startingHand);
 		this.currentArea = area;
-		this.currentArea.draw (this.currentArea.startingHand === undefined ? 4 : this.currentArea.startingHand);
-		this.currentArea.opposite.draw (this.currentArea.opposite.startingHand === undefined ? 5 : this.currentArea.opposite.startingHand);
 		if (this.currentArea.startingGem)
 			this.currentArea.manapool.createGem ();
 		if (this.currentArea.opposite.startingGem !== false)

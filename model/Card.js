@@ -1038,6 +1038,7 @@ class Card {
 			return;
 
 		var data = this.data;
+		data.model = this.model;
 		this.transform(model);
 		this.setState("bonus", true);
 		if (end)
