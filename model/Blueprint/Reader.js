@@ -54,6 +54,7 @@ var Summon = require('./Summon');
 var Transform = require('./Transform');
 var Copycat = require('./Copycat');
 var Copy = require('./Copy');
+var Shift = require('./Shift');
 var Charge = require('./Charge');
 var AddMutation = require('./AddMutation');
 var MutateNextCard = require('./MutateNextCard');
@@ -252,6 +253,7 @@ class Reader {
 			case "transform": bloc = new Transform(card, ctx); break;
 			case "triggersecret": bloc = new TriggerSecret(card, ctx); break;
 			case "copy": bloc = new Copycat(card, ctx); break;
+			case "shift": bloc = new Shift(card, ctx); break;
 			case "charge": bloc = new Charge(card, ctx); break;
 			case "newcopy": bloc = new Copy(card, ctx); break;
 			case "createreceptacle": bloc = new CreateReceptacle(card, ctx); break;

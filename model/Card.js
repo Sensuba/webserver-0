@@ -881,6 +881,7 @@ class Card {
 
 		this.area.manapool.use(this.eff.mana);
 		this.setState("temporary", false);
+		this.setState("bonus", false);
 		switch(this.cardType) {
 		case "figure":
 		case "artifact":
@@ -1031,6 +1032,30 @@ class Card {
 		this.gameboard.notify("transform", this, {data:this.data});
 	}
 
+	shift (model, end) {
+
+		if (!(this.inHand || this.inDeck))
+			return;
+
+		var data = this.data;
+		transform(model);
+		this.setState("bonus", true);
+		if (end)
+			var unsub = end.subscribe((t,s,d) => {
+				for (var k in data) {
+					if (k === "id")
+						continue;
+					this[k] = data[k];
+					if (!isNaN(this[k]))
+						this[k] = parseFloat(this[k], 10);
+				}
+				unsub();
+				this.gameboard.update();
+				this.gameboard.notify("transform", this, {data:this.data});
+			});
+		this.gameboard.update();
+	}
+
 	copy (other, glaze) {
 
 		let wasActivated = this.activated;
@@ -1038,7 +1063,7 @@ class Card {
 			this.deactivate();
 		var data = other.data;
 		for (var k in data) {
-			if (k === "id" || k === "pOrder")
+			if (k === "id")
 				continue;
 			this[k] = data[k];
 			if (!isNaN(this[k]))
