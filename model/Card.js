@@ -422,14 +422,13 @@ class Card {
 			if (src && src.hasState("lifelink"))
 				src.area.hero.heal(dmg, src);
 		}
-		if (!discret)
-			damagen();
 		if (this.chp <= 0 || (this.isType("figure") && src && src.hasState("lethal"))) {
 			this.goingtodie = true;
 			new Update(() => { if (this.goingtodie) this.destroy(); }, this.gameboard);
 		}
 		if (discret)
 			return () => damagen();
+		else damagen();
 	}
 
 	poison (psn) {
@@ -1089,6 +1088,7 @@ class Card {
 		this.clearMutations();
 		this.cmutations = [];
 		this.states = Object.assign({}, other.states);
+		this.setState("bonus", false);
 		this.variables = Object.assign({}, other.variables);
 		this.shield = other.shield;
 		this.armor = other.armor;
