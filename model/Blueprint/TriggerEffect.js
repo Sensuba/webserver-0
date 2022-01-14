@@ -10,8 +10,6 @@ class TriggerEffect extends Bloc {
 			switch (ins[0].type) {
 			case "play":
 				ins[0].chosen = ins[1];
-				if (ins[1])
-					ins[2].retarget = ins[1];
 				ins[2].autocast = true;
 				ins[0].trigger(ins[2]);
 				ins[2].autocast = false;

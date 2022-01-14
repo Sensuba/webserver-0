@@ -6,7 +6,10 @@ class TargetData extends Bloc {
 	constructor (src, ctx) {
 
 		super("target", src, ctx);
-		this.f = (src, ins) => [(src, target) => ins[0].targets.length > 0 && ins[0].targets[0](src, target), ins[0].targets.length > 0];
+		this.f = (src, ins) => {
+			let targetlength = ins[0].isType("figure") ? 1 : 0;
+			return [(src, target) => ins[0].targets.length > targetlength && ins[0].targets[targetlength](src, target), ins[0].targets.length > targetlength];
+		}
 		this.types = [Types.card];
 	}
 }
