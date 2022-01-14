@@ -325,8 +325,10 @@ class Card {
 
 	freeze () {
 
+		if (this.hasState("frozen"))
+			return;
 		this.states.frozen = true;
-		this.frozenTimer = this.frozenTimer || false;
+		this.frozenTimer = false;
 		this.update();
 		this.gameboard.notify("charfreeze", this);
 	}
@@ -422,13 +424,17 @@ class Card {
 			if (src && src.hasState("lifelink"))
 				src.area.hero.heal(dmg, src);
 		}
+		let wascomputing = this.computing;
+		this.computing = true;
+		if (!discret)
+			damagen();
 		if (this.chp <= 0 || (this.isType("figure") && src && src.hasState("lethal"))) {
 			this.goingtodie = true;
 			new Update(() => { if (this.goingtodie) this.destroy(); }, this.gameboard);
 		}
+		this.computing = wascomputing;
 		if (discret)
 			return () => damagen();
-		else damagen();
 	}
 
 	poison (psn) {
@@ -1034,6 +1040,8 @@ class Card {
 		}
 		this.gameboard.update();
 		this.gameboard.notify("transform", this, {data:this.data});
+		if (this.onBoard && (!this.isType("character") || this.chp))
+			loc.applyHazards(this);
 	}
 
 	shift (model, end) {

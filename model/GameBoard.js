@@ -128,7 +128,7 @@ class GameBoard {
 		this.timer = setTimeout(() => {
 			if (!this.ended)
 				this.newTurn();
-		}, 153000);
+		}, 155000);
 	}
 
 

@@ -65,6 +65,7 @@ var DestroyGem = require('./DestroyGem');
 var RefillMana = require('./RefillMana');
 var ExtraMana = require('./ExtraMana');
 var UseMana = require('./UseMana');
+var Shuffle = require('./Shuffle');
 var TriggerSecret = require('./TriggerSecret');
 var PutFirstLast = require('./PutFirstLast');
 var OpenChoosebox = require('./OpenChoosebox');
@@ -162,12 +163,14 @@ var FirstLastCards = require('./FirstLastCards');
 var ForEachTile = require('./ForEachTile');
 var ForEachEffect = require('./ForEachEffect');
 var ForEachEvent = require('./ForEachEvent');
+var ForEachStartingCard = require('./ForEachStartingCard');
 var Timer = require('./Timer');
 
 var ExtraTurn = require('./ExtraTurn');
 
 var Wait = require('./Wait');
 var Blink = require('./Blink');
+var Show = require('./Show');
 var Message = require('./Message');
 var Highlight = require('./Highlight');
 
@@ -263,6 +266,7 @@ class Reader {
 			case "createmana": bloc = new RefillMana(card, ctx); break;
 			case "extramana": bloc = new ExtraMana(card, ctx); break;
 			case "usemana": bloc = new UseMana(card, ctx); break;
+			case "shuffle": bloc = new Shuffle(card, ctx); break;
 			case "putfl": bloc = new PutFirstLast(card, ctx); break;
 			case "writeintvar": bloc = new StoreInteger(card, ctx); break;
 			case "writecardvar": bloc = new StoreCard(card, ctx); break;
@@ -354,9 +358,11 @@ class Reader {
 			case "fortile": bloc = new ForEachTile(card, ctx); break;
 			case "foreffect": bloc = new ForEachEffect(card, ctx); break;
 			case "forevent": bloc = new ForEachEvent(card, ctx); break;
+			case "forstart": bloc = new ForEachStartingCard(card, ctx); break;
 			case "extraturn": bloc = new ExtraTurn(card, ctx); break;
 			case "wait": bloc = new Wait(card, ctx); break;
 			case "blink": bloc = new Blink(card, ctx); break;
+			case "show": bloc = new Show(card, ctx); break;
 			case "message": bloc = new Message(card, ctx); break;
 			case "highlight": bloc = new Highlight(card, ctx); break;
 			case "opplus": bloc = new Plus(card, ctx); break;

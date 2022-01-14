@@ -8,8 +8,8 @@ class StartingDeck extends Bloc {
 		super("startdeck", src, ctx);
 		this.f = (src, ins, props) => {
 			var count = 0;
-			if (src.area.deck.starting) {
-				src.area.deck.starting.forEach(model => {
+			if (ins[0].deck.starting) {
+				ins[0].deck.starting.forEach(model => {
 					let nprops = Object.assign({}, props);
 					nprops.data = model;
 					if (this.in[1](nprops)) {
