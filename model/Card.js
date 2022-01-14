@@ -312,6 +312,7 @@ class Card {
 				event.execute(this.gameboard, this)
 		});
 		this.activate();
+		this.gameboard.update();
 	}
 
 	levelDown () {
