@@ -6,10 +6,11 @@ class Show extends Bloc {
 	constructor (src, ctx) {
 
 		super("show", src, ctx, true);
+		var Card = require('../Card');
 		this.f = (src, ins) => {
 
 			var gen = new Card(ins[0], src.gameboard, src.area.court);
-			src.gameboard.notify("show", ins[0]);
+			src.gameboard.notify("show", gen);
 			gen.anihilate();
 			return [];
 		};
