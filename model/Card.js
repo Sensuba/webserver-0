@@ -1041,8 +1041,8 @@ class Card {
 		}
 		this.gameboard.update();
 		this.gameboard.notify("transform", this, {data:this.data});
-		if (this.onBoard && (!this.isType("character") || this.chp))
-			loc.applyHazards(this);
+		if (this.onBoard && this.isType("character") && this.chp)
+			this.location.applyHazards(this);
 	}
 
 	shift (model, end) {
