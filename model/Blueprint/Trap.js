@@ -20,14 +20,19 @@ class Trap extends Bloc {
 					if (!own.inHand && !(own.location.id.type === "capsule"))
 						return;
 					own.goto(own.area.court);
-					own.gameboard.notify("trap", own);
+					own.gameboard.notify("trap", own, undefined, own.finalMana, own.finalOverload);
 					that.execute({src: own, image: image});
 					own.destroy();
 					own.gameboard.update();
 				}
-				if (own.area.court.isEmpty)
+				if (own.area.court.isEmpty) {
+					own.finalMana = own.eff.mana;
+					own.finalOverload = own.eff.ol;
 					that.act();
+				}
 				else {
+					own.finalMana = own.eff.mana;
+					own.finalOverload = own.eff.ol;
 					own.goto(own.area.capsule);
 					let unsub = that.src.gameboard.subscribe("cardmove", (t2,s2,d2) => {
 						if (own.area.court.isEmpty) {

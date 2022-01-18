@@ -94,6 +94,7 @@ class Card {
 		delete copy.php;
 		delete copy.dying;
 		delete copy.pOrder;
+		delete copy.lOrder;
 		delete copy.stopShifting;
 		delete copy.goingtodie;
 		delete copy.variables;
@@ -158,6 +159,10 @@ class Card {
 		if (former && former.hasCard (this))
 			former.removeCard (this);
 		if (former && (loc === null || former.locationOrder > loc.locationOrder || former.locationOrder === 0))
+			this.resetBody ();
+		else if (former && former.locationOrder && (loc.locationOrder === null || loc.locationOrder === undefined))
+			this.lOrder = former.locationOrder;
+		else if ((this.lOrder !== null && this.lOrder !== undefined) && (former.locationOrder === null || former.locationOrder === undefined) && (loc === null || this.lOrder > loc.locationOrder || this.lOrder === 0))
 			this.resetBody ();
 		if (loc && !loc.hasCard (this))
 			loc.addCard (this);
@@ -239,6 +244,9 @@ class Card {
 		delete this.variables;
 		delete this.charges;
 		delete this.countered;
+		delete this.lOrder;
+		delete this.finalMana;
+		delete this.finalOverload;
 		delete this.retarget;
 		delete this.secretcount;
 		delete this.secretparam;
@@ -886,6 +894,8 @@ class Card {
 
 	play (targets) {
 
+		this.finalMana = this.eff.mana;
+		this.finalOverload = this.eff.ol;
 		this.area.manapool.use(this.eff.mana);
 		this.setState("temporary", false);
 		if (this.hasState("bonus")) {
@@ -898,7 +908,7 @@ class Card {
 		case "artifact":
 			this.summon(targets[0]);
 			let playtargetcard = targets[1] && targets[1].card ? targets[1].card : undefined;
-			this.gameboard.notify("playcard", this, targets[0], targets[1], playtargetcard);
+			this.gameboard.notify("playcard", this, targets[0], targets[1], playtargetcard, this.finalMana, this.finalOverload);
 			let ftarget = targets.length > 1 ? (this.retarget || targets[1]) : undefined;
 			if (ftarget && this.area && ftarget.area && this.area != ftarget.area && ftarget.immune)
 				break;
@@ -911,7 +921,7 @@ class Card {
 			this.goto(this.area.court);
 			let spelltarget = targets ? targets[0] : undefined;
 			let spelltargetcard = spelltarget && spelltarget.card ? spelltarget.card : undefined;
-			this.gameboard.notify("playcard", this, spelltarget, spelltargetcard);
+			this.gameboard.notify("playcard", this, spelltarget, spelltargetcard, undefined, this.finalMana, this.finalOverload);
 			spelltarget = targets ? (this.retarget || targets[0]) : undefined;
 			if (this.countered || (spelltarget && this.area && spelltarget.area && this.area != spelltarget.area && spelltarget.immune && this.targets[0](this, spelltarget) !== "player")) {
 				this.destroy();
@@ -922,7 +932,7 @@ class Card {
 			break;
 		case "secret":
 			this.goto(targets[0]);
-			this.gameboard.notify("playcard", this, targets[0]);
+			this.gameboard.notify("playcard", this, targets[0], undefined, undefined, this.finalMana, this.finalOverload);
 			break;
 		default: break;
 		}
@@ -1271,6 +1281,8 @@ class Card {
 			this.mutatedState = res;
 		this.mutatedState.states = Object.assign({}, res.states);
 		res = this.mutations.reduce((card, mut) => mut.apply(card), res);
+		if (this.finalMana !== undefined) res.mana = this.finalMana;
+		if (this.finalOverload !== undefined) res.ol = this.finalOverload;
 		updatephp();
 		if (this.states && this.states.frozen && !this.frozen)
 			this.states.frozen = false;

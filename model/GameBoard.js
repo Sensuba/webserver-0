@@ -231,11 +231,12 @@ class GameBoard {
 			this.updateState = 1;
 			while (this.updates.length > 0)
 				this.updates[0].trigger();
-			[3, 2, 1, 0].forEach(prio => this.data.cards.forEach(card => {
+			[3, 2, 1, 0].forEach(prio => this.data.cards.filter(card => card.location && card.location.locationOrder === prio)
+				.sort((a, b) => ((a.location.locationOrder === b.location.locationOrder) ? ((a.pOrder && b.pOrder) ? (a.pOrder - b.pOrder) : 0) : (a.location.locationOrder - b.location.locationOrder)))
+				.forEach(card => {
 				if (this.updateState === 2)
 					return;
-				if (card.location && card.location.locationOrder === prio)
-					card.update();
+				card.update();
 			}));
 			if (this.updateState === 2) {
 				delete this.updateState;
