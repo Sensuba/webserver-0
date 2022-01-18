@@ -11,7 +11,7 @@ class AreaOfEffect extends Bloc {
 			var cards = [];
 			area.forEach (loc => loc.cards.filter(card => (targets === null || targets(card))).forEach(card => cards.push(card)));
 			cards.sort((a, b) => ((a.location.locationOrder === b.location.locationOrder) ? ((a.pOrder && b.pOrder) ? (a.pOrder - b.pOrder) : 0) : (a.location.locationOrder - b.location.locationOrder)))
-				.forEach(card => {console.log(card.nameCard);console.log(card.pOrder);
+				.forEach(card => {
 					this.out = [card];
 					if (this["for each"])
 						this["for each"].execute(props);
