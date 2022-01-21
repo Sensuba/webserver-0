@@ -169,6 +169,7 @@ var Timer = require('./Timer');
 var ExtraTurn = require('./ExtraTurn');
 
 var Wait = require('./Wait');
+var Animation = require('./Animation');
 var Blink = require('./Blink');
 var Show = require('./Show');
 var Message = require('./Message');
@@ -361,6 +362,7 @@ class Reader {
 			case "forstart": bloc = new ForEachStartingCard(card, ctx); break;
 			case "extraturn": bloc = new ExtraTurn(card, ctx); break;
 			case "wait": bloc = new Wait(card, ctx); break;
+			case "animation": bloc = new Animation(card, ctx); break;
 			case "blink": bloc = new Blink(card, ctx); break;
 			case "show": bloc = new Show(card, ctx); break;
 			case "message": bloc = new Message(card, ctx); break;

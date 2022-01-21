@@ -105,7 +105,7 @@ class GameBoard {
 
 	newTurn () {
 
-		if (this.currentArea.choosebox.opened)
+		while (this.currentArea.choosebox.opened)
 			this.currentArea.choosebox.chooseAtRandom();
 		this.notify("endturn", this.currentArea);
 		this.update();
