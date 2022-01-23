@@ -1001,7 +1001,6 @@ class Card {
 		else if (value !== null && value !== undefined)
 			data = { type: "int", value: value };
 		this.gameboard.notify("storevar", this, { type: "string", value: name }, data);
-		this.gameboard.update();
 	}
 
 	getVariable (name) {
@@ -1014,7 +1013,6 @@ class Card {
 		if (this.variables) {
 			delete this.variables[name];
 			this.gameboard.notify("clearvar", this, { type: "string", value: name });
-			this.gameboard.update();
 		}
 	}
 
@@ -1132,6 +1130,7 @@ class Card {
 			this.activate();
 		if (this.onBoard || (this.location.id.type === "capsule" && this.isType("entity"))) {
 			other.passives.forEach(p => this.passives.push(p.copy(this)));
+			other.mutations.forEach(m => m.attach(this));
 			other.faculties.forEach(f => this.faculties.push(f.copy()));
 		} else {
 			if (this.blueprint)

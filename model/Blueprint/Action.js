@@ -23,6 +23,7 @@ class Action extends Bloc {
 			if (target)
 				this.chosen = target;
 			this.execute({src, image: image});
+			src.gameboard.notify("endeffect", src);
 		}, tar), ins[1]));
 	}
 }

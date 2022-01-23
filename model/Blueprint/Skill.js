@@ -24,6 +24,7 @@ class Skill extends Bloc {
 			if (target)
 				this.chosen = target;
 			this.execute({src, image: image});
+			src.gameboard.notify("endeffect", src);
 		}, tar);
 		var skill = owner.isType("artifact") ? new ASkill(e, ins[2], ins[1]) : new ESkill(e, ins[2], ins[1]);
 		owner.faculties.push(skill);
