@@ -1,5 +1,5 @@
 
-const MAX_CARDS = 2;
+const MAX_CARDS = 8;
 
 class HonorBoard {
 
