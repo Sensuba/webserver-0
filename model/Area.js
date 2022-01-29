@@ -92,9 +92,9 @@ class Area {
 		if (!this.isPlaying)
 			return;
 
-		while (this.currentArea.choosebox.opened)
-			this.currentArea.choosebox.chooseAtRandom();
-		this.notify("endturn", this.currentArea);
+		while (this.choosebox.opened)
+			this.choosebox.chooseAtRandom();
+		this.notify("endturn", this);
 		this.gameboard.update();
 
 		this.field.entities.forEach(e => {
@@ -109,7 +109,7 @@ class Area {
 		})
 
 		this.hand.cards.filter(c => c.hasState("temporary")).forEach(c => c.discard());
-		this.notify("cleanup", this.currentArea);
+		this.notify("cleanup", this);
 		this.gameboard.newTurn();
 	}
 
