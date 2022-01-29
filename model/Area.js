@@ -94,7 +94,7 @@ class Area {
 
 		while (this.choosebox.opened)
 			this.choosebox.chooseAtRandom();
-		this.notify("endturn", this);
+		this.gameboard.notify("endturn", this);
 		this.gameboard.update();
 
 		this.field.entities.forEach(e => {
