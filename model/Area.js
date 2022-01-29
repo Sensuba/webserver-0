@@ -79,16 +79,6 @@ class Area {
 			if (t.hasHazards("shadow"))
 				t.clearHazards("shadow");
 		})
-		this.field.entities.forEach(e => {
-			if (e.poisoned)
-				e.triggerPoison();
-		})
-		this.field.opposite.entities.forEach(e => {
-			if (e.poisoned)
-				e.triggerPoison();
-			if (e.frozen && e.frozenTimer)
-				e.setState("frozen", false);
-		})
 		this.manapool.reload();
 		this.gameboard.update();
 		this.field.cards.forEach(e => e.refresh());
@@ -99,8 +89,28 @@ class Area {
 
 	endTurn () {
 
-		if (this.isPlaying)
-			this.gameboard.newTurn();
+		if (!this.isPlaying)
+			return;
+
+		while (this.currentArea.choosebox.opened)
+			this.currentArea.choosebox.chooseAtRandom();
+		this.notify("endturn", this.currentArea);
+		this.gameboard.update();
+
+		this.field.entities.forEach(e => {
+			if (e.frozen && e.frozenTimer)
+				e.setState("frozen", false);
+			if (e.poisoned)
+				e.triggerPoison();
+		})
+		this.field.opposite.entities.forEach(e => {
+			if (e.poisoned)
+				e.triggerPoison();
+		})
+
+		this.hand.cards.filter(c => c.hasState("temporary")).forEach(c => c.discard());
+		this.notify("cleanup", this.currentArea);
+		this.gameboard.newTurn();
 	}
 
 	extraTurn () {

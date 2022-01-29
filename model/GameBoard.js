@@ -104,13 +104,7 @@ class GameBoard {
 	}
 
 	newTurn () {
-
-		while (this.currentArea.choosebox.opened)
-			this.currentArea.choosebox.chooseAtRandom();
-		this.notify("endturn", this.currentArea);
-		this.update();
-		this.currentArea.hand.cards.filter(c => c.hasState("temporary")).forEach(c => c.discard());
-		this.notify("cleanup", this.currentArea);
+		
 		if (this.currentArea.extraTurns)
 			this.currentArea.extraTurns--;
 		else
@@ -200,7 +194,7 @@ class GameBoard {
 		case "endturn":
 			if (p.isPlaying) {
 				this.acceptCommand(cmd.type);
-				this.newTurn();
+				this.currentArea.endTurn();
 			}
 			break;
 		default: break;

@@ -208,6 +208,12 @@ class Card {
 	resetBody () {
 
 		//var model = this.loadModel();
+		if (this.hasState("bonus")) {
+			this.setState("bonus", false);
+			if (this.stopShifting)
+				this.stopShifting();
+		}
+		
 		let wasActivated = this.activated;
 		if (this.passives)
 			this.passives.forEach(passive => passive.deactivate());
