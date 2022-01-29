@@ -109,7 +109,7 @@ class Area {
 		})
 
 		this.hand.cards.filter(c => c.hasState("temporary")).forEach(c => c.discard());
-		this.notify("cleanup", this);
+		this.gameboard.notify("cleanup", this);
 		this.gameboard.newTurn();
 	}
 
