@@ -1,5 +1,6 @@
 require('newrelic');
 require('dotenv').config();
+var XMLHttpRequest = require('xhr2');
 var express = require('express');
 var app = express();
 
