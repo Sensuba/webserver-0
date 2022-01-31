@@ -232,7 +232,8 @@ class RoomManager extends Manager {
 			this.spectators.forEach(s => s.emit("endgame", {state: 7}));
 			console.log("Game " + this.room + " ended | Connection with " + name + " lost");
 			console.log("Generated " + c + " credits");
-		}
+		} else if (this.players.length <= 1)
+			this.finish();
 	}
 }
 
