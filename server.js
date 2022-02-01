@@ -46,7 +46,7 @@ xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.setRequestHeader('Accept', 'application/vnd.heroku+json; version=3');
 xhr.setRequestHeader('Authorization', 'Bearer ' + process.env.herokukey);
 
-var time = 0;
+/*var time = 0;
 var needToRestart = false;
 var restart = () => { console.log("Maintenance restart"); xhr.send(); }
 var tick = () => setTimeout(() => {
@@ -62,7 +62,7 @@ var tick = () => setTimeout(() => {
 		}
 	} else tick();
 }, 60000);
-tick();
+tick();*/
 
 
 var computeAI = (ai, next) => {
