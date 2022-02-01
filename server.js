@@ -36,23 +36,6 @@ CreditManager.init(api);
 var ais = [];
 var pendingUsers = [];
 
-var xhr = new XMLHttpRequest();
-xhr.open(
-    'DELETE',
-    'https://api.heroku.com/apps/sensuba/dynos/web'
-);
-xhr.setRequestHeader('Content-Type', 'application/json');
-xhr.setRequestHeader('Accept', 'application/vnd.heroku+json; version=3');
-xhr.setRequestHeader('Authorization', 'Bearer ' + process.env.herokukey);
-var needToRestart = false;
-var restart = () => { console.log("Maintenance restart"); xhr.send(); }
-setTimeout(() => {
-	if (Object.keys(rooms).length === 0)
-		restart();
-	else needToRestart = true;
-}, 6 * 3600 * 1000);
-
-
 var computeAI = (ai, next) => {
 
 	if (ai)
@@ -196,10 +179,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 				manager.kick(socket.user);
 			if (manager.finished) {
 				delete rooms[manager.room];
-				let roomcount = Object.keys(rooms).length;
-				console.log("Room count: " + roomcount);
-				if (roomcount === 0 && needToRestart)
-					restart();
+				console.log("Room count: " + Object.keys(rooms).length);
 			}
 		} else if (socket.user)
 			socket.user.manager.kick(socket.user);
