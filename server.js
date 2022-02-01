@@ -45,13 +45,22 @@ xhr.open(
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.setRequestHeader('Accept', 'application/vnd.heroku+json; version=3');
 xhr.setRequestHeader('Authorization', 'Bearer ' + process.env.herokukey);
+
+var time = 0;
 var needToRestart = false;
 var restart = () => { console.log("Maintenance restart"); xhr.send(); }
-setTimeout(() => {
-	if (Object.keys(rooms).length === 0)
-		restart();
-	else needToRestart = true;
-}, 6 * 3600 * 1000);
+var tick = () => setTimeout(() => {
+	time++;
+	console.log("Up for " + (time * 5) + " minutes");
+	if (time >= 72) {
+		if (Object.keys(rooms).length === 0)
+			restart();
+		else {
+			console.log("Waiting to restart server");
+			needToRestart = true;
+		}
+	} else tick();
+}, 300000);
 
 
 var computeAI = (ai, next) => {
