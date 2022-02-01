@@ -51,8 +51,9 @@ var needToRestart = false;
 var restart = () => { console.log("Maintenance restart"); xhr.send(); }
 var tick = () => setTimeout(() => {
 	time++;
-	console.log("Up for " + (time * 5) + " minutes");
-	if (time >= 72) {
+	if (time % 60 === 0)
+		console.log("Uptime: " + (time/60) + "h");
+	if (time >= 360) {
 		if (Object.keys(rooms).length === 0)
 			restart();
 		else {
@@ -60,7 +61,8 @@ var tick = () => setTimeout(() => {
 			needToRestart = true;
 		}
 	} else tick();
-}, 300000);
+}, 60000);
+tick();
 
 
 var computeAI = (ai, next) => {
