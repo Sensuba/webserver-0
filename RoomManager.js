@@ -233,6 +233,8 @@ class RoomManager extends Manager {
 			console.log("Game " + this.room + " ended | Connection with " + name + " lost");
 			console.log("Generated " + c + " credits");
 		}
+		else if (this.players.length <= 1)
+			this.finish();
 	}
 }
 
