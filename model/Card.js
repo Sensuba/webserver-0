@@ -933,7 +933,7 @@ class Card {
 				this.destroy();
 				break;
 			}
-			let nomoretarget = spelltargetcard && this.area && (spelltargetcard.immune || !spelltargetcard.onBoard) && this.targets[0](this, spelltarget) !== "player";
+			let nomoretarget = spelltargetcard && this.area && ((this.area && spelltargetcard.area && spelltargetcard.immune && this.area != spelltargetcard.area) || !spelltargetcard.onBoard) && this.targets[0](this, spelltarget) !== "player";
 			if (spelltargetcard && !nomoretarget)
 				spelltarget = spelltargetcard.location;
 			this.events.forEach(event => {
