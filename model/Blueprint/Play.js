@@ -27,7 +27,7 @@ class Play extends Bloc {
 			if (target)
 				this.chosen = target;
 			this.trigger(owner, image);
-		}, tar));
+		}, tar, this.target));
 		owner.innereffects.push(this);
 	}
 }

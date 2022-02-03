@@ -24,10 +24,11 @@ const targets = {
 
 class Event {
 
-	constructor (action, requirement) {
+	constructor (action, requirement, hasTarget) {
 
 		this.action = action;
 		this.requirement = requirement;
+		this.hasTarget = hasTarget;
 	}
 
 	execute (gameboard, src, target) {

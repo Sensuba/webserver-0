@@ -929,11 +929,17 @@ class Card {
 			let spelltargetcard = spelltarget && spelltarget.card ? spelltarget.card : undefined;
 			this.gameboard.notify("playcard", this, undefined, spelltarget, spelltargetcard, this.finalMana, this.finalOverload);
 			spelltarget = targets ? (this.retarget || targets[0]) : undefined;
-			if (this.countered || (spelltarget && this.area && spelltarget.area && this.area != spelltarget.area && spelltarget.immune && this.targets[0](this, spelltarget) !== "player")) {
+			if (this.countered) {
 				this.destroy();
 				break;
 			}
-			this.events.forEach(event => event.execute(this.gameboard, this, spelltarget));
+			let nomoretarget = spelltargetcard && this.area && (spelltargetcard.immune || !spelltargetcard.onBoard) && this.targets[0](this, spelltarget) !== "player";
+			if (spelltargetcard && !nomoretarget)
+				spelltarget = spelltargetcard.location;
+			this.events.forEach(event => {
+				if (!event.hasTarget || !nomoretarget)
+					event.execute(this.gameboard, this, spelltarget);
+			});
 			this.destroy();
 			break;
 		case "secret":
