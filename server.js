@@ -52,7 +52,7 @@ setInterval(() => {
 	time++;
 	if (time % 60 === 0)
 		console.log("Uptime:" + (time/60) + "h")
-	if (!needToRestart && time >= 360) {
+	if (!needToRestart && time >= 180) {
 		if (Object.keys(rooms).length === 0)
 			restart();
 		else needToRestart = true;
