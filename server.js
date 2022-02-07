@@ -109,8 +109,8 @@ var start = () => io.sockets.on('connection', function (socket) {
 				delete rooms[manager.room];
 				let roomcount = Object.keys(rooms).length;
 				console.log("Room count: " + roomcount);
-				if (roomcount === 0 && needToRestart)
-					restart();
+				/*if (roomcount === 0 && needToRestart)
+					restart();*/
 			}, prv);
 		socket.emit('assign', {to: roomname});
 	});
@@ -124,8 +124,8 @@ var start = () => io.sockets.on('connection', function (socket) {
 				delete rooms[manager.room];
 				let roomcount = Object.keys(rooms).length;
 				console.log("Room count: " + roomcount);
-				if (roomcount === 0 && needToRestart)
-					restart();
+				/*if (roomcount === 0 && needToRestart)
+					restart();*/
 			});
 		var manager = rooms[roomname];
 		var user, reconnecting = false;
