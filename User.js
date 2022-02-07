@@ -26,15 +26,30 @@ class User {
 		this.disconnected = true;
 	}
 
-	reconnect (socket) {
+	reconnect (socket, resync) {
 
 		this.socket = socket;
 		socket.user = this;
 		delete this.disconnected;
+		if (this.warning) {
+			clearTimeout(this.warning);
+			delete this.warning;
+		}
+		if (resync)
+			this.waitingList = [];
 		while (this.waitingList.length > 0) {
 			var not = this.waitingList.shift();
 			this.socket.emit(not.n, not.data);
 		}
+	}
+
+	warn (time) {
+
+		console.log("Player " + (user.name || "Anonymous") + " disconnected from " + this.room);
+		this.warning = setTimeout(() => {
+			if (this.manager)
+				this.manager.kick(this)
+		}, time);
 	}
 }
 

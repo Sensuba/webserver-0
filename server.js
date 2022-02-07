@@ -105,7 +105,13 @@ var start = () => io.sockets.on('connection', function (socket) {
 		for (var i = 0; i < 10; i++)
 			roomname += batch.charAt(Math.floor(Math.random() * batch.length));
 		if (!(roomname in rooms))
-			rooms[roomname] = new RoomManager(roomname, api, prv);
+			rooms[roomname] = new RoomManager(roomname, api, manager => {
+				delete rooms[manager.room];
+				let roomcount = Object.keys(rooms).length;
+				console.log("Room count: " + roomcount);
+				if (roomcount === 0 && needToRestart)
+					restart();
+			}, prv);
 		socket.emit('assign', {to: roomname});
 	});
 
@@ -114,11 +120,26 @@ var start = () => io.sockets.on('connection', function (socket) {
 		socket.join(roomname);
 		socket.room = roomname;
 		if (!(roomname in rooms))
-			rooms[roomname] = new RoomManager(roomname, api);
+			rooms[roomname] = new RoomManager(roomname, api, manager => {
+				delete rooms[manager.room];
+				let roomcount = Object.keys(rooms).length;
+				console.log("Room count: " + roomcount);
+				if (roomcount === 0 && needToRestart)
+					restart();
+			});
 		var manager = rooms[roomname];
-		var user = new User(socket, id, manager, name, avatar);
+		var user, reconnecting = false;
+		if (manager.players.filter(p => p.id === id).length > 0) {
+			user = manager.players.filter(p => p.id === id)[0];
+			user.reconnect(socket);
+			reconnecting = true;
+		}
+		else user = new User(socket, id, manager, name, avatar);
 		user.bonus = bonus;
-		manager.join(user);
+		if (reconnecting)
+			manager.reconnect(user);
+		else
+			manager.join(user);
 	});
 
 	socket.on('mission', function(id, name, avatar, mission){
@@ -199,16 +220,9 @@ var start = () => io.sockets.on('connection', function (socket) {
 			if (!manager)
 				return;
 			if (socket.user)
-				manager.kick(socket.user);
-			if (manager.finished) {
-				delete rooms[manager.room];
-				let roomcount = Object.keys(rooms).length;
-				console.log("Room count: " + roomcount);
-				if (roomcount === 0 && needToRestart)
-					restart();
-			}
+				manager.warn(socket.user);
 		} else if (socket.user)
-			socket.user.manager.kick(socket.user);
+			socket.user.manager.warn(socket.user);
 	}
 
 	socket.on('quit', quit);
@@ -233,7 +247,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 		let user = pendingUsers.find(u => u.id === userID);
 		if (user) {
 			pendingUsers = pendingUsers.filter(u => u !== user);
-			user.reconnect(socket);
+			user.reconnect(socket, true);
 		}
 	})
 });

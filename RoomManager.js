@@ -4,14 +4,22 @@ var DeckAnalyst = require("./DeckAnalyst");
 
 class RoomManager extends Manager {
 
-	constructor (room, api, prv = true) {
+	constructor (room, api, callback, prv = true) {
 
 		super("room");
 		this.room = room;
 		this.api = api;
+		this.callback = callback;
 		this.private = prv;
 		this.players = [];
 		this.spectators = [];
+	}
+
+	finish () {
+
+		this.game.ended = true;
+		if (this.callback)
+			this.callback(this);
 	}
 
 	broadcast (e, data) {
@@ -30,15 +38,37 @@ class RoomManager extends Manager {
 			if (this.game && this.game.started) {
 				user.emit('joined', {as: 'spectator'});
 				this.spectators.push(user);
+				user.emit('state', 'async');
 				this.game.log.logs.forEach(log => {
 					if (log.type === "command")
 						return;
 					var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
 					user.emit('notification', {type: log.type, src: log.src.id, data: datamap});
 				})
+				user.emit('time', this.game.getTimeLeft());
+				user.emit('state', 'sync');
 				console.log((user.name || "Anonymous") + " joined " + this.room + " as spectator");
 			}
 		}
+	}
+
+	reconnect (user) {
+
+		var noplayer = this.players.findIndex(p => p === user);
+		user.emit('joined', {as: 'player', no: noplayer});
+		if (this.started && this.game && this.game.started) {
+			user.emit('state', 'async');
+			this.game.log.logs.forEach(log => {
+				if (log.type === "command")
+					return;
+				var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
+				user.emit('notification', {type: log.type, src: log.src.id, data: datamap});
+			})
+			this.game.data.cards.filter(c => c.identified && c.identified[noplayer] && !c.location.public).forEach(c => this.game.whisper("identify", noplayer, c.id, c.data));
+			user.emit('time', this.game.getTimeLeft());
+			user.emit('state', 'sync');
+		}
+		console.log("Player " + (user.name || "Anonymous") + " reconnected " + this.room);
 	}
 
 	prepare (player, deck, token) {
@@ -235,6 +265,13 @@ class RoomManager extends Manager {
 		}
 		else if (this.players.length <= 1)
 			this.finish();
+	}
+
+	warn (user) {
+
+		if (this.players.every(p => p !== user))
+			this.kick(user);
+		else user.warn(120000)
 	}
 }
 

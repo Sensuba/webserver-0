@@ -1,6 +1,8 @@
 var Area = require("./Area");
 var Log = require("./Log");
 
+const EXTRA_TIME = 5000;
+
 class GameBoard {
 
 	constructor () {
@@ -122,7 +124,12 @@ class GameBoard {
 		this.timer = setTimeout(() => {
 			if (!this.ended)
 				this.newTurn();
-		}, 155000);
+		}, 150000 + EXTRA_TIME);
+	}
+
+	getTimeLeft() {
+
+	    return Math.max(0, Math.ceil((this.timer._idleStart + this.timer._idleTimeout - Date.now()) - EXTRA_TIME));
 	}
 
 
