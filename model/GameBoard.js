@@ -125,11 +125,12 @@ class GameBoard {
 			if (!this.ended)
 				this.newTurn();
 		}, 150000 + EXTRA_TIME);
+		this.timerStart = new Date();
 	}
 
 	getTimeLeft() {
 
-	    return Math.max(0, Math.ceil((this.timer._idleStart + this.timer._idleTimeout - Date.now()) - EXTRA_TIME));
+	    return this.timerStart ? Math.max(0, (this.timerStart - new Date() + 150000)) : 0;
 	}
 
 
