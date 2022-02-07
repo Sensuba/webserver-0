@@ -37,7 +37,7 @@ CreditManager.init(api);
 var ais = [];
 var pendingUsers = [];
 
-var xhr = new XMLHttpRequest();
+//var xhr = new XMLHttpRequest();
 var time = 0;
 xhr.open(
     'DELETE',
