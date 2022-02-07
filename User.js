@@ -45,7 +45,7 @@ class User {
 
 	warn (time) {
 
-		console.log("Player " + (user.name || "Anonymous") + " disconnected from " + this.room);
+		console.log("Player " + (this.name || "Anonymous") + " disconnected from " + this.manager.room);
 		this.warning = setTimeout(() => {
 			if (this.manager)
 				this.manager.kick(this)
