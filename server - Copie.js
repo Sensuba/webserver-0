@@ -1,6 +1,5 @@
 require('newrelic');
 require('dotenv').config();
-var XMLHttpRequest = require('xhr2');
 var express = require('express');
 var app = express();
 
@@ -35,29 +34,6 @@ Bank.init(api, () => {
 CreditManager.init(api);
 
 var ais = [];
-var pendingUsers = [];
-
-var xhr = new XMLHttpRequest();
-var time = 0;
-xhr.open(
-    'DELETE',
-    'https://api.heroku.com/apps/sensuba/dynos/web'
-);
-xhr.setRequestHeader('Content-Type', 'application/json');
-xhr.setRequestHeader('Accept', 'application/vnd.heroku+json; version=3');
-xhr.setRequestHeader('Authorization', 'Bearer ' + process.env.herokukey);
-var needToRestart = false;
-var restart = () => { console.log("Maintenance restart"); xhr.send(); }
-setInterval(() => {
-	time++;
-	if (time % 60 === 0)
-		console.log("Uptime:" + (time/60) + "h")
-	if (!needToRestart && time >= 180) {
-		if (Object.keys(rooms).length === 0)
-			restart();
-		else needToRestart = true;
-	}
-}, 60000);
 
 var computeAI = (ai, next) => {
 
@@ -105,66 +81,46 @@ var start = () => io.sockets.on('connection', function (socket) {
 		for (var i = 0; i < 10; i++)
 			roomname += batch.charAt(Math.floor(Math.random() * batch.length));
 		if (!(roomname in rooms))
-			rooms[roomname] = new RoomManager(roomname, api, manager => {
-				delete rooms[manager.room];
-				let roomcount = Object.keys(rooms).length;
-				console.log("Room count: " + roomcount);
-				if (roomcount === 0 && needToRestart)
-					restart();
-			}, prv);
+			rooms[roomname] = new RoomManager(roomname, prv);
 		socket.emit('assign', {to: roomname});
 	});
 
-	socket.on('join', function(id, name, avatar, roomname, bonus = false){
+	socket.on('join', function(name, avatar, roomname, bonus = false){
 
 		socket.join(roomname);
 		socket.room = roomname;
 		if (!(roomname in rooms))
-			rooms[roomname] = new RoomManager(roomname, api, manager => {
-				delete rooms[manager.room];
-				let roomcount = Object.keys(rooms).length;
-				console.log("Room count: " + roomcount);
-				if (roomcount === 0 && needToRestart)
-					restart();
-			});
+			rooms[roomname] = new RoomManager(roomname);
 		var manager = rooms[roomname];
-		var user, reconnecting = false;
-		if (manager.players.filter(p => p.id === id).length > 0) {
-			user = manager.players.filter(p => p.id === id)[0];
-			user.reconnect(socket);
-			reconnecting = true;
-		}
-		else user = new User(socket, id, manager, name, avatar);
-		user.bonus = bonus;
-		if (reconnecting)
-			manager.reconnect(user);
-		else
-			manager.join(user);
+		socket.manager = manager;
+		socket.name = name;
+		socket.bonus = bonus;
+		manager.join(socket, name, avatar, bonus);
 	});
 
-	socket.on('mission', function(id, name, avatar, mission){
+	socket.on('mission', function(name, avatar, mission){
 
 		socket.mission = mission;
-		var manager = new MissionManager(mission);
-		var user = new User(socket, id, manager, name, avatar);
-		manager.init(user);
+		socket.manager = new MissionManager(mission);
+		var manager = socket.manager;
+		manager.init(socket, name, avatar);
 	});
 
-	socket.on('training', function(id, name, avatar, deck, ai){
+	socket.on('training', function(name, avatar, deck, ai){
 
 		socket.training = true;
-		var manager = new TrainingManager(ai, computeAI);
-		var user = new User(socket, id, manager, name, avatar);
-		manager.init(user, deck);
+		socket.manager = new TrainingManager(ai, computeAI);
+		var manager = socket.manager;
+		manager.init(socket, name, avatar, deck);
 	});
 
 	socket.on('prepare', function(token, deck){
 
-		if (!socket.user)
+		if (!socket.manager)
 			return;
 
-		var manager = socket.user.manager;
-		manager.prepare(socket.user, deck, token);
+		var manager = socket.manager;
+		manager.prepare(socket, deck, token);
 		if (manager.finished) {
 			delete rooms[manager.room];
 			console.log("Room count: " + Object.keys(rooms).length);
@@ -173,13 +129,10 @@ var start = () => io.sockets.on('connection', function (socket) {
 
 	socket.on('command', function(cmd){
 
-		if (!socket.user)
-			return;
-
-		var manager = socket.user.manager;
+		var manager = socket.manager;
 		if (!manager)
 			return;
-		manager.command(socket.user, cmd);
+		manager.command(socket, cmd);
 		if (manager.finished) {
 			delete rooms[manager.room];
 			console.log("Room count: " + Object.keys(rooms).length);
@@ -188,27 +141,21 @@ var start = () => io.sockets.on('connection', function (socket) {
 
 	socket.on('chat', function(text){
 
-		if (!socket.user)
-			return;
-
-		var manager = socket.user.manager;
+		var manager = socket.manager;
 		if (!manager || !manager.chat)
 			return;
 		if (text.startsWith("/"))
-			manager.chatcommand(socket.user, text.substr(1));
-		else manager.chat(socket.user, text);
+			manager.chatcommand(socket, text.substr(1));
+		else manager.chat(socket, text);
 	});
 
 	socket.on('leave', function(){
 
-		if (!socket.user)
-			return;
-
 		console.log("Client leaved " + socket.room);
-		var manager = socket.user.manager;
+		var manager = socket.manager;
 		if (!manager)
 			return;
-		manager.kick(socke.user);
+		manager.kick(socket);
 	});
 
 	var quit = () => {
@@ -219,35 +166,16 @@ var start = () => io.sockets.on('connection', function (socket) {
 			var manager = rooms[roomname];
 			if (!manager)
 				return;
-			if (socket.user)
-				manager.warn(socket.user);
-		} else if (socket.user && socket.user.manage && socket.user.manager.warn)
-			socket.user.manager.warn(socket.user);
+			manager.kick(socket);
+			if (manager.finished) {
+				delete rooms[manager.room];
+				console.log("Room count: " + Object.keys(rooms).length);
+			}
+		} else if (socket.manager)
+			socket.manager.kick(socket);
 	}
 
 	socket.on('quit', quit);
 
-	socket.on('disconnect', function(){
-
-		if (socket.user) {
-			let user = socket.user;
-			user.disconnect();
-			pendingUsers.push(user);
-			setTimeout(() => {
-				if (pendingUsers.includes(user) && user.disconnected && user.socket === socket) {
-					pendingUsers = pendingUsers.filter(u => u !== user);
-					quit();
-				}
-			}, 5000);
-		} else quit();
-	});
-
-	socket.on('reconnectuser', function(userID) {
-
-		let user = pendingUsers.find(u => u.id === userID);
-		if (user) {
-			pendingUsers = pendingUsers.filter(u => u !== user);
-			user.reconnect(socket, true);
-		}
-	})
+	socket.on('disconnect', quit);
 });
