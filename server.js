@@ -221,7 +221,7 @@ var start = () => io.sockets.on('connection', function (socket) {
 				return;
 			if (socket.user)
 				manager.warn(socket.user);
-		} else if (socket.user && socket.user.manage && socket.user.manager.warn)
+		} else if (socket.user && socket.user.manager && socket.user.manager.warn)
 			socket.user.manager.warn(socket.user);
 	}
 
