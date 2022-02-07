@@ -37,7 +37,7 @@ CreditManager.init(api);
 var ais = [];
 var pendingUsers = [];
 
-//var xhr = new XMLHttpRequest();
+/*var xhr = new XMLHttpRequest();
 var time = 0;
 xhr.open(
     'DELETE',
@@ -46,7 +46,7 @@ xhr.open(
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.setRequestHeader('Accept', 'application/vnd.heroku+json; version=3');
 xhr.setRequestHeader('Authorization', 'Bearer ' + process.env.herokukey);
-/*var needToRestart = false;
+var needToRestart = false;
 var restart = () => { console.log("Maintenance restart"); xhr.send(); }
 setInterval(() => {
 	time++;
