@@ -1,6 +1,6 @@
 require('newrelic');
 require('dotenv').config();
-var XMLHttpRequest = require('xhr2');
+//var XMLHttpRequest = require('xhr2');
 var express = require('express');
 var app = express();
 
@@ -46,7 +46,7 @@ xhr.open(
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.setRequestHeader('Accept', 'application/vnd.heroku+json; version=3');
 xhr.setRequestHeader('Authorization', 'Bearer ' + process.env.herokukey);
-var needToRestart = false;
+/*var needToRestart = false;
 var restart = () => { console.log("Maintenance restart"); xhr.send(); }
 setInterval(() => {
 	time++;
@@ -57,7 +57,7 @@ setInterval(() => {
 			restart();
 		else needToRestart = true;
 	}
-}, 60000);
+}, 60000);*/
 
 var computeAI = (ai, next) => {
 

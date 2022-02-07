@@ -21,7 +21,7 @@ class Frenzy extends Bloc {
 				if (that.unsub1)
 					that.unsub1();
 				that.unsub1 = that.src.gameboard.subscribe("damagecard", (t,s,d) => {
-					if (s === this.victim && d[1] === own && own.onBoard && s.chp !== undefined && s.chp <= 0) {
+					if (s === this.victim && d[1] === own && own.onBoard && s.chp !== undefined && (s.chp <= 0 || s.goingToDie)) {
 						that.unsub1();
 						delete that.unsub1;
 						if (that.unsub2)

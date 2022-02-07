@@ -269,7 +269,7 @@ class RoomManager extends Manager {
 
 	warn (user) {
 
-		if (this.players.every(p => p !== user))
+		if (!this.started || this.players.every(p => p !== user))
 			this.kick(user);
 		else user.warn(120000)
 	}

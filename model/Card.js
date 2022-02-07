@@ -736,7 +736,7 @@ class Card {
 		var dmg1 = target.damage(this.eff.atk - (target.eff.armor || 0), this, true);
 		var dmgcleave;
 		if (this.hasState("cleave"))
-			dmgcleave = target.location.neighbors.filter(t => t.occupied && t.card.isType("entity")).map(t => t.card.damage(this.eff.atk - (t.card.eff.armor || 0), this, true));
+			dmgcleave = target.location.neighbors.filter(t => t.occupied && (t.card.isType("figure") || t.card.isType("artifact"))).map(t => t.card.damage(this.eff.atk - (t.card.eff.armor || 0), this, true));
 		var dmg2;
 		if (!this.eff.states.initiative)
 			dmg2 = target.ripost(this);
