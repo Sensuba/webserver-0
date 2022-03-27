@@ -76,6 +76,7 @@ var StoreModel = require('./StoreModel');
 var StoreLocation = require('./StoreLocation');
 var ClearVariable = require('./ClearVariable');
 var Counter = require('./Counter');
+var Curse = require('./Curse');
 var ChangeTarget = require('./ChangeTarget');
 var AddHazards = require('./AddHazards');
 var ClearHazards = require('./ClearHazards');
@@ -117,6 +118,7 @@ var CardToTileFilter = require('./CardToTileFilter');
 var DoesCover = require('./DoesCover');
 var IsCovered = require('./IsCovered');
 var Poisoned = require('./Poisoned');
+var CurseDamage = require('./CurseDamage');
 var ChargeCount = require('./ChargeCount');
 var MergeMutations = require('./MergeMutations');
 var ConditionalMutation = require('./ConditionalMutation');
@@ -167,6 +169,7 @@ var ForEachStartingCard = require('./ForEachStartingCard');
 var Timer = require('./Timer');
 
 var ExtraTurn = require('./ExtraTurn');
+var SkipTurn = require('./SkipTurn');
 
 var Wait = require('./Wait');
 var Animation = require('./Animation');
@@ -267,6 +270,7 @@ class Reader {
 			case "createmana": bloc = new RefillMana(card, ctx); break;
 			case "extramana": bloc = new ExtraMana(card, ctx); break;
 			case "usemana": bloc = new UseMana(card, ctx); break;
+			case "curse": bloc = new Curse(card, ctx); break;
 			case "shuffle": bloc = new Shuffle(card, ctx); break;
 			case "putfl": bloc = new PutFirstLast(card, ctx); break;
 			case "writeintvar": bloc = new StoreInteger(card, ctx); break;
@@ -315,6 +319,7 @@ class Reader {
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;
 			case "cover": bloc = new DoesCover(card, ctx); break;
 			case "poisoned": bloc = new Poisoned(card, ctx); break;
+			case "cursedmg": bloc = new CurseDamage(card, ctx); break;
 			case "chargecount": bloc = new ChargeCount(card, ctx); break;
 			case "covered": bloc = new IsCovered(card, ctx); break;
 			case "mergemut": bloc = new MergeMutations(card, ctx); break;
@@ -361,6 +366,7 @@ class Reader {
 			case "forevent": bloc = new ForEachEvent(card, ctx); break;
 			case "forstart": bloc = new ForEachStartingCard(card, ctx); break;
 			case "extraturn": bloc = new ExtraTurn(card, ctx); break;
+			case "skipturn": bloc = new SkipTurn(card, ctx); break;
 			case "wait": bloc = new Wait(card, ctx); break;
 			case "animation": bloc = new Animation(card, ctx); break;
 			case "blink": bloc = new Blink(card, ctx); break;
