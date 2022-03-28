@@ -30,6 +30,7 @@ class Area {
 		this.capsule = new Capsule(this);
 		this.nether = new Nether(this);
 		this.choosebox = new Choosebox(this);
+		this.extraTurns = [];
 		this.gameboard.register(this);
 	}
 
@@ -71,8 +72,9 @@ class Area {
 		return this.gameboard.currentArea === this;
 	}
 
-	newTurn () {
+	newTurn (callback) {
 
+		this.startingTurn = true;
 		this.field.tiles.forEach(t => {
 			if (t.hasHazards("wind"))
 				t.clearHazards("wind");
@@ -82,15 +84,27 @@ class Area {
 		this.manapool.reload();
 		this.gameboard.update();
 		this.field.cards.forEach(e => e.refresh());
+		if (callback)
+			callback();
 		this.gameboard.notify("newturn", this);
 		this.draw();
 		this.gameboard.update();
+		delete this.startingTurn;
+		if (this.hasToEnd) {
+			delete this.hasToEnd;
+			this.endTurn();
+		}
 	}
 
 	endTurn () {
 
 		if (!this.isPlaying)
 			return;
+
+		if (this.startingTurn) {
+			this.hasToEnd = true;
+			return;
+		}
 
 		while (this.choosebox.opened)
 			this.choosebox.chooseAtRandom();
@@ -113,9 +127,9 @@ class Area {
 		this.gameboard.newTurn();
 	}
 
-	extraTurn () {
+	extraTurn (callback) {
 
-		this.extraTurns = (this.extraTurns || 0) + 1;
+		this.extraTurns.push(callback);
 		this.gameboard.notify("extraturn", this);
 	}
 }

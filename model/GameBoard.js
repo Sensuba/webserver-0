@@ -107,11 +107,12 @@ class GameBoard {
 
 	newTurn () {
 		
-		if (this.currentArea.extraTurns)
-			this.currentArea.extraTurns--;
+		var callback = null;
+		if (this.currentArea.extraTurns.length > 0)
+			callback = this.currentArea.extraTurns.pop();
 		else
 			this.currentArea = this.currentArea.opposite;
-		this.currentArea.newTurn();
+		this.currentArea.newTurn(callback);
 		this.resetTimer();
 	}
 

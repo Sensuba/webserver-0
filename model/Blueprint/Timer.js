@@ -5,7 +5,7 @@ class Timer extends Bloc {
 
 	constructor (src, ctx) {
 
-		super("timer", src, ctx);
+		super("timer", src, ctx, true);
 		this.f = (src, ins, props) => {
 			ctx.image = (ctx.image || 0) + 1;
 			var timerimage = ctx.image;
