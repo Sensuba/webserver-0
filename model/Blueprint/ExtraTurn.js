@@ -6,7 +6,7 @@ class ExtraTurn extends Bloc {
 	constructor (src, ctx) {
 
 		super("extraturn", src, ctx, true);
-		this.f = (src, ins) => {
+		this.f = (src, ins, props) => {
 			ctx.image = (ctx.image || 0) + 1;
 			var timerimage = ctx.image;
 			Object.keys(ctx).filter(key => key !== "image").forEach(key => ctx[key].forEach((el, i) => {
