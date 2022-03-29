@@ -43,20 +43,20 @@ class Deck {
 		return this.cards.find(filter);
 	}
 
-	curse() {
+	fatigue() {
 
 		this.area.gameboard.notify("fatigue", this);
 		this.area.hero.damage(this.curse, null);
 		this.curse += this.curseInc;
 	}
 
-	fatigue() { this.curse() }
+	curse() { this.fatigue(); }
 
 	editCurse(damage, increment) {
 
-		if (damage != null && damage != undefined)
+		if (damage !== null && damage !== undefined)
 			this.curse = damage;
-		if (increment != null && increment != undefined)
+		if (increment !== null && increment !== undefined)
 			this.curseInc = increment;
 		this.area.gameboard.notify("editfatigue", this, damage, increment);
 	}
