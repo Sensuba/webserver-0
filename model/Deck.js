@@ -15,6 +15,7 @@ class Deck {
 		this.area = area;
 		this.cards = [];
 		this.curse = CURSE_DAMAGE;
+		this.curseInc = CURSE_INC;
 		this.area.gameboard.register(this);
 	}
 
@@ -42,11 +43,22 @@ class Deck {
 		return this.cards.find(filter);
 	}
 
-	fatigue() {
+	curse() {
 
 		this.area.gameboard.notify("fatigue", this);
 		this.area.hero.damage(this.curse, null);
-		this.curse += CURSE_INC;
+		this.curse += this.curseInc;
+	}
+
+	fatigue() { this.curse() }
+
+	editCurse(damage, increment) {
+
+		if (damage != null && damage != undefined)
+			this.curse = damage;
+		if (increment != null && increment != undefined)
+			this.curseInc = increment;
+		this.area.gameboard.notify("editfatigue", this, damage, increment);
 	}
 
 	shuffle() {

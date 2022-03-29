@@ -1270,7 +1270,7 @@ class Card {
 			if (this.isType("character") && this.onBoard) {
 				this.php = this.php || { hp: this.hp, chp: this.chp };
 				var plushp = Math.max (res.negativehpmodifier || 0, res.hp - this.php.hp);
-				this.chp = Math.min(res.hp, (this.chp || this.hp) + plushp);
+				this.chp = Math.min(res.hp, (this.chp === null || this.chp === undefined ? this.hp : this.chp) + plushp);
 				res.chp = this.chp;
 				this.php = { hp: res.hp, chp: res.chp };
 			}

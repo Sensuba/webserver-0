@@ -77,6 +77,7 @@ var StoreLocation = require('./StoreLocation');
 var ClearVariable = require('./ClearVariable');
 var Counter = require('./Counter');
 var Curse = require('./Curse');
+var EditCurse = require('./EditCurse');
 var ChangeTarget = require('./ChangeTarget');
 var AddHazards = require('./AddHazards');
 var ClearHazards = require('./ClearHazards');
@@ -271,6 +272,7 @@ class Reader {
 			case "extramana": bloc = new ExtraMana(card, ctx); break;
 			case "usemana": bloc = new UseMana(card, ctx); break;
 			case "curse": bloc = new Curse(card, ctx); break;
+			case "editcurse": bloc = new EditCurse(card, ctx); break;
 			case "shuffle": bloc = new Shuffle(card, ctx); break;
 			case "putfl": bloc = new PutFirstLast(card, ctx); break;
 			case "writeintvar": bloc = new StoreInteger(card, ctx); break;

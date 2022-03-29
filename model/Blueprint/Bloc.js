@@ -60,7 +60,7 @@ class Bloc {
 		return this.in[no](props);
 	}
 
-	updateIn(ins) {
+	updateIn(ins) {console.log(this.type)
 
 		this.in = ins.map((el, i) => {
 			if (el !== null && typeof el === 'object')
