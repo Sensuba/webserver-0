@@ -27,7 +27,7 @@ class Bloc {
 		if (this.prepared)
 			return;
 		this.prepared = true;
-		this.toPrepare.forEach(to => {
+		this.toPrepare.forEach(to => {console.log(this.src.nameCard + "   " + this.type + "   " + to);
 			if (src[to] !== undefined && src[to] !== null) {
 				this[to] = this.ctx.actions[src[to]];
 				this[to].prepare(blueprint.actions[src[to]], blueprint);
@@ -60,7 +60,7 @@ class Bloc {
 		return this.in[no](props);
 	}
 
-	updateIn(ins) {console.log(this.type)
+	updateIn(ins) {
 
 		this.in = ins.map((el, i) => {
 			if (el !== null && typeof el === 'object')
