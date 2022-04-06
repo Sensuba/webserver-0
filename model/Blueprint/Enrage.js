@@ -13,7 +13,7 @@ class Enrage extends Bloc {
 				return [null];
 			if (!ins[0].isType("character") || !ins[0].onBoard || ins[0].destroyed || ins[0].isGhost)
 				return [null];
-			let targets = ins[0].area.opposite.field.entities.filter(e => (e.isType("figure") || e.isType("artifact")) && !e.destroyed aa !e.isGhost && ins[0].canReach(e));
+			let targets = ins[0].area.opposite.field.entities.filter(e => (e.isType("figure") || e.isType("artifact")) && !e.destroyed && !e.isGhost && ins[0].canReach(e));
 			if (targets.length <= 0)
 				return [null];
 			let target = targets[Math.floor(Math.random()*targets.length)];
