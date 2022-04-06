@@ -34,6 +34,7 @@ var AddPoints = require('./AddPoints');
 var Freeze = require('./Freeze');
 var Poison = require('./Poison');
 var CurePoison = require('./CurePoison');
+var Enrage = require('./Enrage');
 var Silence = require('./Silence');
 var SetCard = require('./Set');
 var Boost = require('./Boost');
@@ -272,6 +273,7 @@ class Reader {
 			case "extramana": bloc = new ExtraMana(card, ctx); break;
 			case "usemana": bloc = new UseMana(card, ctx); break;
 			case "curse": bloc = new Curse(card, ctx); break;
+			case "enrage": bloc = new Enrage(card, ctx); break;
 			case "editcurse": bloc = new EditCurse(card, ctx); break;
 			case "shuffle": bloc = new Shuffle(card, ctx); break;
 			case "putfl": bloc = new PutFirstLast(card, ctx); break;
