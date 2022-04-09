@@ -27,7 +27,7 @@ class Bloc {
 		if (this.prepared)
 			return;
 		this.prepared = true;
-		this.toPrepare.forEach(to => {console.log(this.src.nameCard + "   " + this.type + "   " + to);
+		this.toPrepare.forEach(to => {
 			if (src[to] !== undefined && src[to] !== null) {
 				this[to] = this.ctx.actions[src[to]];
 				this[to].prepare(blueprint.actions[src[to]], blueprint);

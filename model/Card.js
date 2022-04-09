@@ -275,6 +275,10 @@ class Card {
 				overload: this.overload
 			}
 		}
+		if (this.mecha) {
+			this.faculties.push(new Action(new Event(() => { this.chargeMech(1); this.skillPt++; })));
+			this.faculties.push(new Action(new Event((src, target) => { src.loadPilot(target); this.skillPt++; }, (src, target) => src.pilot ? targets.friendly(src, target) && targets.figure(src, target) : false)));
+		}
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
 		if (this.isType("artifact") || this.isType("secret"))
@@ -1192,6 +1196,64 @@ class Card {
 		}
 		if (this.isType("secret"))
 			delete this.secretcount;
+	}
+
+	chargeMech (charge) {
+
+		if (!this.mecha)
+			return;
+		this.activationPt = (this.activationPt || 0) + charge;
+		this.gameboard.notify("chargemech", this, { type: "int", value: charge });
+		if (this.activationPt >= this.activation)
+			this.activateMech();
+	}
+
+	activateMech () {
+
+		if (!this.mecha)
+			return;
+
+		this.deactivate();
+		this.ol = 0;
+		this.atk = this.mechactive.atk;
+		this.range = this.mechactive.range;
+		this.overload = this.mechactive.overload;
+		this.blueprint = this.mechactive.blueprint;
+		this.events = [];
+		this.passives = [];
+		this.innereffects = [];
+		this.faculties = [];
+		this.clearMutations();
+		this.cmutations = [];
+		this.states = {};
+		delete this.armor;
+		if (this.blueprint)
+			Reader.read(this.blueprint, this);
+		if (this.scripts)
+			this.scripts.forEach(event => Reader.read(event, this));
+		if (this.atk && typeof this.atk === 'string')
+			this.atk = parseInt(this.atk, 10);
+		if (this.range && typeof this.range === 'string')
+			this.range = parseInt(this.range, 10);
+		delete this.mechactive;
+		this.gameboard.notify("activatemech", this);
+		this.events.forEach(event => {
+			if (!event.requirement)
+				event.execute(this.gameboard, this)
+		});
+		this.activate();
+		this.gameboard.update();
+	}
+
+	loadPilot (pilot) {
+
+		if (!this.mecha)
+			return;
+		let activ = (pilot.finalMana === null) || pilot.finalMana === undefined ? pilot.mana : pilot.finalMana;
+		this.gameboard.notify("loadpilot", this, pilot);
+		pilot.goto(this.area.capsule);
+		this.pilot = pilot;
+		this.chargeMech(activ);
 	}
 
 	mutate (effect, end) {
