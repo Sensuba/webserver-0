@@ -277,7 +277,7 @@ class Card {
 		}
 		if (this.mecha) {
 			this.faculties.push(new Action(new Event(() => { this.chargeMech(1); this.skillPt++; })));
-			this.faculties.push(new Action(new Event((src, target) => { src.loadPilot(target); this.skillPt++; }, (src, target) => src.pilot ? targets.friendly(src, target) && targets.figure(src, target) : false)));
+			this.faculties.push(new Action(new Event((src, target) => { src.loadPilot(target); this.skillPt++; }, (src, target) => src.pilot ? src.area === target.area && target.occupied && target.card.isType("figure") : false)));
 		}
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
