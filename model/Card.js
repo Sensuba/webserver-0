@@ -1230,6 +1230,7 @@ class Card {
 		this.clearMutations();
 		this.cmutations = [];
 		this.states = {};
+		this.cardType = "figure";
 		delete this.armor;
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
@@ -1245,6 +1246,7 @@ class Card {
 			if (!event.requirement)
 				event.execute(this.gameboard, this)
 		});
+		this.refresh();
 		this.activate();
 		this.gameboard.update();
 	}
