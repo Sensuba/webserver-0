@@ -276,8 +276,8 @@ class Card {
 			}
 		}
 		if (this.mecha) {
-			this.faculties.push(new Action(new Event(() => { this.chargeMech(1); this.skillPt++; })));
-			this.faculties.push(new Action(new Event((src, target) => { src.loadPilot(target); this.skillPt++; }, (src, target) => src.pilot ? src.area === target.area && target.occupied && target.card.isType("figure") : false)));
+			this.faculties.push(new ArtifactSkill(new Event(() => { this.chargeMech(1); this.skillPt++; }), 0));
+			this.faculties.push(new ArtifactSkill(new Event((src, target) => { src.loadPilot(target); this.skillPt++; }, (src, target) => src.pilot ? src.area === target.area && target.occupied && target.card.isType("figure") : false), 0));
 		}
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
@@ -1144,6 +1144,10 @@ class Card {
 		}
 		if (wasActivated)
 			this.activate();
+		if (this.mecha) {
+			this.faculties.push(new ArtifactSkill(new Event(() => { this.chargeMech(1); this.skillPt++; }), 0));
+			this.faculties.push(new ArtifactSkill(new Event((src, target) => { src.loadPilot(target); this.skillPt++; }, (src, target) => src.pilot ? src.area === target.area && target.occupied && target.card.isType("figure") : false), 0));
+		}
 		if (this.onBoard || (this.location.id.type === "capsule" && this.isType("entity"))) {
 			other.passives.forEach(p => this.passives.push(p.copy(this)));
 			other.mutations.forEach(m => m.attach(this));
