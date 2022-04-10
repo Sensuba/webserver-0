@@ -1258,13 +1258,13 @@ class Card {
 		if (this.range && typeof this.range === 'string')
 			this.range = parseInt(this.range, 10);
 		delete this.mechactive;
+		this.resetSickness();
+		this.activate();
 		this.gameboard.notify("activatemech", this);
 		this.events.forEach(event => {
 			if (!event.requirement)
 				event.execute(this.gameboard, this)
 		});
-		this.resetSickness();
-		this.activate();
 		this.gameboard.update();
 	}
 
