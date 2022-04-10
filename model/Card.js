@@ -199,8 +199,10 @@ class Card {
 			if (this.onBoard && this.isType("secret"))
 				this.gameboard.notify("secretsetup", this, loc);
 		}
-		if (pilot)
+		if (pilot) {
 			pilot.goto(former);
+			pilot.outOfMecha = true;
+		}
 		/*if (former != null && !destroyed)
 			Notify ("card.move", former, value);
 		if (location is Tile)
@@ -289,7 +291,7 @@ class Card {
 		}
 		if (this.mecha && this.isType("artifact")) {
 			this.faculties.push(new Skill(new Event(() => { this.setPoints(this.actionPt, this.skillPt+1, this.motionPt); this.chargeMech(1); }), 1));
-			this.faculties.push(new ArtifactSkill(new Event((src, target) => { this.setPoints(this.actionPt, this.skillPt+1, this.motionPt); src.loadPilot(target.card); }, (src, target) => src.pilot ? false : (src.area === target.area && target.occupied && target.card.isType("figure") && !target.card.mecha), true), 0));
+			this.faculties.push(new ArtifactSkill(new Event((src, target) => { this.setPoints(this.actionPt, this.skillPt+1, this.motionPt); src.loadPilot(target.card); }, (src, target) => src.pilot ? false : (src.area === target.area && target.occupied && target.card.isType("figure") && !target.card.mecha && !target.card.outOfMecha), true), 0));
 		}
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
@@ -405,6 +407,7 @@ class Card {
 			let pilot = this.pilot;
 			delete this.pilot;
 			pilot.goto(this.location);
+			pilot.outOfMecha = true;
 		}
 		this.gameboard.notify(discard ? "discardcard" : "destroycard", this, { type: "boolean", value: onboard });
 		if (!this.dying)
@@ -1165,7 +1168,7 @@ class Card {
 			this.activate();
 		if (this.mecha && this.isType("artifact")) {
 			this.faculties.push(new Skill(new Event(() => { this.setPoints(this.actionPt, this.skillPt+1, this.motionPt); this.chargeMech(1); }), 1));
-			this.faculties.push(new ArtifactSkill(new Event((src, target) => { this.setPoints(this.actionPt, this.skillPt+1, this.motionPt); src.loadPilot(target.card); }, (src, target) => src.pilot ? false : (src.area === target.area && target.occupied && target.card.isType("figure") && !target.card.mecha), true), 0));
+			this.faculties.push(new ArtifactSkill(new Event((src, target) => { this.setPoints(this.actionPt, this.skillPt+1, this.motionPt); src.loadPilot(target.card); }, (src, target) => src.pilot ? false : (src.area === target.area && target.occupied && target.card.isType("figure") && !target.card.mecha && !target.card.outOfMecha), true), 0));
 		}
 		if (this.onBoard || (this.location.id.type === "capsule" && this.isType("entity"))) {
 			other.passives.forEach(p => this.passives.push(p.copy(this)));
@@ -1213,6 +1216,7 @@ class Card {
 				this.motionPt = 1;
 				this.firstTurn = false;
 				this.furyState = 0;
+				delete this.outOfMecha;
 				if (this.frozen)
 					this.frozenTimer = true;
 			}
@@ -1246,7 +1250,7 @@ class Card {
 		this.faculties = [];
 		this.clearMutations();
 		this.cmutations = [];
-		this.states = {};
+		this.states = { glazed: this.hasState("glazed") };
 		this.cardType = "figure";
 		delete this.armor;
 		if (this.blueprint)
