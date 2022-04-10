@@ -201,6 +201,7 @@ class Card {
 		}
 		if (pilot) {
 			pilot.goto(former);
+			pilot.actionPt = 0;
 			pilot.outOfMecha = true;
 		}
 		/*if (former != null && !destroyed)
@@ -407,6 +408,7 @@ class Card {
 			let pilot = this.pilot;
 			delete this.pilot;
 			pilot.goto(this.location);
+			pilot.actionPt = 0;
 			pilot.outOfMecha = true;
 		}
 		this.gameboard.notify(discard ? "discardcard" : "destroycard", this, { type: "boolean", value: onboard });
