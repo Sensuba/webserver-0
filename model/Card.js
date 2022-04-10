@@ -8,6 +8,7 @@ var Cemetery = require("./Cemetery");
 var Discard = require("./Discard");
 var Update = require("./Update");
 var Action = require("./Action");
+var Skill = require("./Skill");
 var ArtifactSkill = require("./ArtifactSkill");
 var Mutation = require("./Mutation");
 var Reader = require("./Blueprint/Reader");
@@ -139,7 +140,7 @@ class Card {
 
 		if (this.location === loc)
 			return;
-		var former = this.location;
+		var former = this.location, pilot = null;
 
 		if (this.onBoard && loc instanceof Tile && loc.occupied) {
 			let swapcard = loc.card;
@@ -154,8 +155,13 @@ class Card {
 			this.lb = this.eff.overload && this.eff.ol && this.eff.ol >= this.eff.overload ? Math.floor(this.eff.ol/this.eff.overload) : 0;
 
 		this.location = loc;
-		if (former instanceof Tile && !(loc instanceof Tile || loc instanceof Court) && this.activated)
+		if (former instanceof Tile && !(loc instanceof Tile || loc instanceof Court) && this.activated) {
 			this.deactivate();
+			if (this.pilot) {
+				pilot = this.pilot;
+				delete this.pilot;
+			}
+		}
 		if (former && former.hasCard (this))
 			former.removeCard (this);
 		if (former && (loc === null || former.locationOrder > loc.locationOrder || former.locationOrder === 0))
@@ -193,6 +199,8 @@ class Card {
 			if (this.onBoard && this.isType("secret"))
 				this.gameboard.notify("secretsetup", this, loc);
 		}
+		if (pilot)
+			pilot.goto(former);
 		/*if (former != null && !destroyed)
 			Notify ("card.move", former, value);
 		if (location is Tile)
@@ -219,6 +227,8 @@ class Card {
 			this.passives.forEach(passive => passive.deactivate());
 		if (this.activated)
 			this.deactivate();
+		if (this.identified && (this.inHand || this.inDeck))
+			this.identified[this.area.opposite.id.no] = false;
 		var model = this.model;
 		for (var k in model) {
 			this[k] = model[k];
@@ -259,6 +269,8 @@ class Card {
 		delete this.secreteffect;
 		delete this.goingtodie;
 		delete this.steps;
+		delete this.activationPt;
+		delete this.activated;
 		if (!model.blueprint)
 			delete this.blueprint;
 		this.clearBoardInstance();
@@ -275,9 +287,9 @@ class Card {
 				overload: this.overload
 			}
 		}
-		if (this.mecha) {
-			this.faculties.push(new ArtifactSkill(new Event(() => { this.chargeMech(1); this.skillPt++; }), 0));
-			this.faculties.push(new ArtifactSkill(new Event((src, target) => { src.loadPilot(target); this.skillPt++; }, (src, target) => src.pilot ? src.area === target.area && target.occupied && target.card.isType("figure") : false), 0));
+		if (this.mecha && this.isType("artifact")) {
+			this.faculties.push(new Skill(new Event(() => { this.setPoints(this.actionPt, this.skillPt+1, this.motionPt); this.chargeMech(1); }), 1));
+			this.faculties.push(new ArtifactSkill(new Event((src, target) => { this.setPoints(this.actionPt, this.skillPt+1, this.motionPt); src.loadPilot(target.card); }, (src, target) => src.pilot ? false : (src.area === target.area && target.occupied && target.card.isType("figure") && !target.card.mecha), true), 0));
 		}
 		if (this.blueprint)
 			Reader.read(this.blueprint, this);
@@ -389,6 +401,11 @@ class Card {
 		}
 		this.dying = true;
 		let onboard = this.onBoard;
+		if (this.pilot && onboard) {
+			let pilot = this.pilot;
+			delete this.pilot;
+			pilot.goto(this.location);
+		}
 		this.gameboard.notify(discard ? "discardcard" : "destroycard", this, { type: "boolean", value: onboard });
 		if (!this.dying)
 			return;
@@ -775,6 +792,8 @@ class Card {
 
 	isArchetype (arc) {
 
+		if (arc === "mech" && this.mecha)
+			return true;
 		return this.archetypes && this.archetypes.includes(arc);
 	}
 
@@ -1144,9 +1163,9 @@ class Card {
 		}
 		if (wasActivated)
 			this.activate();
-		if (this.mecha) {
-			this.faculties.push(new ArtifactSkill(new Event(() => { this.chargeMech(1); this.skillPt++; }), 0));
-			this.faculties.push(new ArtifactSkill(new Event((src, target) => { src.loadPilot(target); this.skillPt++; }, (src, target) => src.pilot ? src.area === target.area && target.occupied && target.card.isType("figure") : false), 0));
+		if (this.mecha && this.isType("artifact")) {
+			this.faculties.push(new Skill(new Event(() => { this.setPoints(this.actionPt, this.skillPt+1, this.motionPt); this.chargeMech(1); }), 1));
+			this.faculties.push(new ArtifactSkill(new Event((src, target) => { this.setPoints(this.actionPt, this.skillPt+1, this.motionPt); src.loadPilot(target.card); }, (src, target) => src.pilot ? false : (src.area === target.area && target.occupied && target.card.isType("figure") && !target.card.mecha), true), 0));
 		}
 		if (this.onBoard || (this.location.id.type === "capsule" && this.isType("entity"))) {
 			other.passives.forEach(p => this.passives.push(p.copy(this)));
@@ -1219,8 +1238,6 @@ class Card {
 
 		this.deactivate();
 		this.ol = 0;
-		this.atk = this.mechactive.atk;
-		this.range = this.mechactive.range;
 		this.overload = this.mechactive.overload;
 		this.blueprint = this.mechactive.blueprint;
 		this.events = [];
@@ -1246,7 +1263,7 @@ class Card {
 			if (!event.requirement)
 				event.execute(this.gameboard, this)
 		});
-		this.refresh();
+		this.resetSickness();
 		this.activate();
 		this.gameboard.update();
 	}
