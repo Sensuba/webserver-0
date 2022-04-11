@@ -405,7 +405,7 @@ class Card {
 		let location = this.location;
 		this.gameboard.notify(discard ? "discardcard" : "destroycard", this, { type: "boolean", value: onboard });
 		if (pilot && onboard) 
-			this.ejectPilot();
+			this.ejectPilot(pilot, location);
 		if (!this.dying)
 			return;
 		this.clearBoardInstance();
