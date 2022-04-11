@@ -199,11 +199,8 @@ class Card {
 			if (this.onBoard && this.isType("secret"))
 				this.gameboard.notify("secretsetup", this, loc);
 		}
-		if (pilot) {
-			pilot.goto(former);
-			pilot.actionPt = 0;
-			pilot.outOfMecha = true;
-		}
+		if (pilot)
+			this.ejectPilot(pilot, former);
 		/*if (former != null && !destroyed)
 			Notify ("card.move", former, value);
 		if (location is Tile)
@@ -404,14 +401,11 @@ class Card {
 		}
 		this.dying = true;
 		let onboard = this.onBoard;
-		if (this.pilot && onboard) {
-			let pilot = this.pilot;
-			delete this.pilot;
-			pilot.goto(this.location);
-			pilot.actionPt = 0;
-			pilot.outOfMecha = true;
-		}
+		let pilot = this.pilot;
+		let location = this.location;
 		this.gameboard.notify(discard ? "discardcard" : "destroycard", this, { type: "boolean", value: onboard });
+		if (pilot && onboard) 
+			this.ejectPilot();
 		if (!this.dying)
 			return;
 		this.clearBoardInstance();
@@ -1263,7 +1257,6 @@ class Card {
 			this.atk = parseInt(this.atk, 10);
 		if (this.range && typeof this.range === 'string')
 			this.range = parseInt(this.range, 10);
-		delete this.mechactive;
 		this.resetSickness();
 		this.activate();
 		this.gameboard.notify("activatemech", this);
@@ -1283,6 +1276,53 @@ class Card {
 		pilot.goto(this.area.capsule);
 		this.pilot = pilot;
 		this.chargeMech(activ);
+	}
+
+	ejectPilot (pilot = this.pilot, location = this.location) {
+
+		if (this.pilot === pilot)
+			delete this.pilot;
+		let resultloc = undefined;
+		if (location.field.tiles.filter(t => t.isEmpty) > 0) {
+			resultloc = pilot.moveNear(location);
+			pilot.actionPt = 0;
+			pilot.outOfMecha = true;
+		} else if (!location.area.hand.isMaxed) {
+			pilot.goto(location.area.hand);
+		} else {
+			pilot.destroy();
+		}
+		this.gameboard.notify("ejectpilot", this, pilot, location);
+	}
+
+	moveNear (tile) {
+
+		if (!tile.neighbors)
+			return null;
+		if (tile.isEmpty) {
+			this.goto(tile);
+			return tile;
+		}
+		var neighbors = tile.neighbors.filter(t => t.isEmpty);
+		if (neighbors.length > 0) {
+			var res = neighbors[Math.floor(Math.random()*neighbors.length)];
+			this.goto(res);
+			return tile;
+		}
+		var adjacents = tile.adjacents.filter(t => t.isEmpty);
+		if (adjacents.length > 0) {
+			var res = adjacents[Math.floor(Math.random()*adjacents.length)];
+			this.goto(res);
+			return tile;
+		}
+		var all = tile.field.tiles.filter(t => t.isEmpty);
+		if (all.length > 0) {
+			var distance = all.reduce((min, t) => Math.min(min, t.distanceTo(tile)), 4);
+			all = all.filter(t => t.distanceTo(tile) === distance);
+			var res = all[Math.floor(Math.random()*all.length)];
+			this.goto(res);
+			return tile;
+		}
 	}
 
 	mutate (effect, end) {
