@@ -1283,7 +1283,7 @@ class Card {
 		if (this.pilot === pilot)
 			delete this.pilot;
 		let resultloc = undefined;
-		if (location.field.tiles.filter(t => t.isEmpty) > 0) {
+		if (location.field.tiles.filter(t => t.isEmpty).length > 0) {
 			resultloc = pilot.moveNear(location);
 			pilot.actionPt = 0;
 			pilot.outOfMecha = true;
