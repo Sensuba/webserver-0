@@ -1223,7 +1223,7 @@ class Card {
 
 	chargeMech (charge) {
 
-		if (!this.mecha)
+		if (!this.mecha || !this.isType("artifact"))
 			return;
 		this.activationPt = (this.activationPt || 0) + charge;
 		this.gameboard.notify("chargemech", this, { type: "int", value: charge });
@@ -1233,7 +1233,7 @@ class Card {
 
 	activateMech () {
 
-		if (!this.mecha)
+		if (!this.mecha || !this.isType("artifact"))
 			return;
 
 		this.deactivate();
