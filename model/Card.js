@@ -1419,7 +1419,7 @@ class Card {
 			if (aura.applicable(this))
 				res = aura.apply(res);
 		});
-		if (res.pilot && res.pilot.pmutations)
+		if (res.isType("figue") && res.pilot && res.pilot.pmutations)
 			res.pilot.pmutations.forEach(pm => pm(res));
 		if (this.onBoard) {
 			if (this.location.hasHazards("wind")) {
