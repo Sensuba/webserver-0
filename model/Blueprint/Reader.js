@@ -16,6 +16,7 @@ var Frenzy = require('./Frenzy');
 var Contact = require('./Contact');
 var PassiveMutation = require('./PassiveMutation');
 var ContactMutation = require('./ContactMutation');
+var PilotMutation = require('./PilotMutation');
 var Aura = require('./Aura');
 var Secret = require('./Secret');
 var Trial = require('./Trial');
@@ -226,6 +227,7 @@ class Reader {
 			case "contact": bloc = new Contact(card, ctx); break;
 			case "passivemut": bloc = new PassiveMutation(card, ctx); break;
 			case "contactmut": bloc = new ContactMutation(card, ctx); break;
+			case "pilotmut": bloc = new PilotMutation(card, ctx); break;
 			case "aura": bloc = new Aura(card, ctx); break;
 			case "draw": bloc = new Draw(card, ctx); break;
 			case "move": bloc = new Move(card, ctx); break;

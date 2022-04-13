@@ -64,7 +64,7 @@ class RoomManager extends Manager {
 				var datamap = log.type === "identify" ? log.data : log.data.map(d => d ? d.id || d : d);
 				user.emit('notification', {type: log.type, src: log.src.id, data: datamap});
 			})
-			this.game.data.cards.filter(c => c.identified && c.identified[noplayer]).forEach(c => this.game.whisper("identify", noplayer, c.id, c.data));
+			this.game.data.cards.filter(c => c.identified && c.identified[noplayer]).forEach(c => { console.log(c.data); return this.game.whisper("identify", noplayer, c.id, c.data); });
 			user.emit('time', this.game.getTimeLeft());
 			user.emit('state', 'sync');
 		}

@@ -89,6 +89,7 @@ class Card {
 		delete copy.tokens;
 		delete copy.mutations;
 		delete copy.cmutations;
+		delete copy.pmutations;
 		delete copy.oncontact;
 		delete copy.mutatedState;
 		delete copy.mutdata;
@@ -114,6 +115,8 @@ class Card {
 				else return a.parent.idCardmodel;
 			}
 		}
+		if (copy.pilot)
+			copy.pilot = copy.pilot.data;
 		if (copy.parent)
 			copy.parent = genParent(copy);
 		return copy;
@@ -251,6 +254,7 @@ class Card {
 		this.innereffects = [];
 		this.clearMutations();
 		this.cmutations = [];
+		this.pmutations = [];
 		this.states = {};
 		this.shield = false;
 		delete this.poisondmg;
@@ -326,6 +330,7 @@ class Card {
 		this.faculties = [new Action(new Event(() => this.area.manapool.createReceptacle()))];
 		this.clearMutations();
 		this.cmutations = [];
+		this.pmutations = [];
 		this.states = {};
 		delete this.armor;
 		if (this.blueprint)
@@ -616,6 +621,7 @@ class Card {
 		this.innereffects = [];
 		this.clearMutations();
 		this.cmutations = [];
+		this.pmutations = [];
 		this.events = [];
 		if (this.hasState("glazed"))
 			this.states = { glazed: true };
@@ -1131,6 +1137,7 @@ class Card {
 		this.model = other.model;
 		this.parent = other.parent;
 
+		delete this.pilot;
 		this.events = [];
 		this.faculties = [];
 		this.passives = [];
@@ -1138,6 +1145,7 @@ class Card {
 		other.innereffects.forEach(ie => this.innereffects.push(ie));
 		this.clearMutations();
 		this.cmutations = [];
+		this.pmutations = [];
 		this.states = Object.assign({}, other.states);
 		this.setState("bonus", false);
 		this.variables = Object.assign({}, other.variables);
@@ -1246,6 +1254,7 @@ class Card {
 		this.faculties = [];
 		this.clearMutations();
 		this.cmutations = [];
+		this.pmutations = [];
 		this.states = { glazed: this.hasState("glazed") };
 		this.cardType = "figure";
 		delete this.armor;
@@ -1410,6 +1419,8 @@ class Card {
 			if (aura.applicable(this))
 				res = aura.apply(res);
 		});
+		if (res.pilot && res.pilot.pmutations)
+			res.pilot.pmutations.forEach(pm => pm(res));
 		if (this.onBoard) {
 			if (this.location.hasHazards("wind")) {
 				res.states = res.states || {};
