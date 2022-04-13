@@ -1269,6 +1269,7 @@ class Card {
 		this.resetSickness();
 		this.activate();
 		this.gameboard.notify("activatemech", this);
+		this.update();
 		this.events.forEach(event => {
 			if (!event.requirement)
 				event.execute(this.gameboard, this)
