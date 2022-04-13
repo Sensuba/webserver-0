@@ -688,7 +688,7 @@ class Card {
 			return false;
 		if (eff.canMove)
 			return true;
-		if ((eff.actionPt || (this.hasState("fury") && eff.furyState === 1)) && (!eff.firstTurn || this.hasState("rush")))
+		if ((eff.actionPt || (this.hasState("fury") && eff.furyState === 1)) && (!eff.firstTurn || this.hasState("rush") || this.hasState("agility")))
 			return true;
 
 		return false;
@@ -700,7 +700,7 @@ class Card {
 
 		if (!this.isType("character") || !this.onBoard || !target.onBoard || this.area === target.area || eff.frozen || target.isType("secret") || eff.atk <= 0 || eff.range <= 0 || target.concealed || this.hasState("static") || this.hasState("passive"))
 			return false;
-		if (eff.firstTurn && !this.hasState("rush"))
+		if (eff.firstTurn && !this.hasState("rush") && !(this.hasState("agility") && !target.isType("hero")))
 			return false;
 		if (!eff.actionPt && (!this.hasState("fury") || eff.furyState !== 1))
 			return false;
