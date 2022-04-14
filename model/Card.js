@@ -1268,8 +1268,8 @@ class Card {
 			this.range = parseInt(this.range, 10);
 		this.resetSickness();
 		this.activate();
+		this.gameboard.update();
 		this.gameboard.notify("activatemech", this);
-		this.update();
 		this.events.forEach(event => {
 			if (!event.requirement)
 				event.execute(this.gameboard, this)
