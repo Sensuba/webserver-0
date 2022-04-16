@@ -111,6 +111,8 @@ var ReverseCardFilter = require('./ReverseCardFilter');
 var ReverseModelFilter = require('./ReverseModelFilter');
 var ReverseTileFilter = require('./ReverseTileFilter');
 var FilterHazards = require('./FilterHazards');
+var FilterLeftRight = require('./FilterLeftRight');
+var FilterPlayedLeftRight = require('./FilterPlayedLeftRight');
 var FilterReachable = require('./FilterReachable');
 var CompareLocations = require('./CompareLocations');
 var MergeLocations = require('./MergeLocations');
@@ -325,6 +327,8 @@ class Reader {
 			case "filtercovered": bloc = new FilterCovered(card, ctx); break;
 			case "filtercovering": bloc = new FilterCovering(card, ctx); break;
 			case "filterreachable": bloc = new FilterReachable(card, ctx); break;
+			case "filterlr": bloc = new FilterLeftRight(card, ctx); break;
+			case "filterplaylr": bloc = new FilterPlayedLeftRight(card, ctx); break;
 			case "countcards": bloc = new CountCards(card, ctx); break;
 			case "counttiles": bloc = new CountTiles(card, ctx); break;
 			case "ctotfilter": bloc = new CardToTileFilter(card, ctx); break;

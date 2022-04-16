@@ -97,6 +97,7 @@ class Card {
 		delete copy.dying;
 		delete copy.pOrder;
 		delete copy.lOrder;
+		delete copy.playedFrom;
 		delete copy.stopShifting;
 		delete copy.goingtodie;
 		delete copy.variables;
@@ -931,6 +932,7 @@ class Card {
 		this.finalMana = this.eff.mana;
 		this.finalOverload = this.eff.ol;
 		this.area.manapool.use(this.eff.mana);
+		this.playedFrom = { left: this.isLeftRight(true, false), right: this.isLeftRight(false, true) };
 		this.setState("temporary", false);
 		if (this.hasState("bonus")) {
 			this.setState("bonus", false);
@@ -1333,6 +1335,11 @@ class Card {
 			this.goto(res);
 			return tile;
 		}
+	}
+
+	isLeftRight (left, right) {
+
+		return (!left || (this.location.firstCard === this)) && (!right || (this.location.lastCard === this))
 	}
 
 	mutate (effect, end) {

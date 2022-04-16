@@ -13,6 +13,16 @@ class Court {
 		this.area.gameboard.register(this);
 	}
 
+	get firstCard () {
+
+		return this.isEmpty ? null : this.card;
+	}
+
+	get lastCard () {
+
+		return this.isEmpty ? null : this.card;
+	}
+
 	get isEmpty () {
 
 		return this.card === null || this.card === undefined;

@@ -15,6 +15,16 @@ class Tile {
 		this.area.gameboard.register(this);
 	}
 
+	get firstCard () {
+
+		return this.isEmpty ? null : this.card;
+	}
+
+	get lastCard () {
+
+		return this.isEmpty ? null : this.card;
+	}
+
 	get count () {
 
 		return this.occupied ? 1 : 0;

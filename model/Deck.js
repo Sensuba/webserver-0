@@ -69,6 +69,16 @@ class Deck {
 	    }
 	}
 
+	get firstCard () {
+
+		return this.isEmpty ? null : this.cards[0];
+	}
+
+	get lastCard () {
+
+		return this.isEmpty ? null : this.cards[this.count-1];
+	}
+
 	get count () {
 
 		return this.cards.length;
