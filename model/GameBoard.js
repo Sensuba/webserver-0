@@ -124,7 +124,7 @@ class GameBoard {
 			clearTimeout(this.timer);
 		this.timer = setTimeout(() => {
 			if (!this.ended)
-				this.newTurn();
+				this.currentArea.endTurn();
 		}, 150000 + EXTRA_TIME);
 		this.timerStart = new Date();
 	}

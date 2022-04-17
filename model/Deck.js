@@ -11,6 +11,7 @@ class Deck {
 		this.id = { type: "deck", no: area.id.no };
 
 		this.locationOrder = 1;
+		this.public = false;
 
 		this.area = area;
 		this.cards = [];
@@ -94,16 +95,14 @@ class Deck {
 		return this.area.opposite.deck;
 	}
 
-	get public () {
-
-		return false;
-	}
-
 	addCard (card, index) {
 
+		let first = this.firstCard;
 		this.cards.splice(index || (this.shufflelock ? this.count : Math.floor(Math.random() * (this.count+1))), 0, card);
 		if (card.location !== this)
 			card.goto(this);
+		if (this.private)
+			this.area.gameboard.notify("topdeck", this, this.firstCard);
 	}
 
 	removeCard (card) {
@@ -113,6 +112,8 @@ class Deck {
 			if (card !== null && card.location === this)
 				card.goto(null);
 		}
+		if (this.private && !this.isEmpty)
+			this.area.gameboard.notify("topdeck", this, this.firstCard);
 	}
 
 	hasCard (card) {
