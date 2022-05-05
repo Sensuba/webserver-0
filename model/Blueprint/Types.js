@@ -30,11 +30,13 @@ class Types {
 		case 'this': return src.location;
 		case 'hand': return src.area.hand;
 		case 'deck': return src.area.deck;
+		case 'court': return src.area.court;
 		case 'honor board': return src.area.honorboard;
 		case 'cemetery': return src.area.cemetery;
 		case 'discard': return src.area.discard;
 		case 'opponent\'s hand': return src.area.opposite.hand;
 		case 'opponent\'s deck': return src.area.opposite.deck;
+		case 'opponent\'s court': return src.area.opposite.court;
 		case 'opponent\'s honor board': return src.area.opposite.honorboard;
 		case 'opponent\'s cemetery': return src.area.opposite.cemetery;
 		case 'opponent\'s discard': return src.area.opposite.discard;
@@ -56,6 +58,7 @@ class Types {
 		case 'back': return src.area.field.back;
 		case 'hand': return [src.area.hand];
 		case 'deck': return [src.area.deck];
+		case 'court': return [src.area.court];
 		case 'honor board': return [src.area.honorboard];
 		case 'cemetery': return [src.area.cemetery];
 		case 'discard': return [src.area.discard];
@@ -64,6 +67,7 @@ class Types {
 		case 'opponent\'s back': return src.area.opposite.field.back;
 		case 'opponent\'s hand': return [src.area.opposite.hand, src.area.opposite.court];
 		case 'opponent\'s deck': return [src.area.opposite.deck];
+		case 'opponent\'s court': return [src.area.opposite.court];
 		case 'opponent\'s honor board': return [src.area.opposite.honorboard];
 		case 'opponent\'s cemetery': return [src.area.opposite.cemetery];
 		case 'opponent\'s discard': return [src.area.opposite.discard];

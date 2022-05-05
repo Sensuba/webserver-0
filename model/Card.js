@@ -192,7 +192,7 @@ class Card {
 			var secrets = this.innereffects.filter(e => e.type === "secret");
 			if (!this.area || !this.area.isPlaying)
 				this.secretparam = 0;
-			if (secrets.length === 1)
+			if (secrets.length >= 1)
 				this.secreteffect = secrets[0];
 		}
 		this.identify();
@@ -710,6 +710,8 @@ class Card {
 		if (eff.firstTurn && !this.hasState("rush") && !(this.hasState("agility") && !target.isType("hero")))
 			return false;
 		if (!eff.actionPt && (!this.hasState("fury") || eff.furyState !== 1))
+			return false;
+		if (eff.firstTurn && this.hasState("rush") && this.hasState("fury") && eff.furyState === 1 && target.isType("hero"))
 			return false;
 		if (target.isType("hero") && this.hasState("cannot attack heroes"))
 			return false;

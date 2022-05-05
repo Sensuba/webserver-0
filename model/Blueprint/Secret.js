@@ -15,7 +15,8 @@ class Secret extends Bloc {
 
 	setup (owner, image) {
 
-		this.cost = this.computeIn()[1];
+		var ins = this.computeIn();
+		this.cost = ins[1];
 		var that = this;
 		this.activate = data => {
 			owner.secretcount = (owner.secretcount || 0) + 1;
@@ -28,7 +29,7 @@ class Secret extends Bloc {
 			owner.location.area.manapool.use(that.cost);
 			var loc = owner.location;
 			owner.goto(owner.location.area.court);
-			owner.gameboard.notify("triggersecret", owner);
+			owner.gameboard.notify("triggersecret", owner, {type: "string", value: ins[0]});
 			owner.location = loc;
 			that.trigger(owner, image);
 			owner.location = owner.location.area.court;
