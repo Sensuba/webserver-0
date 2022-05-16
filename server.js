@@ -19,7 +19,7 @@ var User = require("./User");
 console.log("Initialization...");
 var axios = require('axios');
 var api = axios.create({
-	baseURL: 'https://dqf4f7ca83.execute-api.us-east-2.amazonaws.com/production',
+	baseURL: 'https://tafxxjveib.execute-api.us-east-1.amazonaws.com/production',
   	headers: { 'X-Requested-With': 'XMLHttpRequest' }
 });
 api.defaults.headers.common['Authorization'] = 'Bearer ' + process.env.token;

@@ -6,7 +6,7 @@ class GetColors extends Bloc {
 	constructor (src, ctx) {
 
 		super("getcolors", src, ctx);
-		this.f = (src, ins) => [card => card.idColor === ins[0].idColor || (card.isType("hero") && card.idColor2 === ins[0].idColor), card => card.idColor === ins[0].idColor2 || (card.isType("hero") && card.idColor2 === ins[0].idColor2)];
+		this.f = (src, ins) => [ins[0].idColor, ins[0].idColor2 || null];
 		this.types = [Types.card];
 	}
 }

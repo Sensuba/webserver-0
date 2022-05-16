@@ -518,7 +518,7 @@ class Card {
 
 		this.gameboard.notify("charge", this, charge);
 		this.charges = Math.min(5, Math.max(0, (this.charges || 0) + charge));
-		this.update();
+		this.gameboard.update();
 	}
 
 	heal (amt, src) {
