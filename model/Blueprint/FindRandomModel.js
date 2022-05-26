@@ -9,7 +9,7 @@ class FindRandomModel extends Bloc {
 		super("findmodel", src, ctx);
 		this.f = (src, ins) => {
 			var l = Bank.list();
-			var items = Object.keys(l).map(k => l[k]).filter(card => card.idEdition <= Math.max(src.idEdition || 0, 7)).filter(card => ins[0](card));
+			var items = Object.keys(l).map(k => l[k]).filter(card => card.idEdition <= Math.max(src.idEdition || 0, 8)).filter(card => ins[0](card));
 			var item = items.length > 0 ? items[Math.floor(Math.random()*items.length)] : null;
 			return [item, item !== null];
 		};
