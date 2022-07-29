@@ -1,5 +1,4 @@
 var Bloc = require('./Bloc');
-var Types = require('./Types');
 
 class FilterCover extends Bloc {
 
