@@ -4,13 +4,17 @@ var Bank = (() => {
 
 	init = (api, callback, error) => {
 
-	    api.get("/vault/cardmodels")
+		let step = 0, data = [];
+	    [1, 2].forEach(n => api.get("/vault/cardmodels?part=" + n)
 	  	.then(response => {
 	  		var atob = require('atob');
 	  		response.data.forEach(el => this.list[el.idCardmodel] = Object.assign(el, JSON.parse(atob(el.supercode))));
-	  		callback(response.data);
+	  		data = data.concat(response.data);
+	  		step++;
+	  		if (step == 2)
+	  			callback(data);
 	  	})
-	  	.catch(error);
+	  	.catch(error));
 	}
 
 	get = model => {
