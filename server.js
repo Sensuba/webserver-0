@@ -30,7 +30,7 @@ Bank.init(api, () => {
 }, err => {
 
 	console.log(`Error code: ${err.code}`);
-	console.log(`Unable to load data from ${err.hostname}`);
+	console.log(`Unable to load data`);
 });
 CreditManager.init(api);
 
