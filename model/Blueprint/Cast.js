@@ -17,7 +17,7 @@ class Cast extends Bloc {
 				card.finalOverload = card.eff.ol;
 			card.autocast = true;
 			var hastarget = card.events.some(event => event.requirement);
-			card.gameboard.notify("trap", card, hastarget ? ins[1] : undefined, card.finalMana, card.finalOverload);
+			card.gameboard.notify("autocast", card, hastarget ? ins[1] : undefined, card.finalMana, card.finalOverload);
 			card.events.forEach(event => event.execute(card.gameboard, card, ins[1]));
 			card.destroy();
 			card.gameboard.update();
