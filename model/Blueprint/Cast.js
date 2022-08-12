@@ -9,8 +9,12 @@ class Cast extends Bloc {
 		this.f = (src, ins) => {
 			var card = ins[0];
 			card.finalMana = card.eff.mana;
-			card.finalOverload = card.eff.ol;
+			let folafter = card.location && card.location.id.type === "capsule";
+			if (!folafter)
+				card.finalOverload = card.eff.ol;
 			card.goto(card.area.court);
+			if (folafter)
+				card.finalOverload = card.eff.ol;
 			card.autocast = true;
 			var hastarget = card.events.some(event => event.requirement);
 			card.gameboard.notify("trap", card, hastarget ? ins[1] : undefined, card.finalMana, card.finalOverload);
