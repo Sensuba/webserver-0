@@ -418,6 +418,8 @@ class Reader {
 			case "play-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data[2], d.data[1], d.data[1] !== null && d.data[1] !== undefined]); break;
 			case "cast-trigger": bloc = new Trigger(el.type, card, ctx, "cast"); break;
 			case "cast-data": bloc = new Data(el.type, card, ctx, d => [d.src, d.data && d.data[2], d.data && d.data[1], d.data && d.data[1] !== null && d.data[1] !== undefined]); break;
+			case "trap-trigger": bloc = new Trigger(el.type, card, ctx, "trap"); break;
+			case "trap-data": bloc = new Data(el.type, card, ctx, d => [d.src]); break;
 			case "draw-trigger": bloc = new Trigger(el.type, card, ctx, "draw"); break;
 			case "draw-data": bloc = new Data(el.type, card, ctx, d => [d.data[0], d.src]); break;
 			case "move-trigger": bloc = new Trigger(el.type, card, ctx, "cardmove"); break;
