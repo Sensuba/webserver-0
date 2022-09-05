@@ -756,7 +756,7 @@ class Card {
 			target = this.retarget.card;
 			delete this.retarget;
 		}
-		if (this.destroyed || this.isGhost || !this.onBoard || target.destroyed || target.isGhost || !target.onBoard) {
+		if (this.destroyed || this.isGhost || !this.onBoard || target.destroyed || target.isGhost || !target.onBoard || target === this) {
 			this.gameboard.update();
 			return;
 		}
