@@ -1410,6 +1410,7 @@ class Card {
 			return;
 		this.computing = true;
 		var wasCovering = this.hasState("cover neighbors");
+		var wasFlying = this.hasState("flying");
 		var res;
 		res = Object.assign({}, this);
 		res.isEff = true;
@@ -1458,7 +1459,7 @@ class Card {
 
 		this.mutatedState = res;
 
-		if (!wasCovering && res.states["cover neighbors"])
+		if (!wasCovering && res.states["cover neighbors"] || !wasFlying && res.states["flying"])
 			this.gameboard.update();
 		if (res.chp != null && res.chp != undefined && res.chp <= 0) {
 			this.goingtodie = true;
