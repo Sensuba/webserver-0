@@ -1,8 +1,9 @@
 class Mutation {
 
-	constructor (effect) {
+	constructor (effect, priority) {
 		
 		this.effect = effect;
+		this.priority = priority;
 	}
 
 	attach (card) {
