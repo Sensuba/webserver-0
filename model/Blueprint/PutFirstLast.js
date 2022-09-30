@@ -13,6 +13,8 @@ class PutFirstLast extends Bloc {
 				var p = ins[2] ? Math.min(c, ins[1].count-1) : Math.max(0, ins[1].count-1-c);
 				ins[1].cards = ins[1].cards.filter (el => el !== ins[0]);
 				ins[1].cards.splice(p, 0, ins[0]);
+				if (ins[1].id.type === "deck" && ins[1].private && !ins[1].isEmpty)
+					ins[1].area.gameboard.notify("topdeck", ins[1], ins[1].firstCard);
 			}
 			return [];
 		}
